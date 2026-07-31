@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login - KhaCate Catering')
+@section('title', 'Login - Khasanah Catering')
 
 @section('styles')
 <style>
@@ -19,7 +19,7 @@
         width: 100%;
         max-width: 450px;
         padding: 2.5rem;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        box-shadow: var(--shadow-soft);
         backdrop-filter: blur(10px);
     }
 

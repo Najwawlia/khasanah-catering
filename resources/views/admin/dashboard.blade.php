@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Dashboard - KhaCate')
+@section('title', 'Admin Dashboard - Khasanah Catering')
 
 @section('styles')
 <style>
@@ -51,7 +51,7 @@
 <div class="admin-header">
     <div>
         <h1 class="admin-title">Dashboard Overview</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Selamat datang di Panel Manajemen Dapur & Katering KhaCate</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Selamat datang di Panel Manajemen Dapur & Katering Khasanah Catering</p>
     </div>
 </div>
 

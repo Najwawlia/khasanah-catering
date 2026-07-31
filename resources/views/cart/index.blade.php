@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Keranjang Katering Anda - KhaCate')
+@section('title', 'Keranjang Katering Anda - Khasanah Catering')
 
 @section('styles')
 <style>
@@ -44,7 +44,7 @@
         border: 1px solid var(--border-color);
         border-radius: var(--radius-lg);
         padding: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: var(--shadow-soft);
     }
 
     .cart-item-row {
@@ -141,7 +141,7 @@
         padding: 1.8rem;
         position: sticky;
         top: 100px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: var(--shadow-soft);
     }
 
     .summary-title {
@@ -232,7 +232,7 @@
                     <h3 class="summary-title">Ringkasan Booking</h3>
                     
                     <div class="notice-box">
-                        <i class="fa-solid fa-circle-info"></i> Standard Katering Minimal <strong>30 Pax/Porsi</strong> telah diterapkan pada setiap menu.
+                        <i class="fa-solid fa-circle-info"></i> Standard Katering Minimal <strong>30 Pack/Porsi</strong> telah diterapkan pada setiap menu.
                     </div>
 
                     <div class="summary-row">

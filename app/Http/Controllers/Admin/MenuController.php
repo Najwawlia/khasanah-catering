@@ -34,14 +34,23 @@ class MenuController extends Controller
             'description' => 'required|string',
             'price_per_pax' => 'required|numeric|min:0',
             'min_pax' => 'required|integer|min:30',
-            'image' => 'nullable|url',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
             'name.required' => 'Nama menu wajib diisi.',
             'category.required' => 'Kategori menu wajib diisi.',
             'description.required' => 'Deskripsi menu wajib diisi.',
             'price_per_pax.required' => 'Harga per pax wajib diisi.',
             'min_pax.min' => 'Minimal pemesanan untuk katering tidak boleh kurang dari 30 pax.',
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau webp.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
+
+        $imagePath = 'https://images.unsplash.com/photo-1555244162-803834f70033?w=800&auto=format&fit=crop&q=80';
+
+        if ($request->hasFile('image')) {
+            $imagePath = asset('storage/' . $request->file('image')->store('menus', 'public'));
+        }
 
         Menu::create([
             'name' => $request->name,
@@ -49,7 +58,7 @@ class MenuController extends Controller
             'description' => $request->description,
             'price_per_pax' => $request->price_per_pax,
             'min_pax' => $request->min_pax,
-            'image' => $request->image ?: 'https://images.unsplash.com/photo-1555244162-803834f70033?w=800&auto=format&fit=crop&q=80',
+            'image' => $imagePath,
             'is_available' => $request->has('is_available') ? true : false,
         ]);
 
@@ -72,8 +81,24 @@ class MenuController extends Controller
             'description' => 'required|string',
             'price_per_pax' => 'required|numeric|min:0',
             'min_pax' => 'required|integer|min:30',
-            'image' => 'nullable|url',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ], [
+            'image.image' => 'File yang diunggah harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau webp.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.',
         ]);
+
+        $imagePath = $menu->image;
+
+        if ($request->hasFile('image')) {
+            // Hapus foto lama jika itu file lokal hasil upload (bukan link eksternal/default)
+            if ($menu->image && str_contains($menu->image, '/storage/menus/')) {
+                $oldRelativePath = 'menus/' . basename($menu->image);
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($oldRelativePath);
+            }
+
+            $imagePath = asset('storage/' . $request->file('image')->store('menus', 'public'));
+        }
 
         $menu->update([
             'name' => $request->name,
@@ -81,7 +106,7 @@ class MenuController extends Controller
             'description' => $request->description,
             'price_per_pax' => $request->price_per_pax,
             'min_pax' => $request->min_pax,
-            'image' => $request->image ?: $menu->image,
+            'image' => $imagePath,
             'is_available' => $request->has('is_available') ? true : false,
         ]);
 

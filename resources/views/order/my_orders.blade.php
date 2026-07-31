@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Riwayat Pesanan Saya - KhaCate')
+@section('title', 'Riwayat Pesanan Saya - Khasanah Catering')
 
 @section('styles')
 <style>
@@ -30,13 +30,13 @@
         border-radius: var(--radius-lg);
         padding: 1.8rem;
         margin-bottom: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: var(--shadow-soft);
         transition: all var(--transition-speed);
     }
 
     .order-card:hover {
         border-color: var(--primary-orange);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow);
+        box-shadow: var(--shadow-hover);
     }
 
     .order-card-header {
@@ -57,7 +57,7 @@
         font-weight: 700;
     }
 
-    .status-pending { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid #facc15; }
+    .status-pending { background: rgba(234, 179, 8, 0.15); color: #B45309; border: 1px solid #E8A320; }
     .status-paid { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
 </style>
 @section('content')

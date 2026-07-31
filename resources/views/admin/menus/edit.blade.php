@@ -12,7 +12,7 @@
 </div>
 
 <div class="card-table" style="max-width: 700px;">
-    <form action="{{ route('admin.menus.update', $menu->id) }}" method="POST">
+    <form action="{{ route('admin.menus.update', $menu->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -34,21 +34,37 @@
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
             <div>
-                <label style="display: block; margin-bottom: 6px; font-weight: 600;">Harga per Pax (Rp)</label>
+                <label style="display: block; margin-bottom: 6px; font-weight: 600;">Harga per Pack (Rp)</label>
                 <input type="number" name="price_per_pax" value="{{ old('price_per_pax', $menu->price_per_pax) }}" required 
                        style="width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: var(--radius-md); outline: none;">
             </div>
             <div>
-                <label style="display: block; margin-bottom: 6px; font-weight: 600;">Minimal Pemesanan Pax</label>
+                <label style="display: block; margin-bottom: 6px; font-weight: 600;">Minimal Pemesanan Pack</label>
                 <input type="number" name="min_pax" value="{{ old('min_pax', $menu->min_pax) }}" min="30" required 
                        style="width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: var(--radius-md); outline: none;">
             </div>
         </div>
 
         <div style="margin-bottom: 1.2rem;">
-            <label style="display: block; margin-bottom: 6px; font-weight: 600;">URL Gambar Foto Menu</label>
-            <input type="url" name="image" value="{{ old('image', $menu->image) }}" 
+            <label style="display: block; margin-bottom: 6px; font-weight: 600;">Foto Menu</label>
+
+            @if($menu->image)
+                <div style="margin-bottom: 10px;">
+                    <img src="{{ $menu->image }}" alt="{{ $menu->name }}"
+                         style="width: 140px; height: 100px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-color);"
+                         onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=400'">
+                    <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px;">Foto saat ini</p>
+                </div>
+            @endif
+
+            <input type="file" name="image" accept="image/*"
                    style="width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px; border-radius: var(--radius-md); outline: none;">
+            <small style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; display: block;">
+                Format JPG, PNG, atau WEBP, maksimal 2MB. Kosongkan jika tidak ingin mengganti foto.
+            </small>
+            @error('image')
+                <span style="color: var(--danger-red); font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>
+            @enderror
         </div>
 
         <div style="margin-bottom: 1.2rem;">

@@ -13,21 +13,24 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Internal Styling & Custom CSS Theme (Dark Mode + Bright Orange Accent) -->
+    <!-- Internal Styling & Custom CSS Theme (Light Mode + Bright Orange Accent, Elegant) -->
     <style>
         :root {
-            --bg-main: #121212; /* Main body background */
-            --bg-card: #1E1E1E; /* Background for cards, forms, and order summary */
-            --bg-input: #2A2A2A; /* Background for input fields */
-            --primary-orange: #FF6600; /* Main buttons, active links, and accents */
-            --primary-orange-hover: #E55C00; /* Button hover state */
-            --text-primary: #FFFFFF; /* Headings, menu names, and prices */
-            --text-secondary: #9CA3AF; /* Placeholders, descriptions, and small notes */
-            --border-color: #374151; /* Borders and dividers */
-            --success: #22C55E; /* Success messages and tracking timeline */
-            --error: #EF4444; /* Error messages like the 20 pax minimum order */
+            --bg-main: #FFFCF9;         /* Main body background - warm off-white */
+            --bg-card: #FFFFFF;         /* Background for cards, forms, and order summary */
+            --bg-input: #FAF6F1;        /* Background for input fields */
+            --bg-soft: #FFF3E9;         /* Soft tinted section background (How It Works, etc.) */
+            --primary-orange: #FF7A1E; /* Main buttons, active links, and accents - bright orange */
+            --primary-orange-hover: #E8650A; /* Button hover state */
+            --primary-orange-light: #FFEDE0; /* Light orange tint for badges/backgrounds */
+            --charcoal: #2A2118;        /* Elegant deep charcoal-brown for headings */
+            --text-primary: #2A2118;    /* Headings, menu names, and prices */
+            --text-secondary: #7A7168;  /* Placeholders, descriptions, and small notes */
+            --border-color: #F0E4D8;    /* Borders and dividers */
+            --success: #1DA35A;         /* Success messages and tracking timeline */
+            --error: #E5484D;           /* Error messages like the 20 pax minimum order */
 
-            --primary-glow: rgba(255, 102, 0, 0.35);
+            --primary-glow: rgba(255, 122, 30, 0.25);
             --text-main: var(--text-primary);
             --text-muted: var(--text-secondary);
             --accent-green: var(--success);
@@ -36,6 +39,8 @@
             --radius-md: 12px;
             --radius-sm: 8px;
             --transition-speed: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-soft: 0 4px 20px rgba(42, 33, 24, 0.06);
+            --shadow-hover: 0 12px 30px rgba(255, 122, 30, 0.18);
         }
 
         * {
@@ -61,7 +66,7 @@
 
         /* --- NAVBAR --- */
         .navbar {
-            background: rgba(30, 30, 30, 0.92);
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-color);
@@ -72,6 +77,55 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        @media (max-width: 900px) {
+            .hamburger-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 68px;
+                left: 0;
+                right: 0;
+                background: #FFFFFF;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0;
+                padding: 0.5rem 1.5rem;
+                border-bottom: 1px solid var(--border-color);
+                box-shadow: var(--shadow-soft);
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.35s ease;
+            }
+
+            .nav-links.open {
+                max-height: 500px;
+                padding: 1rem 1.5rem 1.5rem;
+            }
+
+            .nav-links .nav-link,
+            .nav-links .profile-btn {
+                width: 100%;
+                padding: 12px 0;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .nav-links .nav-link.active::after {
+                display: none;
+            }
         }
 
         .nav-brand {
@@ -141,7 +195,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: var(--bg-card);
+            background: var(--bg-input);
             border: 1px solid var(--border-color);
             padding: 8px 16px;
             border-radius: 30px;
@@ -153,7 +207,7 @@
 
         .profile-btn:hover {
             border-color: var(--primary-orange);
-            box-shadow: 0 0 15px var(--primary-glow);
+            box-shadow: var(--shadow-hover);
             transform: translateY(-2px);
         }
 
@@ -190,13 +244,13 @@
         .btn-primary:hover {
             background: var(--primary-orange-hover);
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 25px var(--primary-glow);
+            box-shadow: var(--shadow-hover);
         }
 
         .btn-secondary {
-            background: var(--bg-input);
+            background: var(--bg-card);
             color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             padding: 12px 24px;
             border-radius: var(--radius-md);
             font-weight: 600;
@@ -209,9 +263,9 @@
         }
 
         .btn-secondary:hover {
-            background: var(--bg-card);
+            background: var(--primary-orange-light);
             border-color: var(--primary-orange);
-            color: var(--primary-orange);
+            color: var(--primary-orange-hover);
             transform: translateY(-2px);
         }
 
@@ -283,10 +337,24 @@
 
         /* --- FOOTER --- */
         footer {
-            background: #0a0a0a;
+            background: var(--charcoal);
             border-top: 1px solid var(--border-color);
             padding: 3rem 2rem 2rem;
             margin-top: auto;
+        }
+
+        footer, footer .nav-brand, footer .footer-col h4 {
+            color: #FFFFFF;
+        }
+
+        footer .footer-col p,
+        footer .footer-col li,
+        footer .footer-bottom {
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        footer .nav-brand i {
+            color: var(--primary-orange);
         }
 
         .footer-content {
@@ -337,6 +405,18 @@
         main {
             flex: 1;
         }
+
+        /* --- SCROLL REVEAL ANIMATION (global utility) --- */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
     @yield('styles')
 </head>
@@ -349,7 +429,11 @@
             Khasanah<span>Catering</span>
         </a>
 
-        <div class="nav-links">
+        <button class="hamburger-btn" onclick="toggleMobileNav()" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="nav-links" id="navLinks">
             <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
                 <i class="fa-solid fa-house"></i> Beranda
             </a>
@@ -428,7 +512,7 @@
     </main>
 
     <!-- FLOATING WHATSAPP BUTTON -->
-    <a href="https://wa.me/6281325032009?text=Halo%20Admin%20KhaCate,%20saya%20ingin%20tanya%20seputar%20booking%20katering..." 
+    <a href="https://wa.me/6281325032009?text=Halo%20Admin%20Khasanah Catering,%20saya%20ingin%20tanya%20seputar%20booking%20katering..." 
        target="_blank" 
        class="floating-wa" 
        title="Chat Customer Service via WhatsApp">
@@ -442,15 +526,15 @@
                 <div class="nav-brand" style="margin-bottom: 1rem;">
                     <i class="fa-solid fa-utensils"></i> Khasanah<span>Catering</span>
                 </div>
-                <p>Layanan Booking Katering Premium Modern untuk Pernikahan, Acara Kantor, Prasmanan Sultan, dan Syukuran Keluarga. Garansi Rasa & Kualitas Bintang 5.</p>
+                <p>Layanan Booking Katering Modern untuk Pernikahan, Acara Kantor, Prasmanan, dan Syukuran Keluarga. Garansi Rasa & Kualitas Bintang 5.</p>
             </div>
             <div class="footer-col">
                 <h4>Menu Utama</h4>
                 <ul>
-                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Paket Prasmanan Royal</a></li>
-                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Nasi Kotak Executive</a></li>
-                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Snack Box Premium</a></li>
-                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Live Cooking Station</a></li>
+                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Paket Prasmanan</a></li>
+                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Nasi Kotak </a></li>
+                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Snack Box </a></li>
+                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Tumpengan</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -471,6 +555,28 @@
                 document.getElementById('logout-form').submit();
             }
         }
+
+        // Mobile hamburger menu toggle
+        function toggleMobileNav() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
+        // Global scroll-reveal animation using IntersectionObserver
+        document.addEventListener('DOMContentLoaded', function () {
+            const revealEls = document.querySelectorAll('.reveal-up');
+            if (!revealEls.length) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            revealEls.forEach(el => observer.observe(el));
+        });
     </script>
     @yield('scripts')
 </body>

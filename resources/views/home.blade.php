@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'KhaCate - Booking Katering Premium & Modern')
+@section('title', 'Khasanah Catering - Booking Katering Premium & Modern')
 
 @section('styles')
 <style>
@@ -8,7 +8,7 @@
     .hero-section {
         position: relative;
         padding: 5rem 2rem;
-        background: linear-gradient(180deg, rgba(30, 30, 30, 0.95) 0%, var(--bg-main) 100%), 
+        background: linear-gradient(180deg, rgba(42, 33, 24, 0.72) 0%, rgba(255, 122, 30, 0.55) 55%, var(--bg-main) 100%), 
                     url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
         border-bottom: 1px solid var(--border-color);
         text-align: center;
@@ -42,16 +42,17 @@
         font-weight: 800;
         line-height: 1.2;
         margin-bottom: 1.2rem;
-        color: var(--text-primary);
+        color: #FFFFFF;
+        text-shadow: 0 2px 12px rgba(0,0,0,0.25);
     }
 
     .hero-title span {
-        color: var(--primary-orange);
+        color: #FFE3C6;
     }
 
     .hero-subtitle {
         font-size: 1.15rem;
-        color: var(--text-secondary);
+        color: rgba(255, 255, 255, 0.88);
         max-width: 700px;
         margin: 0 auto 2.5rem;
         line-height: 1.6;
@@ -155,10 +156,14 @@
         position: relative;
     }
 
+    .menu-card {
+        box-shadow: var(--shadow-soft);
+    }
+
     .menu-card:hover {
-        transform: translateY(-8px);
+        transform: translateY(-8px) scale(1.01);
         border-color: var(--primary-orange);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow);
+        box-shadow: var(--shadow-hover);
     }
 
     .card-img-wrapper {
@@ -282,7 +287,7 @@
         max-width: 550px;
         padding: 2rem;
         position: relative;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 20px 50px rgba(42, 33, 24, 0.25);
         animation: popup 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -295,7 +300,7 @@
         position: absolute;
         top: 15px;
         right: 15px;
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--bg-input);
         color: var(--text-secondary);
         width: 32px;
         height: 32px;
@@ -361,7 +366,7 @@
     }
 
     .subtotal-preview {
-        background: rgba(255, 102, 0, 0.1);
+        background: var(--primary-orange-light);
         border: 1px dashed var(--primary-orange);
         padding: 1rem;
         border-radius: var(--radius-sm);
@@ -372,6 +377,233 @@
         font-weight: 700;
         color: var(--text-primary);
     }
+
+    /* --- SECTION HEADER (shared) --- */
+    .section-header {
+        max-width: 700px;
+        margin: 0 auto 3rem;
+        text-align: center;
+        padding: 0 1.5rem;
+    }
+
+    .section-header .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--primary-orange-light);
+        color: var(--primary-orange-hover);
+        padding: 5px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .section-header h2 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin-bottom: 0.6rem;
+    }
+
+    .section-header h2 span {
+        color: var(--primary-orange);
+    }
+
+    .section-header p {
+        color: var(--text-secondary);
+        font-size: 1.05rem;
+    }
+
+    /* --- HOW IT WORKS --- */
+    .how-it-works {
+        background: var(--bg-soft);
+        padding: 4.5rem 1.5rem;
+    }
+
+    .steps-grid {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    .step-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 2.2rem 1.8rem;
+        text-align: center;
+        transition: all var(--transition-speed);
+        box-shadow: var(--shadow-soft);
+    }
+
+    .step-card:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary-orange);
+    }
+
+    .step-number {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 1.2rem;
+        border-radius: 50%;
+        background: var(--primary-orange);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.2rem;
+        box-shadow: 0 6px 16px var(--primary-glow);
+    }
+
+    .step-card h3 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.6rem;
+    }
+
+    .step-card p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    /* --- TESTIMONIALS --- */
+    .testimonials {
+        padding: 4.5rem 1.5rem;
+    }
+
+    .testimonial-grid {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+    }
+
+    .testimonial-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-soft);
+        transition: all var(--transition-speed);
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary-orange);
+    }
+
+    .testimonial-stars {
+        color: #FFB020;
+        margin-bottom: 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .testimonial-text {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        font-style: italic;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .testimonial-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-hover));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .testimonial-author strong {
+        display: block;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    .testimonial-author span {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+
+    /* --- CTA BANNER --- */
+    .cta-banner {
+        max-width: 1100px;
+        margin: 0 auto 4.5rem;
+        padding: 3.5rem 2rem;
+        border-radius: 24px;
+        background: linear-gradient(120deg, var(--primary-orange) 0%, var(--primary-orange-hover) 100%);
+        text-align: center;
+        box-shadow: 0 20px 40px var(--primary-glow);
+    }
+
+    .cta-banner h2 {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.8rem;
+    }
+
+    .cta-banner p {
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 550px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+    }
+
+    .cta-banner .btn-primary {
+        background: #fff;
+        color: var(--primary-orange-hover);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .cta-banner .btn-primary:hover {
+        background: var(--charcoal);
+        color: #fff;
+        transform: translateY(-3px) scale(1.03);
+    }
+
+    @media (max-width: 900px) {
+        .steps-grid, .testimonial-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.7rem;
+        }
+
+        .cta-banner h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (min-width: 901px) and (max-width: 1200px) {
+        .steps-grid, .testimonial-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
 </style>
 @section('content')
 
@@ -379,13 +611,13 @@
 <section class="hero-section">
     <div class="hero-content">
         <div class="hero-badge">
-            <i class="fa-solid fa-crown"></i> Standard Katering Bintang Lima
+            <i class="fa-solid fa-crown"></i> Catering Bintang Lima
         </div>
         <h1 class="hero-title">
             Nikmati Kelezatan Kuliner <br> untuk <span>Setiap Acara Spesial Anda</span>
         </h1>
         <p class="hero-subtitle">
-            Sistem Booking Katering Online Terpercaya. Prasmanan Modern, Nasi Kotak Eksklusif, hingga Custom Tumpeng dengan Garansi Kualitas Rasa Terbaik & Pengiriman Tepat Waktu.
+            Sistem Booking Katering Online Terpercaya. Prasmanan Modern, Nasi Kotak, hingga Custom Tumpeng dengan Garansi Kualitas Rasa Terbaik.
         </p>
         <div class="hero-buttons">
             <a href="#katalog" class="btn-primary">
@@ -399,7 +631,7 @@
 </section>
 
 <!-- CATEGORY FILTER & SEARCH -->
-<section class="filter-section" id="katalog">
+<section class="filter-section reveal-up" id="katalog">
     <div class="category-pills">
         <a href="{{ route('home') }}" class="pill-btn {{ !request('category') || request('category') == 'All' ? 'active' : '' }}">
             Semua Menu
@@ -421,13 +653,13 @@
 </section>
 
 <!-- MENU GRID -->
-<section class="menu-container">
+<section class="menu-container reveal-up">
     @forelse($menus as $menu)
         <div class="menu-card">
             <div class="card-img-wrapper">
                 <img src="{{ $menu->image }}" alt="{{ $menu->name }}" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=800'">
                 <span class="card-category-badge">{{ $menu->category }}</span>
-                <span class="min-pax-badge"><i class="fa-solid fa-users"></i> Min. {{ $menu->min_pax }} Pax</span>
+                <span class="min-pax-badge"><i class="fa-solid fa-users"></i> Min. {{ $menu->min_pax }} Pack</span>
             </div>
             <div class="card-body">
                 <h3 class="menu-title">{{ $menu->name }}</h3>
@@ -435,7 +667,7 @@
                 
                 <div class="card-footer-row">
                     <div class="price-tag">
-                        <span class="price-label">Harga per Pax</span>
+                        <span class="price-label">Harga per Pack</span>
                         <span class="price-amount">Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</span>
                     </div>
 
@@ -454,6 +686,85 @@
         </div>
     @endforelse
 </section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works reveal-up">
+    <div class="section-header">
+        <span class="eyebrow"><i class="fa-solid fa-list-check"></i> Alur Pemesanan</span>
+        <h2>Cara <span>Kerjanya</span></h2>
+        <p>Tiga langkah mudah menuju hidangan katering sempurna untuk acara Anda.</p>
+    </div>
+    <div class="steps-grid">
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Pilih Menu Favorit</h3>
+            <p>Jelajahi katalog menu kami dan pilih paket prasmanan, nasi kotak, atau hidangan spesial sesuai selera acara Anda.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Lakukan Pemesanan</h3>
+            <p>Tentukan jumlah pax, isi data pengiriman, dan selesaikan pembayaran DP atau lunas dengan aman.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Kami Antar Tepat Waktu</h3>
+            <p>Duduk santai — hidangan segar kami akan disiapkan dan diantar langsung ke lokasi acara Anda.</p>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials reveal-up">
+    <div class="section-header">
+        <span class="eyebrow"><i class="fa-solid fa-heart"></i> Cerita Pelanggan</span>
+        <h2>Apa Kata <span>Pelanggan Kami</span></h2>
+        <p>Kisah nyata dari acara-acara yang sudah kami layani.</p>
+    </div>
+    <div class="testimonial-grid">
+        <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Prasmanannya enak banget, tamu ulang tahun anak saya semua puas. Pasti pesan lagi untuk acara berikutnya!"</p>
+            <div class="testimonial-author">
+                <div class="testimonial-avatar">M</div>
+                <div>
+                    <strong>Maria Santoso</strong>
+                    <span>Ulang Tahun</span>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Pemesanan gampang, makanan datang segar dan tepat waktu. Nasi kotaknya jadi favorit di acara syukuran keluarga kami."</p>
+            <div class="testimonial-author">
+                <div class="testimonial-avatar">J</div>
+                <div>
+                    <strong>Pasetya</strong>
+                    <span>Syukuran Keluarga</span>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">"Cocok banget buat acara kantor! Variasi menunya lengkap, semua kolega jadi ketagihan sama makanannya."</p>
+            <div class="testimonial-author">
+                <div class="testimonial-avatar">A</div>
+                <div>
+                    <strong>Anisa Rahayu</strong>
+                    <span>Acara Kantor</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner reveal-up">
+    <h2>Jadikan Acara Anda Tak Terlupakan</h2>
+    <p>Pesan sekarang dan biarkan kami yang mengurus hidangannya, sementara Anda menikmati momen bersama orang-orang tercinta.</p>
+    <a href="#katalog" class="btn-primary">
+        <i class="fa-solid fa-utensils"></i> Pesan Sekarang
+    </a>
+</div>
 
 <!-- MODAL TAMBAH KE KERANJANG -->
 <div class="modal-overlay" id="orderModal">

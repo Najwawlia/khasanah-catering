@@ -15,7 +15,7 @@
         border: 1px solid var(--border-color);
         border-radius: var(--radius-lg);
         padding: 2.5rem;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        box-shadow: var(--shadow-soft);
         text-align: center;
     }
 
@@ -61,11 +61,12 @@
     /* --- DUMMY QRIS IMAGE CONTAINER --- */
     .qris-box {
         background: #FFFFFF;
+        border: 1px solid var(--border-color);
         border-radius: var(--radius-md);
         padding: 1.5rem;
         display: inline-block;
         margin: 1.5rem 0;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        box-shadow: var(--shadow-soft);
     }
 
     .qris-img {
@@ -127,7 +128,7 @@
                 <div style="font-size: 1.3rem; font-weight: 800; color: var(--primary-orange);">
                     BANK {{ strtoupper($order->payment_method) }}: 8830-1234-9988
                 </div>
-                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. PT Katering KhaCate Indonesia</div>
+                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. PT Katering Khasanah Indonesia</div>
             </div>
         @else
             <div class="bank-account-box">
@@ -135,7 +136,7 @@
                 <div style="font-size: 1.3rem; font-weight: 800; color: var(--primary-orange);">
                     {{ strtoupper($order->payment_method) }}: 0812-3456-7890
                 </div>
-                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. KhaCate Official Store</div>
+                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. Khasanah Catering Official Store</div>
             </div>
         @endif
 

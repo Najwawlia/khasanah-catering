@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Checkout Form - KhaCate Catering')
+@section('title', 'Checkout Form - Khasanah Catering')
 
 @section('styles')
 <style>
@@ -42,7 +42,7 @@
         border-radius: var(--radius-lg);
         padding: 2rem;
         margin-bottom: 1.8rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: var(--shadow-soft);
     }
 
     .section-header {

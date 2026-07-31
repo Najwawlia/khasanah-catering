@@ -17,7 +17,7 @@
         padding: 2.5rem;
         text-align: center;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: var(--shadow-soft);
     }
 
     .success-icon {
@@ -53,7 +53,7 @@
         border-radius: var(--radius-lg);
         padding: 2rem;
         margin-bottom: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        box-shadow: var(--shadow-soft);
     }
 
     .timeline-header {
@@ -218,7 +218,7 @@
 
         <!-- GOOGLE MAPS DUMMY DULUR/DAPUR UTAMA -->
         <div class="timeline-card">
-            <h4 style="margin-bottom: 0.8rem; color: var(--primary-orange);"><i class="fa-solid fa-map-location-dot"></i> Lokasi Dapur Utama KhaCate</h4>
+            <h4 style="margin-bottom: 0.8rem; color: var(--primary-orange);"><i class="fa-solid fa-map-location-dot"></i> Lokasi Dapur Utama Khasanah Catering</h4>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Gunakan rute peta berikut jika Anda memilih metode <strong>Pickup Mandiri</strong>:</p>
             
             <div class="map-container">
