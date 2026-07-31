@@ -58,8 +58,8 @@
                 <thead>
                     <tr>
                         <th>Menu</th>
-                        <th>Harga / Pax</th>
-                        <th>Jumlah Pax</th>
+                        <th>Harga / Pack</th>
+                        <th>Jumlah Pack</th>
                         <th>Subtotal</th>
                     </tr>
                 </thead>
@@ -68,7 +68,7 @@
                         <tr>
                             <td><strong>{{ $item->menu_name }}</strong></td>
                             <td>Rp {{ number_format($item->price_per_pax, 0, ',', '.') }}</td>
-                            <td><strong>{{ $item->pax_quantity }} Pax</strong></td>
+                            <td><strong>{{ $item->pax_quantity }} Pack</strong></td>
                             <td><strong style="color: var(--primary-orange);">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</strong></td>
                         </tr>
                     @endforeach
@@ -87,7 +87,7 @@
                 <p><strong>Email:</strong> {{ $order->customer_email }}</p>
                 <p>
                     <strong>WhatsApp:</strong> 
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $order->customer_phone) }}" target="_blank" style="color: #34d399; font-weight: 700;">
+                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $order->customer_phone) }}" target="_blank" style="color: var(--success); font-weight: 700;">
                         {{ $order->customer_phone }} <i class="fa-brands fa-whatsapp"></i>
                     </a>
                 </p>
@@ -113,7 +113,7 @@
             </div>
             <div style="font-size: 0.9rem; color: var(--text-muted); display: flex; justify-content: space-between; margin-top: 6px;">
                 <span>Telah Dibayar:</span>
-                <span style="color: #34d399; font-weight: 700;">Rp {{ number_format($order->paid_amount, 0, ',', '.') }}</span>
+                <span style="color: var(--success); font-weight: 700;">Rp {{ number_format($order->paid_amount, 0, ',', '.') }}</span>
             </div>
         </div>
     </div>

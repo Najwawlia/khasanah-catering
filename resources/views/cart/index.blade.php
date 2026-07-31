@@ -201,7 +201,7 @@
                         
                         <div class="cart-item-info">
                             <h3 class="cart-item-title">{{ $item['name'] }}</h3>
-                            <div class="cart-item-price">Rp {{ number_format($item['price'], 0, ',', '.') }} / pax</div>
+                            <div class="cart-item-price">Rp {{ number_format($item['price'], 0, ',', '.') }} / pack</div>
                             <small style="color: var(--text-muted);">
                                 Subtotal: <strong style="color: var(--text-main);">Rp {{ number_format($item['price'] * $item['pax_quantity'], 0, ',', '.') }}</strong>
                             </small>
@@ -210,8 +210,8 @@
                         <div class="cart-item-actions">
                             <form action="{{ route('cart.update', $id) }}" method="POST" class="pax-input-group">
                                 @csrf
-                                <input type="number" name="pax_quantity" class="pax-input" value="{{ $item['pax_quantity'] }}" min="30" onchange="this.form.submit()">
-                                <span style="font-size: 0.8rem; color: var(--text-muted); padding-right: 6px;">pax</span>
+                                <input type="number" name="pax_quantity" class="pax-input" value="{{ $item['pax_quantity'] }}" min="{{ $item['category'] === 'Custom / Tumpeng' ? 1 : 30 }}" onchange="this.form.submit()">
+                                <span style="font-size: 0.8rem; color: var(--text-muted); padding-right: 6px;">pack</span>
                             </form>
 
                             <form action="{{ route('cart.remove', $id) }}" method="POST">
@@ -232,11 +232,11 @@
                     <h3 class="summary-title">Ringkasan Booking</h3>
                     
                     <div class="notice-box">
-                        <i class="fa-solid fa-circle-info"></i> Standard Katering Minimal <strong>30 Pack/Porsi</strong> telah diterapkan pada setiap menu.
+                        <i class="fa-solid fa-circle-info"></i> Standard Katering Minimal <strong>30 Pack/Porsi</strong> berlaku untuk semua menu, kecuali <strong>Custom / Tumpeng</strong>.
                     </div>
 
                     <div class="summary-row">
-                        <span>Total Pax Dipesan:</span>
+                        <span>Total Pack Dipesan:</span>
                         <span style="font-weight: 700; color: var(--text-main);">
                             {{ array_sum(array_column($cart, 'pax_quantity')) }} Porsi
                         </span>

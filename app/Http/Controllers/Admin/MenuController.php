@@ -28,19 +28,21 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
+        $isTumpeng = $request->category === 'Custom / Tumpeng';
+
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:100',
             'description' => 'required|string',
             'price_per_pax' => 'required|numeric|min:0',
-            'min_pax' => 'required|integer|min:30',
+            'min_pax' => $isTumpeng ? 'required|integer|min:1' : 'required|integer|min:30',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
             'name.required' => 'Nama menu wajib diisi.',
             'category.required' => 'Kategori menu wajib diisi.',
             'description.required' => 'Deskripsi menu wajib diisi.',
-            'price_per_pax.required' => 'Harga per pax wajib diisi.',
-            'min_pax.min' => 'Minimal pemesanan untuk katering tidak boleh kurang dari 30 pax.',
+            'price_per_pax.required' => 'Harga per pack wajib diisi.',
+            'min_pax.min' => $isTumpeng ? 'Minimal pemesanan tidak boleh kurang dari 1.' : 'Minimal pemesanan untuk katering tidak boleh kurang dari 30 pack.',
             'image.image' => 'File yang diunggah harus berupa gambar.',
             'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau webp.',
             'image.max' => 'Ukuran gambar maksimal 2MB.',
@@ -60,6 +62,7 @@ class MenuController extends Controller
             'min_pax' => $request->min_pax,
             'image' => $imagePath,
             'is_available' => $request->has('is_available') ? true : false,
+            'is_bestseller' => $request->has('is_bestseller') ? true : false,
         ]);
 
         return redirect()->route('admin.menus.index')->with('success', 'Menu katering baru berhasil ditambahkan!');
@@ -75,14 +78,17 @@ class MenuController extends Controller
     {
         $menu = Menu::findOrFail($id);
 
+        $isTumpeng = $request->category === 'Custom / Tumpeng';
+
         $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|string|max:100',
             'description' => 'required|string',
             'price_per_pax' => 'required|numeric|min:0',
-            'min_pax' => 'required|integer|min:30',
+            'min_pax' => $isTumpeng ? 'required|integer|min:1' : 'required|integer|min:30',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ], [
+            'min_pax.min' => $isTumpeng ? 'Minimal pemesanan tidak boleh kurang dari 1.' : 'Minimal pemesanan untuk katering tidak boleh kurang dari 30 pack.',
             'image.image' => 'File yang diunggah harus berupa gambar.',
             'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau webp.',
             'image.max' => 'Ukuran gambar maksimal 2MB.',
@@ -108,6 +114,7 @@ class MenuController extends Controller
             'min_pax' => $request->min_pax,
             'image' => $imagePath,
             'is_available' => $request->has('is_available') ? true : false,
+            'is_bestseller' => $request->has('is_bestseller') ? true : false,
         ]);
 
         return redirect()->route('admin.menus.index')->with('success', 'Data menu katering berhasil diperbarui!');

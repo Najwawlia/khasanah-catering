@@ -22,17 +22,18 @@ class CartController extends Controller
     {
         $request->validate([
             'menu_id' => 'required|exists:menus,id',
-            'pax_quantity' => 'required|integer',
+            'pax_quantity' => 'required|integer|min:1',
         ]);
 
         $pax = (int) $request->pax_quantity;
+        $menu = Menu::findOrFail($request->menu_id);
+        $isTumpeng = $menu->category === 'Custom / Tumpeng';
 
-        // VALIDASI KHUSUS KATERING: MINIMAL 30 PAX
-        if ($pax < 30) {
-            return back()->with('error_min_pax', 'Mohon maaf! Minimal pemesanan katering adalah 30 porsi (pax). Silakan masukkan 30 porsi atau lebih.');
+        // VALIDASI KHUSUS KATERING: MINIMAL 30 PACK (tidak berlaku untuk Custom/Tumpeng)
+        if (!$isTumpeng && $pax < 30) {
+            return back()->with('error_min_pax', 'Mohon maaf! Minimal pemesanan katering adalah 30 porsi (pack). Silakan masukkan 30 porsi atau lebih.');
         }
 
-        $menu = Menu::findOrFail($request->menu_id);
         $cart = session()->get('cart', []);
 
         if (isset($cart[$menu->id])) {
@@ -56,17 +57,17 @@ class CartController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'pax_quantity' => 'required|integer',
+            'pax_quantity' => 'required|integer|min:1',
         ]);
 
         $pax = (int) $request->pax_quantity;
-
-        // VALIDASI KHUSUS KATERING: MINIMAL 30 PAX
-        if ($pax < 30) {
-            return back()->with('error_min_pax', 'Gagal memperbarui: Jumlah porsi katering minimal 30 pax!');
-        }
-
         $cart = session()->get('cart', []);
+        $isTumpeng = isset($cart[$id]) && $cart[$id]['category'] === 'Custom / Tumpeng';
+
+        // VALIDASI KHUSUS KATERING: MINIMAL 30 PACK (tidak berlaku untuk Custom/Tumpeng)
+        if (!$isTumpeng && $pax < 30) {
+            return back()->with('error_min_pax', 'Gagal memperbarui: Jumlah porsi katering minimal 30 pack!');
+        }
 
         if (isset($cart[$id])) {
             $cart[$id]['pax_quantity'] = $pax;

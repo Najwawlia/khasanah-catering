@@ -11,26 +11,32 @@
 
     <style>
         :root {
-            --bg-main: #121212; /* Main body background */
-            --bg-card: #1E1E1E; /* Background for cards, forms, and order summary */
-            --bg-input: #2A2A2A; /* Background for input fields */
-            --primary-orange: #FF6600; /* Main buttons, active links, and accents */
-            --primary-orange-hover: #E55C00; /* Button hover state */
-            --text-primary: #FFFFFF; /* Headings, menu names, and prices */
-            --text-secondary: #9CA3AF; /* Placeholders, descriptions, and small notes */
-            --border-color: #374151; /* Borders and dividers */
-            --success: #22C55E; /* Success messages and tracking timeline */
-            --error: #EF4444; /* Error messages like the 20 pax minimum order */
+            --bg-main: #FFFCF9;         /* Main body background - warm off-white */
+            --bg-card: #FFFFFF;         /* Background for cards, forms, and tables */
+            --bg-input: #FAF6F1;        /* Background for input fields */
+            --bg-soft: #FFF3E9;         /* Soft tinted background */
+            --primary-orange: #FF7A1E; /* Main buttons, active links, and accents */
+            --primary-orange-hover: #E8650A; /* Button hover state */
+            --primary-orange-light: #FFEDE0; /* Light orange tint for active menu/badges */
+            --charcoal: #2A2118;        /* Elegant deep charcoal-brown for headings */
+            --text-primary: #2A2118;    /* Headings, menu names, and prices */
+            --text-secondary: #7A7168;  /* Placeholders, descriptions, and small notes */
+            --border-color: #F0E4D8;    /* Borders and dividers */
+            --success: #1DA35A;         /* Success messages */
+            --error: #E5484D;           /* Error / delete messages */
 
-            --primary-glow: rgba(255, 102, 0, 0.35);
+            --primary-glow: rgba(255, 122, 30, 0.25);
             --text-main: var(--text-primary);
             --text-muted: var(--text-secondary);
             --accent-green: var(--success);
+            --accent-blue: #3B82F6;
             --danger-red: var(--error);
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
             --transition-speed: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-soft: 0 4px 20px rgba(42, 33, 24, 0.06);
+            --shadow-hover: 0 12px 30px rgba(255, 122, 30, 0.18);
         }
 
         * {
@@ -52,11 +58,12 @@
         /* --- SIDEBAR --- */
         .sidebar {
             width: 260px;
-            background: #181818;
+            background: #FFFFFF;
             border-right: 1px solid var(--border-color);
             padding: 2rem 1.5rem;
             display: flex;
             flex-direction: column;
+            box-shadow: var(--shadow-soft);
         }
 
         .sidebar-brand {
@@ -69,7 +76,7 @@
             margin-bottom: 2.5rem;
         }
 
-        .sidebar-brand span { color: var(--primary-orange); }
+        .sidebar-brand .brand-accent { color: var(--primary-orange); }
 
         .sidebar-menu {
             display: flex;
@@ -89,8 +96,8 @@
         }
 
         .menu-item:hover, .menu-item.active {
-            background: rgba(255, 102, 0, 0.15);
-            color: var(--primary-orange);
+            background: var(--primary-orange-light);
+            color: var(--primary-orange-hover);
             border-left: 3px solid var(--primary-orange);
         }
 
@@ -119,7 +126,7 @@
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
             padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-soft);
         }
 
         table {
@@ -172,7 +179,10 @@
     <aside class="sidebar">
         <div class="sidebar-brand">
             <i class="fa-solid fa-crown" style="color: var(--primary-orange);"></i>
-            Kha<span>Admin</span>
+            <div style="line-height: 1.1;">
+                <div><span class="brand-text">Kha<span class="brand-accent">Catering</span></span></div>
+                <small style="font-size: 0.65rem; font-weight: 600; color: var(--text-muted); letter-spacing: 1px;">ADMIN PANEL</small>
+            </div>
         </div>
 
         <div class="sidebar-menu">
@@ -197,7 +207,7 @@
     <!-- CONTENT AREA -->
     <main class="admin-content">
         @if(session('success'))
-            <div style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; padding: 1rem 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-weight: 600;">
+            <div style="background: rgba(29, 163, 90, 0.1); border: 1px solid var(--success); color: #146C3C; padding: 1rem 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-weight: 600;">
                 <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
             </div>
         @endif

@@ -19,10 +19,22 @@ class HomeController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $menus = $query->get();
+        $isDefaultView = (!$request->filled('category') || $request->category == 'All') && !$request->filled('search');
+
+        if ($isDefaultView) {
+            // Tampilkan 6 menu bestseller dulu, sisanya bisa dibuka lewat "Lihat Menu Lainnya"
+            $bestsellers = (clone $query)->where('is_bestseller', true)->orderBy('created_at', 'desc')->take(6)->get();
+            $others = (clone $query)->whereNotIn('id', $bestsellers->pluck('id'))->orderBy('created_at', 'desc')->get();
+            $menus = $bestsellers->concat($others)->values();
+            $bestsellerCount = $bestsellers->count();
+        } else {
+            $menus = $query->orderBy('created_at', 'desc')->get();
+            $bestsellerCount = null; // null artinya: tampilkan semua, tanpa tombol "Lihat Menu Lainnya"
+        }
+
         $categories = Menu::select('category')->distinct()->pluck('category');
 
-        return view('home', compact('menus', 'categories'));
+        return view('home', compact('menus', 'categories', 'bestsellerCount'));
     }
 
     public function showMenu($id)

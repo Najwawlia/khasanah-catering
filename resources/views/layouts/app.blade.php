@@ -143,7 +143,7 @@
             font-size: 1.8rem;
         }
 
-        .nav-brand span {
+        .nav-brand .brand-accent {
             color: var(--primary-orange);
         }
 
@@ -426,7 +426,7 @@
     <nav class="navbar">
         <a href="{{ route('home') }}" class="nav-brand">
             <i class="fa-solid fa-utensils"></i>
-            Khasanah<span>Catering</span>
+            <span class="brand-text">Khasanah<span class="brand-accent">Catering</span></span>
         </a>
 
         <button class="hamburger-btn" onclick="toggleMobileNav()" aria-label="Menu">
@@ -524,28 +524,28 @@
         <div class="footer-content">
             <div class="footer-col">
                 <div class="nav-brand" style="margin-bottom: 1rem;">
-                    <i class="fa-solid fa-utensils"></i> Khasanah<span>Catering</span>
+                    <i class="fa-solid fa-utensils"></i> <span class="brand-text">Khasanah<span class="brand-accent">Catering</span></span>
                 </div>
                 <p>Layanan Booking Katering Modern untuk Pernikahan, Acara Kantor, Prasmanan, dan Syukuran Keluarga. Garansi Rasa & Kualitas Bintang 5.</p>
             </div>
             <div class="footer-col">
                 <h4>Menu Utama</h4>
                 <ul>
-                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Paket Prasmanan</a></li>
+                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Paket Prasmanan </a></li>
                     <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Nasi Kotak </a></li>
                     <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Snack Box </a></li>
-                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Tumpengan</a></li>
+                    <li><a href="{{ route('home') }}"><i class="fa-solid fa-angle-right" style="color: var(--primary-orange);"></i> Custom Tumpeng</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Hubungi Dapur Kami</h4>
-                <p><i class="fa-solid fa-location-dot" style="color: var(--primary-orange);"></i> app.balde</p>
+                <p><i class="fa-solid fa-location-dot" style="color: var(--primary-orange);"></i> Ngesrep, Kec. Banyumanik, Kota Semarang, Jawa Tengah 50261</p>
                 <p><i class="fa-solid fa-phone" style="color: var(--primary-orange);"></i> +62 813-2503-2009</p>
                 <p><i class="fa-solid fa-envelope" style="color: var(--primary-orange);"></i> di app.blade</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} <strong>Khasanah Catering</strong>. By Najwa Aulia PPLG 1.</p>
+            <p>&copy; {{ date('Y') }} <strong>Khasanah Catering</strong>. By Najwa Aulia Larasati 12 PPLG 1.</p>
         </div>
     </footer>
 

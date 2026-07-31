@@ -86,7 +86,7 @@
             <div style="margin-bottom: 1rem;">
                 @foreach($order->items as $item)
                     <div style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 4px;">
-                        <span>{{ $item->menu_name }} ({{ $item->pax_quantity }} pax)</span>
+                        <span>{{ $item->menu_name }} ({{ $item->pax_quantity }} pack)</span>
                         <strong>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</strong>
                     </div>
                 @endforeach

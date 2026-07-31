@@ -7,7 +7,7 @@
 <div class="admin-header">
     <div>
         <h1 class="admin-title">SCRUD Menu Makanan Katering</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Kelola data katalog menu katering, harga per pax, dan ketersediaan.</p>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Kelola data katalog menu katering, harga per pack, dan ketersediaan.</p>
     </div>
 
     <a href="{{ route('admin.menus.create') }}" class="btn-sm btn-orange" style="padding: 10px 18px; font-size: 0.9rem;">
@@ -29,8 +29,8 @@
                 <th>Foto</th>
                 <th>Nama Menu</th>
                 <th>Kategori</th>
-                <th>Harga / Pax</th>
-                <th>Min. Pax</th>
+                <th>Harga / Pack</th>
+                <th>Min. Pack</th>
                 <th>Status</th>
                 <th>Aksi SCRUD</th>
             </tr>
@@ -41,15 +41,20 @@
                     <td>
                         <img src="{{ $menu->image }}" alt="{{ $menu->name }}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
                     </td>
-                    <td><strong>{{ $menu->name }}</strong></td>
+                    <td>
+                        <strong>{{ $menu->name }}</strong>
+                        @if($menu->is_bestseller)
+                            <i class="fa-solid fa-star" style="color: #FFB020; margin-left: 4px;" title="Bestseller"></i>
+                        @endif
+                    </td>
                     <td><span style="color: var(--primary-orange);">{{ $menu->category }}</span></td>
                     <td>Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</td>
-                    <td>{{ $menu->min_pax }} Pax</td>
+                    <td>{{ $menu->min_pax }} Pack</td>
                     <td>
                         @if($menu->is_available)
-                            <span style="color: #34d399; font-weight: 700;">Tersedia</span>
+                            <span style="color: var(--success); font-weight: 700;">Tersedia</span>
                         @else
-                            <span style="color: #f87171;">Habis</span>
+                            <span style="color: var(--danger-red);">Habis</span>
                         @endif
                     </td>
                     <td>

@@ -101,7 +101,7 @@
                     <td>{{ $order->customer_name }}</td>
                     <td>{{ \Carbon\Carbon::parse($order->event_date)->format('d M Y') }}</td>
                     <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
-                    <td><span style="color: #34d399;">{{ strtoupper($order->payment_status) }}</span></td>
+                    <td><span style="color: var(--success);">{{ strtoupper($order->payment_status) }}</span></td>
                     <td>
                         <a href="{{ route('admin.orders.show', $order->id) }}" class="btn-sm btn-blue">
                             <i class="fa-solid fa-eye"></i> Detail

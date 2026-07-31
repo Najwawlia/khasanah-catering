@@ -209,6 +209,26 @@
         font-weight: 700;
     }
 
+    .bestseller-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #FFB020;
+        color: #3D2600;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 4px 10px rgba(255, 176, 32, 0.4);
+    }
+
+    .menu-card-hidden {
+        display: none;
+    }
+
     .card-body {
         padding: 1.5rem;
         display: flex;
@@ -630,20 +650,27 @@
     </div>
 </section>
 
+<!-- MENU SECTION TITLE -->
+<div class="section-header reveal-up" style="padding-top: 3rem;">
+    <span class="eyebrow"><i class="fa-solid fa-bowl-food"></i> Katalog Kami</span>
+    <h2>Menu <span>Kami</span></h2>
+    <p>Aneka pilihan prasmanan, nasi kotak, snack box, hingga custom tumpeng untuk setiap acara Anda.</p>
+</div>
+
 <!-- CATEGORY FILTER & SEARCH -->
 <section class="filter-section reveal-up" id="katalog">
     <div class="category-pills">
-        <a href="{{ route('home') }}" class="pill-btn {{ !request('category') || request('category') == 'All' ? 'active' : '' }}">
+        <a href="{{ route('home') }}#katalog" class="pill-btn {{ !request('category') || request('category') == 'All' ? 'active' : '' }}">
             Semua Menu
         </a>
         @foreach($categories as $cat)
-            <a href="{{ route('home', ['category' => $cat]) }}" class="pill-btn {{ request('category') == $cat ? 'active' : '' }}">
+            <a href="{{ route('home', ['category' => $cat]) }}#katalog" class="pill-btn {{ request('category') == $cat ? 'active' : '' }}">
                 {{ $cat }}
             </a>
         @endforeach
     </div>
 
-    <form action="{{ route('home') }}" method="GET" class="search-box">
+    <form action="{{ route('home') }}#katalog" method="GET" class="search-box">
         @if(request('category'))
             <input type="hidden" name="category" value="{{ request('category') }}">
         @endif
@@ -654,12 +681,17 @@
 
 <!-- MENU GRID -->
 <section class="menu-container reveal-up">
-    @forelse($menus as $menu)
-        <div class="menu-card">
+    @forelse($menus as $index => $menu)
+        <div class="menu-card {{ !is_null($bestsellerCount) && $index >= $bestsellerCount ? 'menu-card-hidden' : '' }}">
             <div class="card-img-wrapper">
                 <img src="{{ $menu->image }}" alt="{{ $menu->name }}" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=800'">
                 <span class="card-category-badge">{{ $menu->category }}</span>
-                <span class="min-pax-badge"><i class="fa-solid fa-users"></i> Min. {{ $menu->min_pax }} Pack</span>
+                @if($menu->is_bestseller)
+                    <span class="bestseller-badge"><i class="fa-solid fa-star"></i> Bestseller</span>
+                @endif
+                @if($menu->category !== 'Custom / Tumpeng')
+                    <span class="min-pax-badge"><i class="fa-solid fa-users"></i> Min. {{ $menu->min_pax }} Pack</span>
+                @endif
             </div>
             <div class="card-body">
                 <h3 class="menu-title">{{ $menu->name }}</h3>
@@ -672,7 +704,7 @@
                     </div>
 
                     <button class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;" 
-                            onclick="openOrderModal('{{ $menu->id }}', '{{ addslashes($menu->name) }}', '{{ $menu->price_per_pax }}', '{{ $menu->min_pax }}')">
+                            onclick="openOrderModal('{{ $menu->id }}', '{{ addslashes($menu->name) }}', '{{ $menu->price_per_pax }}', '{{ $menu->min_pax }}', '{{ addslashes($menu->category) }}')">
                         <i class="fa-solid fa-cart-plus"></i> Pesan
                     </button>
                 </div>
@@ -686,6 +718,14 @@
         </div>
     @endforelse
 </section>
+
+@if(!is_null($bestsellerCount) && $menus->count() > $bestsellerCount)
+    <div style="text-align: center; margin: -1rem auto 3rem;">
+        <button id="showMoreMenuBtn" class="btn-secondary" onclick="showMoreMenu()">
+            Lihat Menu Lainnya <i class="fa-solid fa-chevron-down"></i>
+        </button>
+    </div>
+@endif
 
 <!-- HOW IT WORKS -->
 <section class="how-it-works reveal-up">
@@ -703,7 +743,7 @@
         <div class="step-card">
             <div class="step-number">2</div>
             <h3>Lakukan Pemesanan</h3>
-            <p>Tentukan jumlah pax, isi data pengiriman, dan selesaikan pembayaran DP atau lunas dengan aman.</p>
+            <p>Tentukan jumlah pack, isi data pengiriman, dan selesaikan pembayaran DP atau lunas dengan aman.</p>
         </div>
         <div class="step-card">
             <div class="step-number">3</div>
@@ -738,7 +778,7 @@
             <div class="testimonial-author">
                 <div class="testimonial-avatar">J</div>
                 <div>
-                    <strong>Pasetya</strong>
+                    <strong>Joko Wibowo</strong>
                     <span>Syukuran Keluarga</span>
                 </div>
             </div>
@@ -771,17 +811,17 @@
     <div class="modal-box">
         <button class="close-modal-btn" onclick="closeOrderModal()">&times;</button>
         <h3 class="modal-title" id="modalMenuName">Nama Menu Katering</h3>
-        <div class="modal-price" id="modalMenuPrice">Rp 0 / pax</div>
+        <div class="modal-price" id="modalMenuPrice">Rp 0 / pack</div>
         
         <form action="{{ route('cart.add') }}" method="POST" id="addToCartForm">
             @csrf
             <input type="hidden" name="menu_id" id="modalMenuId">
             
             <div class="form-group">
-                <label for="paxInput">Jumlah Porsi (Pax) <span style="color: var(--primary-orange);">(Minimal 30 Pax)</span></label>
+                <label for="paxInput">Jumlah Porsi (Pack) <span id="modalMinHint" style="color: var(--primary-orange);">(Minimal 30 Pack)</span></label>
                 <input type="number" name="pax_quantity" id="paxInput" class="form-input" min="30" value="30" oninput="calculateSubtotal()" required>
-                <small style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; display: block;">
-                    <i class="fa-solid fa-circle-info" style="color: var(--primary-orange);"></i> Pemesanan di bawah 30 pax akan ditolak oleh sistem katering.
+                <small id="modalMinNote" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; display: block;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--primary-orange);"></i> Pemesanan di bawah 30 pack akan ditolak oleh sistem katering.
                 </small>
             </div>
 
@@ -803,15 +843,28 @@
 <script>
     let currentPrice = 0;
 
-    function openOrderModal(id, name, price, minPax) {
+    function openOrderModal(id, name, price, minPax, category) {
         currentPrice = parseFloat(price);
         document.getElementById('modalMenuId').value = id;
         document.getElementById('modalMenuName').innerText = name;
-        document.getElementById('modalMenuPrice').innerText = 'Rp ' + Number(price).toLocaleString('id-ID') + ' / pax';
-        
+        document.getElementById('modalMenuPrice').innerText = 'Rp ' + Number(price).toLocaleString('id-ID') + ' / pack';
+
         const paxInput = document.getElementById('paxInput');
-        paxInput.value = minPax || 30;
-        paxInput.min = 30;
+        const minHint = document.getElementById('modalMinHint');
+        const minNote = document.getElementById('modalMinNote');
+        const isTumpeng = category === 'Custom / Tumpeng';
+
+        if (isTumpeng) {
+            paxInput.min = 1;
+            paxInput.value = 1;
+            minHint.style.display = 'none';
+            minNote.style.display = 'none';
+        } else {
+            paxInput.min = 30;
+            paxInput.value = minPax || 30;
+            minHint.style.display = 'inline';
+            minNote.style.display = 'block';
+        }
 
         calculateSubtotal();
         document.getElementById('orderModal').classList.add('active');
@@ -819,6 +872,19 @@
 
     function closeOrderModal() {
         document.getElementById('orderModal').classList.remove('active');
+    }
+
+    function showMoreMenu() {
+        document.querySelectorAll('.menu-card-hidden').forEach(function (card) {
+            card.classList.remove('menu-card-hidden');
+            card.classList.add('reveal-up');
+            requestAnimationFrame(function () {
+                card.classList.add('is-visible');
+            });
+        });
+
+        const btnWrapper = document.getElementById('showMoreMenuBtn').parentElement;
+        btnWrapper.style.display = 'none';
     }
 
     function calculateSubtotal() {

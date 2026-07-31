@@ -340,7 +340,7 @@
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.9rem;">
                             <div>
                                 <strong>{{ $item['name'] }}</strong><br>
-                                <small style="color: var(--text-muted);">{{ $item['pax_quantity'] }} pax x Rp {{ number_format($item['price'], 0, ',', '.') }}</small>
+                                <small style="color: var(--text-muted);">{{ $item['pax_quantity'] }} pack x Rp {{ number_format($item['price'], 0, ',', '.') }}</small>
                             </div>
                             <div style="font-weight: 700; color: var(--text-main);">
                                 Rp {{ number_format($item['price'] * $item['pax_quantity'], 0, ',', '.') }}

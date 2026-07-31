@@ -17,12 +17,14 @@ class Menu extends Model
         'min_pax',
         'image',
         'is_available',
+        'is_bestseller',
     ];
 
     protected $casts = [
         'price_per_pax' => 'decimal:2',
         'min_pax' => 'integer',
         'is_available' => 'boolean',
+        'is_bestseller' => 'boolean',
     ];
 
     public function orderItems()

@@ -59,7 +59,7 @@
                         </small>
                     </td>
                     <td>
-                        <span style="color: {{ $order->payment_status === 'pending' ? '#facc15' : '#34d399' }}; font-weight: 700;">
+                        <span style="color: {{ $order->payment_status === 'pending' ? '#B45309' : 'var(--success)' }}; font-weight: 700;">
                             {{ strtoupper($order->payment_status) }}
                         </span>
                     </td>
