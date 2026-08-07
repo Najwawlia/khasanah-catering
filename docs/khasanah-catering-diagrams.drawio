@@ -1,0 +1,191 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Flowchart" id="flowchart-page">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1300" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="2" value="Mulai" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="340" y="40" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="3" value="Pilih &amp; tambah menu&lt;br&gt;&lt;i&gt;Minimal 30 pax per item&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="140" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="4" value="Checkout&lt;br&gt;&lt;i&gt;Isi data pemesan &amp;amp; acara&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="260" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="5" value="Sistem buat pesanan&lt;br&gt;&lt;i&gt;Status: booking received&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="380" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="6" value="Konfirmasi pembayaran&lt;br&gt;&lt;i&gt;Pilih metode &amp;amp; bayar&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="500" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="7" value="Admin verifikasi&lt;br&gt;pembayaran valid?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="280" y="620" width="280" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="8" value="Update status&lt;br&gt;&lt;i&gt;Payment verified&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="760" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="9" value="Dapur proses pesanan&lt;br&gt;&lt;i&gt;Kitchen preparation&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="880" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="10" value="Pesanan siap&lt;br&gt;&lt;i&gt;Pickup / delivery&lt;/i&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1000" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="11" value="Selesai" style="rounded=1;arcSize=50;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="340" y="1120" width="160" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="2" target="3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="4" target="5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="5" target="6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="6" target="7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="Valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;fontColor=#333333;" edge="1" parent="1" source="7" target="8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="Tidak valid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#d79b00;fontColor=#d79b00;" edge="1" parent="1" source="7" target="6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="665" />
+              <mxPoint x="150" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="8" target="9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="9" target="10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="10" target="11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram name="CDM" id="cdm-page">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageWidth="1000" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="2" value="PENGGUNA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="200" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="3" value="PESANAN" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="320" y="200" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="4" value="DETAIL_PESANAN" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="600" y="200" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="5" value="MENU" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="600" y="360" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" value="melakukan (1,N)" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="2" target="3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="memiliki (1,N)" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="dipesan dalam (1,N)" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="5" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram name="ERD" id="erd-page">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageWidth="1100" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="2" value="&lt;b&gt;USERS&lt;/b&gt;&lt;br&gt;――――――――――&lt;br&gt;id : bigint (PK)&lt;br&gt;name : string&lt;br&gt;email : string&lt;br&gt;role : string" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="220" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="3" value="&lt;b&gt;ORDERS&lt;/b&gt;&lt;br&gt;――――――――――&lt;br&gt;id : bigint (PK)&lt;br&gt;user_id : bigint (FK)&lt;br&gt;order_code : string&lt;br&gt;customer_name : string&lt;br&gt;event_date : date&lt;br&gt;payment_status : string&lt;br&gt;tracking_status : string" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="340" y="40" width="240" height="180" as="geometry" />
+        </mxCell>
+
+        <mxCell id="4" value="&lt;b&gt;ORDER_ITEMS&lt;/b&gt;&lt;br&gt;――――――――――&lt;br&gt;id : bigint (PK)&lt;br&gt;order_id : bigint (FK)&lt;br&gt;menu_id : bigint (FK)&lt;br&gt;pax_quantity : integer&lt;br&gt;subtotal : decimal" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="40" width="240" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="5" value="&lt;b&gt;MENUS&lt;/b&gt;&lt;br&gt;――――――――――&lt;br&gt;id : bigint (PK)&lt;br&gt;name : string&lt;br&gt;category : string&lt;br&gt;price_per_pax : decimal&lt;br&gt;is_available : boolean" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="660" y="280" width="240" height="150" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" value="places" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="2" target="3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="contains" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="referenced in" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="5" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram name="PDM" id="pdm-page">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageWidth="1200" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="2" value="&lt;b&gt;users&lt;/b&gt;&lt;br&gt;――――――――――&lt;br&gt;id : bigint (PK)&lt;br&gt;name : varchar&lt;br&gt;email : varchar (UK)&lt;br&gt;email_verified_at : timestamp&lt;br&gt;password : varchar&lt;br&gt;phone : varchar&lt;br&gt;role : enum&lt;br&gt;created_at : timestamp&lt;br&gt;updated_at : timestamp" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="240" height="220" as="geometry" />
+        </mxCell>
+
+        <mxCell id="3" value="&lt;b&gt;orders&lt;/b&gt;&lt;br&gt;――――――――――&lt;br&gt;id : bigint (PK)&lt;br&gt;order_code : varchar (UK)&lt;br&gt;user_id : bigint (FK, nullable)&lt;br&gt;customer_name : varchar&lt;br&gt;customer_phone : varchar&lt;br&gt;customer_email : varchar&lt;br&gt;event_date : date&lt;br&gt;delivery_type : enum&lt;br&gt;shipping_address : text&lt;br&gt;special_notes : text&lt;br&gt;payment_method : varchar&lt;br&gt;payment_type : enum&lt;br&gt;total_amount : decimal&lt;br&gt;dp_amount : decimal&lt;br&gt;paid_amount : decimal&lt;br&gt;payment_status : enum&lt;br&gt;tracking_status : enum&lt;br&gt;created_at : timestamp&lt;br&gt;updated_at : timestamp" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="360" y="40" width="260" height="420" as="geometry" />
+        </mxCell>
+
+        <mxCell id="4" value="&lt;b&gt;order_items&lt;/b&gt;&lt;br&gt;――――――――――&lt;br&gt;id : bigint (PK)&lt;br&gt;order_id : bigint (FK)&lt;br&gt;menu_id : bigint (FK, nullable)&lt;br&gt;menu_name : varchar&lt;br&gt;price_per_pax : decimal&lt;br&gt;pax_quantity : int&lt;br&gt;subtotal : decimal&lt;br&gt;created_at : timestamp&lt;br&gt;updated_at : timestamp" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="40" width="260" height="220" as="geometry" />
+        </mxCell>
+
+        <mxCell id="5" value="&lt;b&gt;menus&lt;/b&gt;&lt;br&gt;――――――――――&lt;br&gt;id : bigint (PK)&lt;br&gt;name : varchar&lt;br&gt;category : varchar&lt;br&gt;description : text&lt;br&gt;price_per_pax : decimal&lt;br&gt;min_pax : int&lt;br&gt;image : varchar&lt;br&gt;is_available : boolean&lt;br&gt;is_bestseller : boolean&lt;br&gt;created_at : timestamp&lt;br&gt;updated_at : timestamp" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;spacing=8;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="300" width="260" height="260" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" value="user_id" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="2" target="3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="order_id" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="3" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="menu_id" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;rounded=0;strokeColor=#666666;fontSize=11;fontColor=#333333;" edge="1" parent="1" source="5" target="4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
