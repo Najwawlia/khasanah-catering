@@ -541,7 +541,7 @@
                 <h4>Hubungi Dapur Kami</h4>
                 <p><i class="fa-solid fa-location-dot" style="color: var(--primary-orange);"></i> Ngesrep, Kec. Banyumanik, Kota Semarang, Jawa Tengah 50261</p>
                 <p><i class="fa-solid fa-phone" style="color: var(--primary-orange);"></i> +62 813-2503-2009</p>
-                <p><i class="fa-solid fa-envelope" style="color: var(--primary-orange);"></i> di app.blade</p>
+                <p><i class="fa-solid fa-envelope" style="color: var(--primary-orange);"></i> deanthamrin72@gmail.com</p>
             </div>
         </div>
         <div class="footer-bottom">

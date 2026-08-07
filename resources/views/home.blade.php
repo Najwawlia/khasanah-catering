@@ -767,7 +767,7 @@
             <div class="testimonial-author">
                 <div class="testimonial-avatar">M</div>
                 <div>
-                    <strong>Maria Santoso</strong>
+                    <strong>Nurhayati</strong>
                     <span>Ulang Tahun</span>
                 </div>
             </div>
@@ -778,18 +778,18 @@
             <div class="testimonial-author">
                 <div class="testimonial-avatar">J</div>
                 <div>
-                    <strong>Joko Wibowo</strong>
+                    <strong>Ogi Winarni</strong>
                     <span>Syukuran Keluarga</span>
                 </div>
             </div>
         </div>
         <div class="testimonial-card">
             <div class="testimonial-stars">★★★★★</div>
-            <p class="testimonial-text">"Cocok banget buat acara kantor! Variasi menunya lengkap, semua kolega jadi ketagihan sama makanannya."</p>
+            <p class="testimonial-text">"Cocok banget buat acara kantor! Variasi menunya lengkap, semua rekan jadi ketagihan sama makanannya."</p>
             <div class="testimonial-author">
                 <div class="testimonial-avatar">A</div>
                 <div>
-                    <strong>Anisa Rahayu</strong>
+                    <strong>Agung Tri</strong>
                     <span>Acara Kantor</span>
                 </div>
             </div>
