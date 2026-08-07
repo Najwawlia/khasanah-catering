@@ -767,7 +767,7 @@
             <div class="testimonial-author">
                 <div class="testimonial-avatar">M</div>
                 <div>
-                    <strong>Nurhayati</strong>
+                    <strong>Tania Dwi</strong>
                     <span>Ulang Tahun</span>
                 </div>
             </div>
