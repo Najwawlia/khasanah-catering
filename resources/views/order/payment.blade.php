@@ -21,7 +21,7 @@
 
     .order-badge {
         display: inline-block;
-        background: rgba(255, 102, 0, 0.15);
+        background: rgba(255, 107, 0, 0.15);
         color: var(--primary-orange);
         border: 1px solid var(--primary-orange);
         padding: 6px 16px;

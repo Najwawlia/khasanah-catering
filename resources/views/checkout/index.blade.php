@@ -4,30 +4,53 @@
 
 @section('styles')
 <style>
-    .checkout-wrapper {
+    .checkout-hero {
+        background: linear-gradient(135deg, var(--charcoal) 0%, #4A3420 100%);
+        padding: 2.4rem 1.5rem;
+        margin-bottom: -1px;
+    }
+
+    .checkout-hero-inner {
         max-width: 1100px;
-        margin: 3rem auto;
-        padding: 0 1.5rem;
+        margin: 0 auto;
+    }
+
+    .checkout-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--secondary-gold);
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        margin-bottom: 0.6rem;
     }
 
     .checkout-title {
-        font-size: 2rem;
-        font-weight: 800;
-        color: var(--text-primary);
-        margin-bottom: 2rem;
-        display: flex;
-        align-items: center;
-        gap: 12px;
+        font-family: var(--font-heading);
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #FFFFFF;
+        margin-bottom: 0.4rem;
     }
 
-    .checkout-title i {
-        color: var(--primary-orange);
+    .checkout-subtitle {
+        color: rgba(255,255,255,0.75);
+        font-size: 0.98rem;
+    }
+
+    .checkout-wrapper {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 3rem;
     }
 
     .checkout-grid {
         display: grid;
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1.6fr 1fr;
         gap: 2rem;
+        align-items: start;
     }
 
     @media (max-width: 900px) {
@@ -40,25 +63,39 @@
         background: var(--bg-card);
         border: 1px solid var(--border-color);
         border-radius: var(--radius-lg);
-        padding: 2rem;
-        margin-bottom: 1.8rem;
+        padding: 1.8rem;
+        margin-bottom: 1.6rem;
         box-shadow: var(--shadow-soft);
+        transition: box-shadow var(--transition-speed);
+    }
+
+    @media (max-width: 640px) {
+        .card-section { padding: 1.3rem; border-radius: var(--radius-md); }
     }
 
     .section-header {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         color: var(--text-primary);
-        padding-bottom: 0.8rem;
+        padding-bottom: 0.9rem;
         border-bottom: 1px solid var(--border-color);
     }
 
-    .section-header i {
-        color: var(--primary-orange);
+    .section-icon-badge {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        border-radius: 10px;
+        background: var(--primary-orange-light);
+        color: var(--primary-orange-hover);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
     }
 
     .form-group {
@@ -118,10 +155,10 @@
     }
 
     .payment-option-card:hover, .payment-option-card.selected {
-        border-color: var(--primary-orange);
-        background: rgba(255, 102, 0, 0.1);
+        border-color: var(--tertiary-coral-dark);
+        background: var(--tertiary-coral-light);
         color: var(--text-primary);
-        box-shadow: 0 0 15px var(--primary-glow);
+        box-shadow: 0 0 15px rgba(255, 138, 117, 0.35);
     }
 
     .payment-option-card input[type="radio"] {
@@ -150,9 +187,9 @@
     }
 
     .dp-card:hover, .dp-card.selected {
-        border-color: var(--primary-orange);
-        background: rgba(255, 102, 0, 0.12);
-        box-shadow: 0 0 15px var(--primary-glow);
+        border-color: var(--secondary-gold-dark);
+        background: var(--secondary-gold-light);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.35);
     }
 
     .dp-card input[type="radio"] {
@@ -177,14 +214,84 @@
         color: var(--primary-orange);
         margin-top: 8px;
     }
+
+    /* --- ORDER SUMMARY --- */
+    .order-summary-card {
+        position: sticky;
+        top: 100px;
+    }
+
+    @media (max-width: 900px) {
+        .order-summary-card {
+            position: static;
+        }
+    }
+
+    .summary-item-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .summary-item-img {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--radius-sm);
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 1px solid var(--border-color);
+    }
+
+    .summary-item-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .summary-item-name {
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .summary-item-qty {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    .summary-item-price {
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        white-space: nowrap;
+    }
+
+    .secure-note {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        margin-top: 0.9rem;
+    }
+
+    .secure-note i { color: var(--success); }
 </style>
 @section('content')
 
-<div class="checkout-wrapper">
-    <h1 class="checkout-title">
-        <i class="fa-solid fa-clipboard-check"></i> Form Booking & Tanggal Acara
-    </h1>
+<div class="checkout-hero">
+    <div class="checkout-hero-inner">
+        <span class="checkout-eyebrow"><i class="fa-solid fa-shield-halved"></i> Secure Checkout</span>
+        <h1 class="checkout-title">Form Booking & Tanggal Acara</h1>
+        <p class="checkout-subtitle">Lengkapi detail acara Anda untuk pengalaman kuliner yang sempurna.</p>
+    </div>
+</div>
 
+<div class="checkout-wrapper">
     <form action="{{ route('checkout.process') }}" method="POST">
         @csrf
 
@@ -194,7 +301,7 @@
                 <!-- 1. DATA PEMESAN & TANGGAL ACARA -->
                 <div class="card-section">
                     <h3 class="section-header">
-                        <i class="fa-solid fa-user-gear"></i> Informasi Pemesan & Tanggal Acara
+                        <span class="section-icon-badge"><i class="fa-solid fa-user-gear"></i></span> Informasi Pemesan & Tanggal Acara
                     </h3>
 
                     <div class="form-group">
@@ -233,7 +340,7 @@
                 <!-- 2. PENGIRIMAN & CATATAN KHUSUS -->
                 <div class="card-section">
                     <h3 class="section-header">
-                        <i class="fa-solid fa-truck-ramp-box"></i> Metode Pengiriman & Catatan Khusus
+                        <span class="section-icon-badge" style="background: var(--tertiary-coral-light); color: var(--tertiary-coral-dark);"><i class="fa-solid fa-truck-ramp-box"></i></span> Metode Pengiriman & Catatan Khusus
                     </h3>
 
                     <div class="form-group">
@@ -263,7 +370,7 @@
                 <!-- 3. PILIHAN JADWAL PEMBAYARAN (DP 50% vs FULL) -->
                 <div class="card-section">
                     <h3 class="section-header">
-                        <i class="fa-solid fa-coins"></i> Opsi Pembayaran (Down Payment 50% / Lunas)
+                        <span class="section-icon-badge" style="background: var(--secondary-gold-light); color: var(--secondary-gold-dark);"><i class="fa-solid fa-coins"></i></span> Opsi Pembayaran (Down Payment 50% / Lunas)
                     </h3>
 
                     <div class="dp-toggle-grid">
@@ -286,7 +393,7 @@
                 <!-- 4. METODE PEMBAYARAN -->
                 <div class="card-section">
                     <h3 class="section-header">
-                        <i class="fa-solid fa-wallet"></i> Metode Pembayaran
+                        <span class="section-icon-badge"><i class="fa-solid fa-wallet"></i></span> Metode Pembayaran
                     </h3>
 
                     <div class="payment-options-grid">
@@ -330,34 +437,37 @@
             </div>
 
             <!-- RIGHT SUMMARY -->
-            <div>
-                <div class="card-section" style="position: sticky; top: 100px;">
+            <div class="order-summary-card">
+                <div class="card-section">
                     <h3 class="section-header">
-                        <i class="fa-solid fa-receipt"></i> Rincian Pesanan
+                        <span class="section-icon-badge"><i class="fa-solid fa-receipt"></i></span> Rincian Pesanan
                     </h3>
 
                     @foreach($cart as $item)
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.8rem; font-size: 0.9rem;">
-                            <div>
-                                <strong>{{ $item['name'] }}</strong><br>
-                                <small style="color: var(--text-muted);">{{ $item['pax_quantity'] }} pack x Rp {{ number_format($item['price'], 0, ',', '.') }}</small>
+                        <div class="summary-item-row">
+                            <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="summary-item-img" onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=200'">
+                            <div class="summary-item-info">
+                                <div class="summary-item-name">{{ $item['name'] }}</div>
+                                <div class="summary-item-qty">Qty: {{ $item['pax_quantity'] }} pack</div>
                             </div>
-                            <div style="font-weight: 700; color: var(--text-main);">
-                                Rp {{ number_format($item['price'] * $item['pax_quantity'], 0, ',', '.') }}
-                            </div>
+                            <div class="summary-item-price">Rp {{ number_format($item['price'] * $item['pax_quantity'], 0, ',', '.') }}</div>
                         </div>
                     @endforeach
 
                     <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 1.2rem 0;">
 
-                    <div style="display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: 800; margin-bottom: 1.5rem;">
-                        <span>Total Tagihan:</span>
+                    <div style="display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 800; margin-bottom: 1.2rem; font-family: var(--font-heading);">
+                        <span>Total Tagihan</span>
                         <span style="color: var(--primary-orange);">Rp {{ number_format($totalAmount, 0, ',', '.') }}</span>
                     </div>
 
                     <button type="submit" class="btn-primary" style="width: 100%; padding: 14px;">
-                        <i class="fa-solid fa-lock"></i> Konfirmasi Booking Now
+                        <i class="fa-solid fa-lock"></i> Konfirmasi Booking Sekarang
                     </button>
+
+                    <div class="secure-note">
+                        <i class="fa-solid fa-shield-halved"></i> Data Anda terenkripsi & aman
+                    </div>
                 </div>
             </div>
         </div>

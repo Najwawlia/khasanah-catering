@@ -7,8 +7,8 @@
     /* --- HERO SECTION --- */
     .hero-section {
         position: relative;
-        padding: 5rem 2rem;
-        background: linear-gradient(180deg, rgba(42, 33, 24, 0.72) 0%, rgba(255, 122, 30, 0.55) 55%, var(--bg-main) 100%), 
+        padding: 6rem 2rem;
+        background: linear-gradient(165deg, rgba(43, 33, 25, 0.82) 0%, rgba(181, 80, 46, 0.58) 60%, var(--bg-main) 100%),
                     url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
         border-bottom: 1px solid var(--border-color);
         text-align: center;
@@ -20,42 +20,70 @@
         margin: 0 auto;
         position: relative;
         z-index: 2;
+        animation: heroFade 0.9s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    @keyframes heroFade {
+        from { opacity: 0; transform: translateY(24px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(255, 102, 0, 0.15);
-        border: 1px solid var(--primary-orange);
-        color: var(--primary-orange);
-        padding: 6px 16px;
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 215, 130, 0.5);
+        color: #F7DDBB;
+        padding: 7px 18px;
         border-radius: 30px;
-        font-size: 0.9rem;
-        font-weight: 700;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 0 15px var(--primary-glow);
+        font-size: 0.86rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        margin-bottom: 1.6rem;
+        animation: badgeFloat 4.5s ease-in-out infinite;
+    }
+
+    @keyframes badgeFloat {
+        0%   { transform: translateY(0) rotate(0deg); }
+        25%  { transform: translateY(-7px) rotate(-1.5deg); }
+        50%  { transform: translateY(0) rotate(0deg); }
+        75%  { transform: translateY(6px) rotate(1.5deg); }
+        100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    .hero-badge i {
+        display: inline-block;
+        animation: badgeSpinIcon 5s ease-in-out infinite;
+    }
+
+    @keyframes badgeSpinIcon {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(14deg); }
     }
 
     .hero-title {
-        font-size: 3.2rem;
-        font-weight: 800;
-        line-height: 1.2;
-        margin-bottom: 1.2rem;
+        font-family: var(--font-heading);
+        font-size: 3.4rem;
+        font-weight: 600;
+        line-height: 1.18;
+        margin-bottom: 1.3rem;
         color: #FFFFFF;
-        text-shadow: 0 2px 12px rgba(0,0,0,0.25);
+        text-shadow: 0 2px 14px rgba(0,0,0,0.3);
     }
 
     .hero-title span {
-        color: #FFE3C6;
+        font-style: italic;
+        color: var(--secondary-gold);
     }
 
     .hero-subtitle {
-        font-size: 1.15rem;
-        color: rgba(255, 255, 255, 0.88);
-        max-width: 700px;
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.85);
+        max-width: 680px;
         margin: 0 auto 2.5rem;
-        line-height: 1.6;
+        line-height: 1.65;
     }
 
     .hero-buttons {
@@ -85,37 +113,38 @@
 
     .pill-btn {
         background: var(--bg-card);
-        border: 1px solid var(--border-color);
+        border: 1.5px solid var(--border-color);
         color: var(--text-secondary);
-        padding: 8px 18px;
+        padding: 9px 20px;
         border-radius: 30px;
         font-weight: 600;
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         cursor: pointer;
         transition: all var(--transition-speed);
     }
 
     .pill-btn:hover, .pill-btn.active {
         background: var(--primary-orange);
-        color: var(--text-primary);
+        color: #FFFFFF;
         border-color: var(--primary-orange);
-        box-shadow: 0 0 15px var(--primary-glow);
+        box-shadow: 0 6px 16px var(--primary-glow);
+        transform: translateY(-1px);
     }
 
     .search-box {
         display: flex;
         align-items: center;
-        background: var(--bg-input);
-        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+        border: 1.5px solid var(--border-color);
         border-radius: 30px;
-        padding: 6px 16px;
+        padding: 8px 18px;
         width: 300px;
         transition: all var(--transition-speed);
     }
 
     .search-box:focus-within {
         border-color: var(--primary-orange);
-        box-shadow: 0 0 12px var(--primary-glow);
+        box-shadow: 0 0 0 4px var(--primary-glow);
     }
 
     .search-box input {
@@ -145,6 +174,11 @@
         gap: 2rem;
     }
 
+    @keyframes cardRise {
+        from { opacity: 0; transform: translateY(22px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     .menu-card {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
@@ -154,75 +188,92 @@
         display: flex;
         flex-direction: column;
         position: relative;
+        box-shadow: var(--shadow-soft);
+        animation: cardRise 0.6s cubic-bezier(0.4,0,0.2,1) backwards;
     }
 
-    .menu-card {
-        box-shadow: var(--shadow-soft);
-    }
+    .menu-container .menu-card:nth-child(1) { animation-delay: 0.03s; }
+    .menu-container .menu-card:nth-child(2) { animation-delay: 0.09s; }
+    .menu-container .menu-card:nth-child(3) { animation-delay: 0.15s; }
+    .menu-container .menu-card:nth-child(4) { animation-delay: 0.21s; }
+    .menu-container .menu-card:nth-child(5) { animation-delay: 0.27s; }
+    .menu-container .menu-card:nth-child(6) { animation-delay: 0.33s; }
 
     .menu-card:hover {
-        transform: translateY(-8px) scale(1.01);
-        border-color: var(--primary-orange);
+        transform: translateY(-8px);
+        border-color: transparent;
         box-shadow: var(--shadow-hover);
     }
 
     .card-img-wrapper {
         position: relative;
-        height: 220px;
+        height: 210px;
         overflow: hidden;
+    }
+
+    .card-img-wrapper::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 55%, rgba(43, 33, 25, 0.45) 100%);
+        pointer-events: none;
     }
 
     .card-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
+        transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
     }
 
     .menu-card:hover .card-img {
-        transform: scale(1.08);
+        transform: scale(1.07);
     }
 
     .card-category-badge {
         position: absolute;
-        top: 15px;
-        left: 15px;
-        background: rgba(30, 30, 30, 0.85);
-        backdrop-filter: blur(8px);
-        color: var(--primary-orange);
-        border: 1px solid var(--primary-orange);
-        padding: 4px 12px;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(6px);
+        color: var(--tertiary-coral-dark);
+        padding: 4px 13px;
         border-radius: 20px;
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         font-weight: 700;
+        letter-spacing: 0.2px;
     }
 
     .min-pax-badge {
         position: absolute;
-        bottom: 15px;
-        right: 15px;
-        background: var(--primary-orange);
-        color: var(--text-primary);
-        padding: 4px 10px;
-        border-radius: 6px;
-        font-size: 0.75rem;
+        bottom: 14px;
+        right: 14px;
+        z-index: 2;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(6px);
+        color: var(--primary-orange-hover);
+        padding: 4px 11px;
+        border-radius: 8px;
+        font-size: 0.72rem;
         font-weight: 700;
     }
 
     .bestseller-badge {
         position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #FFB020;
+        top: 14px;
+        right: 14px;
+        z-index: 2;
+        background: linear-gradient(120deg, var(--secondary-gold), #D4A63C);
         color: #3D2600;
         padding: 4px 12px;
         border-radius: 20px;
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 800;
         display: flex;
         align-items: center;
         gap: 4px;
-        box-shadow: 0 4px 10px rgba(255, 176, 32, 0.4);
+        box-shadow: 0 4px 10px rgba(184, 137, 43, 0.4);
     }
 
     .menu-card-hidden {
@@ -237,9 +288,10 @@
     }
 
     .menu-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin-bottom: 0.6rem;
+        font-family: var(--font-heading);
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
         color: var(--text-primary);
     }
 
@@ -269,14 +321,39 @@
     }
 
     .price-label {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
 
     .price-amount {
-        font-size: 1.3rem;
-        font-weight: 800;
+        font-family: var(--font-heading);
+        font-size: 1.4rem;
+        font-weight: 700;
         color: var(--primary-orange);
+    }
+
+    .btn-order-pill {
+        background: transparent;
+        border: 1.5px solid var(--primary-orange);
+        color: var(--primary-orange);
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 9px 18px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all var(--transition-speed);
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .btn-order-pill:hover {
+        background: var(--primary-orange);
+        color: #FFFFFF;
+        box-shadow: 0 8px 18px var(--primary-glow);
+        transform: translateY(-2px);
     }
 
     /* --- MODAL DIALOG --- */
@@ -420,13 +497,15 @@
     }
 
     .section-header h2 {
-        font-size: 2.2rem;
-        font-weight: 800;
+        font-family: var(--font-heading);
+        font-size: 2.3rem;
+        font-weight: 600;
         color: var(--text-primary);
         margin-bottom: 0.6rem;
     }
 
     .section-header h2 span {
+        font-style: italic;
         color: var(--primary-orange);
     }
 
@@ -462,7 +541,7 @@
     .step-card:hover {
         transform: translateY(-6px) scale(1.02);
         box-shadow: var(--shadow-hover);
-        border-color: var(--primary-orange);
+        border-color: transparent;
     }
 
     .step-number {
@@ -475,14 +554,26 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 800;
-        font-size: 1.2rem;
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 1.3rem;
         box-shadow: 0 6px 16px var(--primary-glow);
     }
 
+    .step-card:nth-child(2) .step-number {
+        background: var(--secondary-gold-dark);
+        box-shadow: 0 6px 16px rgba(184, 137, 43, 0.3);
+    }
+
+    .step-card:nth-child(3) .step-number {
+        background: var(--quaternary-olive-dark);
+        box-shadow: 0 6px 16px rgba(79, 95, 65, 0.3);
+    }
+
     .step-card h3 {
-        font-size: 1.2rem;
-        font-weight: 700;
+        font-family: var(--font-heading);
+        font-size: 1.25rem;
+        font-weight: 600;
         color: var(--text-primary);
         margin-bottom: 0.6rem;
     }
@@ -518,11 +609,11 @@
     .testimonial-card:hover {
         transform: translateY(-6px);
         box-shadow: var(--shadow-hover);
-        border-color: var(--primary-orange);
+        border-color: transparent;
     }
 
     .testimonial-stars {
-        color: #FFB020;
+        color: var(--secondary-gold-dark);
         margin-bottom: 0.8rem;
         font-size: 0.95rem;
     }
@@ -570,16 +661,30 @@
         margin: 0 auto 4.5rem;
         padding: 3.5rem 2rem;
         border-radius: 24px;
-        background: linear-gradient(120deg, var(--primary-orange) 0%, var(--primary-orange-hover) 100%);
+        background: linear-gradient(120deg, var(--primary-orange) 0%, var(--tertiary-coral-dark) 100%);
         text-align: center;
         box-shadow: 0 20px 40px var(--primary-glow);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-banner::before {
+        content: '';
+        position: absolute;
+        width: 260px; height: 260px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        top: -100px; right: -60px;
     }
 
     .cta-banner h2 {
+        font-family: var(--font-heading);
+        font-style: italic;
         color: #fff;
-        font-size: 2rem;
-        font-weight: 800;
+        font-size: 2.1rem;
+        font-weight: 600;
         margin-bottom: 0.8rem;
+        position: relative;
     }
 
     .cta-banner p {
@@ -703,7 +808,7 @@
                         <span class="price-amount">Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</span>
                     </div>
 
-                    <button class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;" 
+                    <button class="btn-order-pill"
                             onclick="openOrderModal('{{ $menu->id }}', '{{ addslashes($menu->name) }}', '{{ $menu->price_per_pax }}', '{{ $menu->min_pax }}', '{{ addslashes($menu->category) }}')">
                         <i class="fa-solid fa-cart-plus"></i> Pesan
                     </button>
@@ -730,7 +835,7 @@
 <!-- HOW IT WORKS -->
 <section class="how-it-works reveal-up">
     <div class="section-header">
-        <span class="eyebrow"><i class="fa-solid fa-list-check"></i> Alur Pemesanan</span>
+        <span class="eyebrow" style="background: var(--quaternary-olive-light); color: var(--quaternary-olive-dark);"><i class="fa-solid fa-list-check"></i> Alur Pemesanan</span>
         <h2>Cara <span>Kerjanya</span></h2>
         <p>Tiga langkah mudah menuju hidangan katering sempurna untuk acara Anda.</p>
     </div>
@@ -756,7 +861,7 @@
 <!-- TESTIMONIALS -->
 <section class="testimonials reveal-up">
     <div class="section-header">
-        <span class="eyebrow"><i class="fa-solid fa-heart"></i> Cerita Pelanggan</span>
+        <span class="eyebrow" style="background: var(--tertiary-coral-light); color: var(--tertiary-coral-dark);"><i class="fa-solid fa-heart"></i> Cerita Pelanggan</span>
         <h2>Apa Kata <span>Pelanggan Kami</span></h2>
         <p>Kisah nyata dari acara-acara yang sudah kami layani.</p>
     </div>

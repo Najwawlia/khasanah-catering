@@ -89,6 +89,20 @@
         gap: 1rem;
     }
 
+    @media (max-width: 560px) {
+        .cart-item-row {
+            flex-wrap: wrap;
+        }
+        .cart-item-info {
+            flex-basis: calc(100% - 106px);
+        }
+        .cart-item-actions {
+            flex-basis: 100%;
+            justify-content: space-between;
+            margin-top: 0.6rem;
+        }
+    }
+
     .pax-input-group {
         display: flex;
         align-items: center;
@@ -173,7 +187,7 @@
     }
 
     .notice-box {
-        background: rgba(255, 102, 0, 0.1);
+        background: rgba(255, 107, 0, 0.1);
         border-left: 3px solid var(--primary-orange);
         padding: 10px 14px;
         border-radius: 4px;

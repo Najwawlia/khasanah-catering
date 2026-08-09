@@ -6,44 +6,55 @@
     <title>@yield('title', 'Admin Panel - Khasanah Catering')</title>
 
     <!-- Google Fonts & FontAwesome -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --bg-main: #FFFCF9;         /* Main body background - warm off-white */
-            --bg-card: #FFFFFF;         /* Background for cards, forms, and tables */
-            --bg-input: #FAF6F1;        /* Background for input fields */
-            --bg-soft: #FFF3E9;         /* Soft tinted background */
-            --primary-orange: #FF7A1E; /* Main buttons, active links, and accents */
-            --primary-orange-hover: #E8650A; /* Button hover state */
-            --primary-orange-light: #FFEDE0; /* Light orange tint for active menu/badges */
-            --charcoal: #2A2118;        /* Elegant deep charcoal-brown for headings */
-            --text-primary: #2A2118;    /* Headings, menu names, and prices */
-            --text-secondary: #7A7168;  /* Placeholders, descriptions, and small notes */
-            --border-color: #F0E4D8;    /* Borders and dividers */
-            --success: #1DA35A;         /* Success messages */
-            --error: #E5484D;           /* Error / delete messages */
+            --bg-main: #FAF6EF;
+            --bg-card: #FFFFFF;
+            --bg-input: #F8F1E7;
+            --bg-soft: #F5EEE1;
+            --primary-orange: #B5502E;
+            --primary-orange-hover: #963F22;
+            --primary-orange-light: #F3E1D6;
+            --secondary-gold: #B8892B;
+            --secondary-gold-dark: #8C6A1F;
+            --secondary-gold-light: #F7ECD3;
+            --tertiary-coral: #C97B6D;
+            --tertiary-coral-dark: #A65B4E;
+            --tertiary-coral-light: #F5DFDA;
+            --quaternary-olive: #6B7F5B;
+            --quaternary-olive-dark: #4F5F41;
+            --quaternary-olive-light: #E7EDDF;
+            --charcoal: #2B2119;
+            --text-primary: #2B2119;
+            --text-secondary: #8A7C6D;
+            --border-color: #EFE4D4;
+            --success: #4F7A52;
+            --error: #B23A3A;
 
-            --primary-glow: rgba(255, 122, 30, 0.25);
+            --primary-glow: rgba(181, 80, 46, 0.20);
             --text-main: var(--text-primary);
             --text-muted: var(--text-secondary);
             --accent-green: var(--success);
             --accent-blue: #3B82F6;
             --danger-red: var(--error);
-            --radius-lg: 16px;
+            --font-heading: 'Fraunces', Georgia, serif;
+            --font-body: 'Inter', sans-serif;
+            --radius-lg: 18px;
             --radius-md: 12px;
             --radius-sm: 8px;
-            --transition-speed: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow-soft: 0 4px 20px rgba(42, 33, 24, 0.06);
-            --shadow-hover: 0 12px 30px rgba(255, 122, 30, 0.18);
+            --transition-speed: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-soft: 0 4px 22px rgba(43, 33, 25, 0.07);
+            --shadow-hover: 0 16px 34px rgba(181, 80, 46, 0.16);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: var(--font-body);
         }
 
         body {
@@ -53,27 +64,54 @@
             min-height: 100vh;
         }
 
+        h1, h2, h3, .admin-title, .sidebar-brand {
+            font-family: var(--font-heading);
+        }
+
         a { color: inherit; text-decoration: none; }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* --- SIDEBAR --- */
         .sidebar {
-            width: 260px;
+            width: 264px;
             background: #FFFFFF;
             border-right: 1px solid var(--border-color);
-            padding: 2rem 1.5rem;
+            padding: 2rem 1.4rem;
             display: flex;
             flex-direction: column;
             box-shadow: var(--shadow-soft);
+            position: sticky;
+            top: 0;
+            height: 100vh;
         }
 
         .sidebar-brand {
             font-size: 1.5rem;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 2.5rem;
+            gap: 12px;
+            margin-bottom: 2.6rem;
+            padding-bottom: 1.6rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--tertiary-coral));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 1.2rem;
+            box-shadow: 0 6px 16px rgba(181, 80, 46, 0.28);
         }
 
         .sidebar-brand .brand-accent { color: var(--primary-orange); }
@@ -81,7 +119,7 @@
         .sidebar-menu {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .menu-item {
@@ -92,19 +130,31 @@
             color: var(--text-secondary);
             border-radius: var(--radius-md);
             font-weight: 600;
+            font-size: 0.94rem;
             transition: all var(--transition-speed);
+            border-left: 3px solid transparent;
         }
 
-        .menu-item:hover, .menu-item.active {
+        .menu-item i { width: 18px; text-align: center; }
+
+        .menu-item:hover {
+            background: var(--bg-soft);
+            color: var(--text-primary);
+            transform: translateX(3px);
+        }
+
+        .menu-item.active {
             background: var(--primary-orange-light);
             color: var(--primary-orange-hover);
             border-left: 3px solid var(--primary-orange);
+            font-weight: 700;
         }
 
         .admin-content {
             flex: 1;
             padding: 2.5rem;
             overflow-y: auto;
+            animation: fadeSlideUp 0.5s cubic-bezier(0.4,0,0.2,1);
         }
 
         .admin-header {
@@ -115,8 +165,8 @@
         }
 
         .admin-title {
-            font-size: 1.8rem;
-            font-weight: 800;
+            font-size: 1.9rem;
+            font-weight: 700;
             color: var(--text-primary);
         }
 
@@ -145,10 +195,12 @@
             color: var(--text-secondary);
             font-weight: 700;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
+            font-size: 0.72rem;
+            letter-spacing: 0.6px;
         }
 
+        tr { transition: background var(--transition-speed); }
+        tr:hover td { background: var(--bg-soft); }
         tr:last-child td { border-bottom: none; }
 
         .btn-sm {
@@ -164,12 +216,12 @@
             transition: all var(--transition-speed);
         }
 
-        .btn-orange { background: var(--primary-orange); color: var(--text-primary); }
+        .btn-orange { background: var(--primary-orange); color: #FFFFFF; }
         .btn-orange:hover { background: var(--primary-orange-hover); }
-        .btn-blue { background: #3b82f6; color: var(--text-primary); }
+        .btn-blue { background: #3b82f6; color: #FFFFFF; }
         .btn-blue:hover { background: #2563eb; }
-        .btn-red { background: var(--error); color: var(--text-primary); }
-        .btn-red:hover { background: #dc2626; }
+        .btn-red { background: var(--error); color: #FFFFFF; }
+        .btn-red:hover { background: #8f2c2c; }
     </style>
     @yield('styles')
 </head>
@@ -178,7 +230,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <i class="fa-solid fa-crown" style="color: var(--primary-orange);"></i>
+            <div class="sidebar-brand-icon"><i class="fa-solid fa-crown"></i></div>
             <div style="line-height: 1.1;">
                 <div><span class="brand-text">Kha<span class="brand-accent">Catering</span></span></div>
                 <small style="font-size: 0.65rem; font-weight: 600; color: var(--text-muted); letter-spacing: 1px;">ADMIN PANEL</small>

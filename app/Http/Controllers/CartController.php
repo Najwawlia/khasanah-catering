@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -20,6 +21,14 @@ class CartController extends Controller
 
     public function add(Request $request)
     {
+        // Guest tidak boleh menambahkan menu ke keranjang - wajib login dulu
+        if (!Auth::check()) {
+            return back()->with(
+                'error_login_required',
+                'Tolong login dulu agar bisa memasukkan makanan favoritmu ke keranjang ya!'
+            );
+        }
+
         $request->validate([
             'menu_id' => 'required|exists:menus,id',
             'pax_quantity' => 'required|integer|min:1',

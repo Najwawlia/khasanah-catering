@@ -34,9 +34,12 @@ class AuthController extends Controller
             return redirect()->intended('/')->with('success', 'Login berhasil! Selamat datang di KhaCate.');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password yang Anda masukkan salah.',
-        ])->onlyInput('email');
+        return back()
+            ->withErrors([
+                'email' => 'Email atau password yang Anda masukkan salah.',
+            ])
+            ->with('error', 'Login gagal. Periksa kembali email dan password Anda.')
+            ->onlyInput('email');
     }
 
     public function showRegister()
