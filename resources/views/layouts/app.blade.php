@@ -677,7 +677,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} <strong>Khasanah Catering</strong>. By Najwa Aulia Larasati 12 PPLG 1.</p>
+            <p>&copy; {{ date('Y') }} <strong>Khasanah Catering</strong>. @nnayyow.</p>
         </div>
     </footer>
 

@@ -584,17 +584,34 @@
         line-height: 1.6;
     }
 
-    /* --- TESTIMONIALS --- */
+    /* --- TESTIMONIALS (auto-scrolling marquee) --- */
     .testimonials {
-        padding: 4.5rem 1.5rem;
+        padding: 4.5rem 0;
+        overflow: hidden;
     }
 
-    .testimonial-grid {
-        max-width: 1100px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+    .testimonial-track-wrapper {
+        max-width: 100%;
+        overflow: hidden;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .testimonial-track {
+        display: flex;
         gap: 2rem;
+        width: max-content;
+        animation: testimonialScroll 32s linear infinite;
+        padding: 0 1rem;
+    }
+
+    .testimonial-track-wrapper:hover .testimonial-track {
+        animation-play-state: paused;
+    }
+
+    @keyframes testimonialScroll {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
     }
 
     .testimonial-card {
@@ -604,6 +621,8 @@
         padding: 2rem;
         box-shadow: var(--shadow-soft);
         transition: all var(--transition-speed);
+        width: 340px;
+        flex-shrink: 0;
     }
 
     .testimonial-card:hover {
@@ -707,7 +726,7 @@
     }
 
     @media (max-width: 900px) {
-        .steps-grid, .testimonial-grid {
+        .steps-grid {
             grid-template-columns: 1fr;
         }
 
@@ -722,10 +741,18 @@
         .cta-banner h2 {
             font-size: 1.5rem;
         }
+
+        .testimonial-card {
+            width: 280px;
+        }
+
+        .testimonial-track {
+            animation-duration: 22s;
+        }
     }
 
     @media (min-width: 901px) and (max-width: 1200px) {
-        .steps-grid, .testimonial-grid {
+        .steps-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
@@ -865,39 +892,30 @@
         <h2>Apa Kata <span>Pelanggan Kami</span></h2>
         <p>Kisah nyata dari acara-acara yang sudah kami layani.</p>
     </div>
-    <div class="testimonial-grid">
-        <div class="testimonial-card">
-            <div class="testimonial-stars">★★★★★</div>
-            <p class="testimonial-text">"Prasmanannya enak banget, tamu ulang tahun anak saya semua puas. Pasti pesan lagi untuk acara berikutnya!"</p>
-            <div class="testimonial-author">
-                <div class="testimonial-avatar">M</div>
-                <div>
-                    <strong>Tania Dwi</strong>
-                    <span>Ulang Tahun</span>
-                </div>
-            </div>
-        </div>
-        <div class="testimonial-card">
-            <div class="testimonial-stars">★★★★★</div>
-            <p class="testimonial-text">"Pemesanan gampang, makanan datang segar dan tepat waktu. Nasi kotaknya jadi favorit di acara syukuran keluarga kami."</p>
-            <div class="testimonial-author">
-                <div class="testimonial-avatar">J</div>
-                <div>
-                    <strong>Ogi Winarni</strong>
-                    <span>Syukuran Keluarga</span>
-                </div>
-            </div>
-        </div>
-        <div class="testimonial-card">
-            <div class="testimonial-stars">★★★★★</div>
-            <p class="testimonial-text">"Cocok banget buat acara kantor! Variasi menunya lengkap, semua rekan jadi ketagihan sama makanannya."</p>
-            <div class="testimonial-author">
-                <div class="testimonial-avatar">A</div>
-                <div>
-                    <strong>Agung Tri</strong>
-                    <span>Acara Kantor</span>
-                </div>
-            </div>
+    <div class="testimonial-track-wrapper">
+        <div class="testimonial-track">
+            @php
+                $testimonials = [
+                    ['stars' => 5, 'text' => 'Prasmanannya enak banget, tamu ulang tahun anak saya semua puas. Pasti pesan lagi untuk acara berikutnya!', 'initial' => 'T', 'name' => 'Tania Dwi', 'event' => 'Ulang Tahun'],
+                    ['stars' => 5, 'text' => 'Pemesanan gampang, makanan datang segar dan tepat waktu. Nasi kotaknya jadi favorit di acara syukuran keluarga kami.', 'initial' => 'O', 'name' => 'Ogi Winarni', 'event' => 'Syukuran Keluarga'],
+                    ['stars' => 5, 'text' => 'Cocok banget buat acara kantor! Variasi menunya lengkap, semua rekan jadi ketagihan sama makanannya.', 'initial' => 'A', 'name' => 'Agung Tri', 'event' => 'Acara Kantor'],
+                ];
+            @endphp
+            @for ($i = 0; $i < 2; $i++)
+                @foreach ($testimonials as $t)
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">{{ str_repeat('★', $t['stars']) }}</div>
+                        <p class="testimonial-text">"{{ $t['text'] }}"</p>
+                        <div class="testimonial-author">
+                            <div class="testimonial-avatar">{{ $t['initial'] }}</div>
+                            <div>
+                                <strong>{{ $t['name'] }}</strong>
+                                <span>{{ $t['event'] }}</span>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @endfor
         </div>
     </div>
 </section>

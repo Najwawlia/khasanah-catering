@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Detail Pesanan ' . $order->order_code . ' - Admin')
+@section('admin-title', 'Detail Pesanan')
 
 @section('content')
 

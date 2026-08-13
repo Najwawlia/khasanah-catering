@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Edit Menu - Admin')
+@section('admin-title', 'Edit Menu')
 
 @section('content')
 

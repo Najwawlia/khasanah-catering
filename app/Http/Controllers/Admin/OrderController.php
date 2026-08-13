@@ -22,7 +22,7 @@ class OrderController extends Controller
             $query->where('tracking_status', $request->status);
         }
 
-        $orders = $query->orderBy('created_at', 'desc')->paginate(10);
+        $orders = $query->orderBy('created_at', 'desc')->get();
         return view('admin.orders.index', compact('orders'));
     }
 
@@ -53,7 +53,25 @@ class OrderController extends Controller
 
         $order->save();
 
-        return back()->with('success', 'Status pesanan &' . $order->order_code . ' berhasil diperbarui!');
+        return back()->with('success', 'Status pesanan berhasil diperbarui.');
+    }
+
+    /**
+     * Update HANYA tracking_status (timeline proses dapur) tanpa mengubah payment_status.
+     * Dipakai untuk update cepat langsung dari Dashboard / daftar Pesanan.
+     */
+    public function updateTracking(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        $request->validate([
+            'tracking_status' => 'required|in:booking_received,payment_verified,kitchen_prep,ready',
+        ]);
+
+        $order->tracking_status = $request->tracking_status;
+        $order->save();
+
+        return back()->with('success', 'Timeline pesanan ' . $order->order_code . ' berhasil diperbarui.');
     }
 
     public function destroy($id)

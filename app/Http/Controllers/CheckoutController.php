@@ -25,8 +25,9 @@ class CheckoutController extends Controller
 
         $dp50Amount = $totalAmount * 0.50;
         $user = Auth::user();
+        $minEventDate = now()->addDays(3)->format('Y-m-d');
 
-        return view('checkout.index', compact('cart', 'totalAmount', 'dp50Amount', 'user'));
+        return view('checkout.index', compact('cart', 'totalAmount', 'dp50Amount', 'user', 'minEventDate'));
     }
 
     public function process(Request $request)
@@ -37,11 +38,13 @@ class CheckoutController extends Controller
             return redirect()->route('home')->with('error', 'Keranjang Anda kosong.');
         }
 
+        $minEventDate = now()->addDays(3)->startOfDay();
+
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
             'customer_email' => 'required|email|max:255',
-            'event_date' => 'required|date|after_or_equal:today',
+            'event_date' => 'required|date|after_or_equal:' . $minEventDate->format('Y-m-d'),
             'delivery_type' => 'required|in:pickup,delivery',
             'shipping_address' => 'required_if:delivery_type,delivery|nullable|string',
             'special_notes' => 'nullable|string',
@@ -52,7 +55,7 @@ class CheckoutController extends Controller
             'customer_phone.required' => 'Nomor Telepon/WhatsApp wajib diisi.',
             'customer_email.required' => 'Alamat Email wajib diisi.',
             'event_date.required' => 'Tanggal acara wajib dipilih!',
-            'event_date.after_or_equal' => 'Tanggal acara tidak boleh tanggal di masa lalu.',
+            'event_date.after_or_equal' => 'Mohon maaf, pemesanan katering minimal 3 hari sebelum tanggal acara (tidak melayani pesanan mendadak/dadakan).',
             'shipping_address.required_if' => 'Alamat pengiriman lokasi acara wajib diisi untuk layanan Delivery.',
             'payment_method.required' => 'Pilih salah satu metode pembayaran.',
             'payment_type.required' => 'Pilih jenis pembayaran (Bayar Penuh atau DP 50%).',

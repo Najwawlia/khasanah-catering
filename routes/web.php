@@ -46,8 +46,9 @@ Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('order.my_o
 // --- 6. HALAMAN ADMIN (MANAGEMENT SCRUD) ---
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    
+
     // SCRUD Menu Makanan
+    Route::get('/menus/categories', [AdminMenuController::class, 'categories'])->name('menus.categories');
     Route::get('/menus', [AdminMenuController::class, 'index'])->name('menus.index');
     Route::get('/menus/create', [AdminMenuController::class, 'create'])->name('menus.create');
     Route::post('/menus', [AdminMenuController::class, 'store'])->name('menus.store');
@@ -59,5 +60,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [AdminOrderController::class, 'show'])->name('orders.show');
     Route::put('/orders/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.update_status');
+    Route::put('/orders/{id}/tracking', [AdminOrderController::class, 'updateTracking'])->name('orders.update_tracking');
     Route::delete('/orders/{id}', [AdminOrderController::class, 'destroy'])->name('orders.destroy');
+
+    // Data Pelanggan
+    Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('customers.index');
 });

@@ -330,9 +330,9 @@
                             Pilih Tanggal Pelaksanaan Acara
                         </label>
                         <input type="date" name="event_date" id="event_date" class="form-input" 
-                               min="{{ date('Y-m-d') }}" value="{{ old('event_date') }}" required>
+                               min="{{ $minEventDate }}" value="{{ old('event_date') }}" required>
                         <small style="color: var(--text-muted); margin-top: 4px; display: block;">
-                            *Tanggal acara Anda akan otomatis kami lock di kalender dapur kami setelah pembayaran terverifikasi.
+                            <i class="fa-solid fa-circle-info"></i> Pemesanan katering minimal <strong>3 hari sebelum acara</strong> (kami tidak melayani pesanan mendadak/dadakan) agar bahan & persiapan dapur maksimal.
                         </small>
                     </div>
                 </div>

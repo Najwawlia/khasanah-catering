@@ -17,8 +17,18 @@ class MenuController extends Controller
                   ->orWhere('category', 'like', '%' . $request->search . '%');
         }
 
-        $menus = $query->orderBy('created_at', 'desc')->paginate(10);
+        $menus = $query->orderBy('created_at', 'desc')->get();
         return view('admin.menus.index', compact('menus'));
+    }
+
+    public function categories()
+    {
+        $categories = Menu::selectRaw('category, COUNT(*) as total_menu, SUM(CASE WHEN is_available = 1 THEN 1 ELSE 0 END) as total_tersedia')
+            ->groupBy('category')
+            ->orderBy('category')
+            ->get();
+
+        return view('admin.menus.categories', compact('categories'));
     }
 
     public function create()
