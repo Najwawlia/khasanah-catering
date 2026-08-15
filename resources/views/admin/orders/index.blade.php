@@ -21,7 +21,7 @@
             <input type="text" name="search" placeholder="Cari Kode Order / Nama Customer..." value="{{ request('search') }}">
         </div>
 
-        <select name="status" onchange="this.form.submit()" style="background: var(--bg-input); border: none; color: var(--text-main); padding: 11px 18px; border-radius: 30px; outline: none; font-size: 0.88rem;">
+        <select name="status" onchange="this.form.submit()" style="background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 9px 14px; border-radius: var(--radius-sm); outline: none; font-size: 0.86rem;">
             <option value="">Semua Status Progress</option>
             <option value="booking_received" {{ request('status') == 'booking_received' ? 'selected' : '' }}>Booking Diterima</option>
             <option value="payment_verified" {{ request('status') == 'payment_verified' ? 'selected' : '' }}>Pembayaran Diverifikasi</option>
@@ -30,7 +30,8 @@
         </select>
     </form>
 
-    <table>
+    <div class="table-scroll">
+<table>
         <thead>
             <tr>
                 <th>Kode Booking</th>
@@ -99,6 +100,7 @@
             @endforelse
         </tbody>
     </table>
+</div>
 </div>
 
 @endsection

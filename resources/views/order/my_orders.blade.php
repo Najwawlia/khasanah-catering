@@ -59,6 +59,7 @@
 
     .status-pending { background: rgba(234, 179, 8, 0.15); color: #B45309; border: 1px solid #E8A320; }
     .status-paid { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
+    .status-tracking { background: var(--primary-orange-light, rgba(181,80,46,0.12)); color: var(--primary-orange); border: 1px solid var(--primary-orange); }
 </style>
 @section('content')
 
@@ -76,9 +77,20 @@
                         Acara: {{ \Carbon\Carbon::parse($order->event_date)->format('d M Y') }}
                     </span>
                 </div>
-                <div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                     <span class="status-pill {{ $order->payment_status === 'pending' ? 'status-pending' : 'status-paid' }}">
                         Status Bayar: {{ strtoupper($order->payment_status) }}
+                    </span>
+                    @php
+                        $trackLabels = [
+                            'booking_received' => 'Booking Diterima',
+                            'payment_verified' => 'Pembayaran Diverifikasi',
+                            'kitchen_prep' => 'Diproses Dapur',
+                            'ready' => 'Siap Diambil/Dikirim',
+                        ];
+                    @endphp
+                    <span class="status-pill status-tracking">
+                        <i class="fa-solid fa-truck-fast"></i> {{ $trackLabels[$order->tracking_status] ?? $order->tracking_status }}
                     </span>
                 </div>
             </div>

@@ -7,102 +7,81 @@
 
 <div class="admin-header">
     <div>
-        <h1 class="admin-title">Selamat Datang, Admin ✦</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Ringkasan performa dapur & pemesanan katering.</p>
+        <h1 class="admin-title">Ringkasan Operasional</h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">{{ \Carbon\Carbon::now()->format('l, d F Y') }} — pantau performa dapur & pemesanan katering di sini.</p>
     </div>
 </div>
 
-<!-- BENTO STATS: 1 hero revenue card + 4 compact tiles -->
-<div class="bento-grid" style="margin-bottom: 1.5rem;">
-    <div class="hero-revenue">
-        <div class="hero-revenue-label">Pendapatan Bulan Ini</div>
-        <div class="hero-revenue-val">Rp {{ number_format($revenueThisMonth, 0, ',', '.') }}</div>
-        <div class="hero-revenue-sub"><i class="fa-solid fa-arrow-trend-up"></i> Dari {{ $ordersToday }} pesanan masuk hari ini</div>
+<!-- KPI STRIP: satu bar tunggal dengan pembatas garis tipis, bukan kartu terpisah -->
+<div class="kpi-strip" style="margin-bottom: 1.5rem;">
+    <div class="kpi-item" style="animation-delay:.03s;">
+        <div class="kpi-label"><span class="kpi-dot" style="background: var(--primary-orange);"></span>Pendapatan Bulan Ini</div>
+        <div class="kpi-value kpi-value-lg">Rp {{ number_format($revenueThisMonth, 0, ',', '.') }}</div>
     </div>
-
-    <div class="stat-tile" style="animation-delay:.05s;">
-        <div class="stat-tile-icon stat-orange"><i class="fa-solid fa-utensils"></i></div>
-        <div>
-            <div class="stat-tile-label">Total Menu</div>
-            <div class="stat-tile-val">{{ $totalMenus }}</div>
-        </div>
+    <div class="kpi-item" style="animation-delay:.08s;">
+        <div class="kpi-label"><span class="kpi-dot" style="background: var(--secondary-gold-dark);"></span>Total Menu</div>
+        <div class="kpi-value">{{ $totalMenus }}</div>
     </div>
-
-    <div class="stat-tile" style="animation-delay:.1s;">
-        <div class="stat-tile-icon stat-blue"><i class="fa-solid fa-users"></i></div>
-        <div>
-            <div class="stat-tile-label">Total Pelanggan</div>
-            <div class="stat-tile-val">{{ $totalCustomers }}</div>
-        </div>
+    <div class="kpi-item" style="animation-delay:.13s;">
+        <div class="kpi-label"><span class="kpi-dot" style="background: var(--quaternary-olive-dark);"></span>Total Pelanggan</div>
+        <div class="kpi-value">{{ $totalCustomers }}</div>
     </div>
-
-    <div class="stat-tile" style="animation-delay:.15s;">
-        <div class="stat-tile-icon stat-rose"><i class="fa-solid fa-cart-shopping"></i></div>
-        <div>
-            <div class="stat-tile-label">Pesanan Hari Ini</div>
-            <div class="stat-tile-val">{{ $ordersToday }}</div>
-        </div>
+    <div class="kpi-item" style="animation-delay:.18s;">
+        <div class="kpi-label"><span class="kpi-dot" style="background: var(--tertiary-coral-dark);"></span>Pesanan Hari Ini</div>
+        <div class="kpi-value">{{ $ordersToday }}</div>
     </div>
-
-    <div class="stat-tile" style="animation-delay:.2s;">
-        <div class="stat-tile-icon stat-green"><i class="fa-solid fa-hourglass-half"></i></div>
-        <div>
-            <div class="stat-tile-label">Menunggu Bayar</div>
-            <div class="stat-tile-val">{{ $pendingOrders->count() }}</div>
-        </div>
-    </div>
-</div>
-
-<!-- SALES AREA CHART - full width -->
-<div class="card-table" style="margin-bottom: 1.5rem;">
-    <div class="panel-header">
-        <div>
-            <h3>Tren Penjualan 7 Hari Terakhir</h3>
-            <p>Total omset transaksi yang berhasil dibayar per hari</p>
-        </div>
-    </div>
-    <div class="chart-wrap" style="height: 240px;">
-        <canvas id="salesChart"></canvas>
+    <div class="kpi-item" style="animation-delay:.23s;">
+        <div class="kpi-label"><span class="kpi-dot" style="background: var(--error);"></span>Menunggu Bayar</div>
+        <div class="kpi-value">{{ $pendingOrders->count() }}</div>
     </div>
 </div>
 
 <div class="dashboard-grid">
-    <!-- CATEGORY BREAKDOWN AS RANKED BARS (not a donut, keeps it distinct) -->
-    <div class="card-table">
-        <div class="panel-header">
+    <!-- SEBARAN KATEGORI: satu bar tersegmentasi, bukan chart / progress bar terpisah -->
+    <div class="list-panel">
+        <div class="section-label">
+            <span class="tick"></span>
             <div>
                 <h3>Sebaran Menu per Kategori</h3>
-                <p>Proporsi jumlah menu pada tiap kategori katalog</p>
+                <span class="sub">Proporsi jumlah menu pada tiap kategori katalog</span>
             </div>
         </div>
+
         @php
             $catColors = ['#B5502E', '#B8892B', '#C97B6D', '#6B7F5B'];
-            $catMax = $categoryDistribution->max('total') ?: 1;
+            $catTotal = $categoryDistribution->sum('total') ?: 1;
         @endphp
-        @foreach($categoryDistribution as $i => $cat)
-            <div style="margin-bottom: 1.1rem;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.86rem; margin-bottom: 6px;">
-                    <span style="font-weight: 600;">{{ $cat->category }}</span>
-                    <span style="color: var(--text-muted);">{{ $cat->total }} menu</span>
+
+        <div class="segment-bar">
+            @foreach($categoryDistribution as $i => $cat)
+                <div class="segment" style="width: {{ ($cat->total / $catTotal) * 100 }}%; background: {{ $catColors[$i % 4] }};" title="{{ $cat->category }}: {{ $cat->total }} menu"></div>
+            @endforeach
+        </div>
+
+        <div class="segment-legend">
+            @foreach($categoryDistribution as $i => $cat)
+                <div class="segment-legend-item">
+                    <span class="segment-legend-swatch" style="background: {{ $catColors[$i % 4] }};"></span>
+                    <strong>{{ $cat->category }}</strong>
+                    <span class="count">({{ round(($cat->total / $catTotal) * 100) }}%, {{ $cat->total }} menu)</span>
                 </div>
-                <div style="background: var(--bg-soft); border-radius: 20px; height: 9px; overflow: hidden;">
-                    <div style="width: {{ ($cat->total / $catMax) * 100 }}%; height: 100%; border-radius: 20px; background: {{ $catColors[$i % 4] }};"></div>
-                </div>
-            </div>
-        @endforeach
+            @endforeach
+        </div>
     </div>
 
-    <!-- PENDING PAYMENTS -->
-    <div class="card-table">
-        <div class="panel-header">
-            <div>
-                <h3><i class="fa-solid fa-triangle-exclamation" style="color: var(--secondary-gold-dark);"></i> Menunggu Verifikasi</h3>
-                <p>Pesanan dengan status bayar pending</p>
+    <!-- MENUNGGU VERIFIKASI -->
+    <div class="list-panel">
+        <div class="section-label" style="justify-content: space-between; width: 100%;">
+            <div style="display: flex; align-items: baseline; gap: 10px;">
+                <span class="tick" style="background: var(--secondary-gold-dark);"></span>
+                <div>
+                    <h3>Menunggu Verifikasi</h3>
+                    <span class="sub">Pesanan dengan status bayar pending</span>
+                </div>
             </div>
-            <span class="pill-badge pill-red">{{ $pendingOrders->count() }}</span>
         </div>
         @forelse($pendingOrders as $order)
-            <a href="{{ route('admin.orders.show', $order->id) }}" style="display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--bg-soft);">
+            <a href="{{ route('admin.orders.show', $order->id) }}" class="list-row">
                 <div>
                     <strong style="font-size: 0.87rem;">{{ $order->customer_name }}</strong>
                     <div style="font-size: 0.76rem; color: var(--text-muted);">{{ $order->order_code }}</div>
@@ -110,19 +89,24 @@
                 <span style="font-weight: 700; color: var(--primary-orange); font-size: 0.85rem;">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
             </a>
         @empty
-            <p style="color: var(--text-muted); text-align: center; padding: 1.5rem 0;">Semua pesanan sudah terverifikasi 🎉</p>
+            <p style="color: var(--text-muted); text-align: center; padding: 1.5rem 0;">Semua pesanan sudah terverifikasi.</p>
         @endforelse
     </div>
 </div>
 
-<div class="card-table" style="margin-top: 1.5rem;">
-    <div class="panel-header">
-        <div>
-            <h3>Pesanan Terbaru Masuk</h3>
-            <p>5 transaksi booking terakhir</p>
+<div class="list-panel" style="margin-top: 1.5rem;">
+    <div class="section-label" style="justify-content: space-between; width: 100%;">
+        <div style="display: flex; align-items: baseline; gap: 10px;">
+            <span class="tick" style="background: var(--quaternary-olive-dark);"></span>
+            <div>
+                <h3>Pesanan Terbaru Masuk</h3>
+                <span class="sub">5 transaksi booking terakhir — ubah timeline langsung di sini</span>
+            </div>
         </div>
-        <a href="{{ route('admin.orders.index') }}">Lihat Semua</a>
+        <a href="{{ route('admin.orders.index') }}" style="color: var(--primary-orange); font-weight: 700; font-size: 0.85rem;">Lihat Semua</a>
     </div>
+
+    <div class="table-scroll">
     <table>
         <thead>
             <tr>
@@ -164,47 +148,7 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>
 
-@endsection
-
-@section('scripts')
-<script>
-    const salesCtx = document.getElementById('salesChart');
-    const salesGradient = salesCtx.getContext('2d').createLinearGradient(0, 0, 0, 240);
-    salesGradient.addColorStop(0, 'rgba(181, 80, 46, 0.28)');
-    salesGradient.addColorStop(1, 'rgba(181, 80, 46, 0.02)');
-
-    new Chart(salesCtx, {
-        type: 'line',
-        data: {
-            labels: {!! json_encode($salesChartLabels) !!},
-            datasets: [{
-                label: 'Omset',
-                data: {!! json_encode($salesChartData) !!},
-                borderColor: '#B5502E',
-                backgroundColor: salesGradient,
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#B5502E',
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                borderWidth: 3,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: { color: '#EFE4D4' },
-                    ticks: { callback: v => 'Rp ' + (v / 1000) + 'k', font: { family: 'Inter' } }
-                },
-                x: { grid: { display: false }, ticks: { font: { family: 'Inter' } } }
-            }
-        }
-    });
-</script>
 @endsection

@@ -28,17 +28,6 @@ class DashboardController extends Controller
 
         $recentOrders = Order::with('items')->orderBy('created_at', 'desc')->take(5)->get();
 
-        // --- Grafik penjualan 7 hari terakhir ---
-        $salesChartLabels = [];
-        $salesChartData = [];
-        for ($i = 6; $i >= 0; $i--) {
-            $date = Carbon::today()->subDays($i);
-            $salesChartLabels[] = $date->format('d M');
-            $salesChartData[] = (float) Order::whereDate('created_at', $date)
-                ->whereIn('payment_status', ['dp_paid', 'paid'])
-                ->sum('total_amount');
-        }
-
         // --- Distribusi menu per kategori ---
         $categoryDistribution = Menu::selectRaw('category, COUNT(*) as total')
             ->groupBy('category')
@@ -52,8 +41,6 @@ class DashboardController extends Controller
             'revenueThisMonth',
             'pendingOrders',
             'recentOrders',
-            'salesChartLabels',
-            'salesChartData',
             'categoryDistribution'
         ));
     }

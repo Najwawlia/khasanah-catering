@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Akun Admin & Customer Dummy
         User::updateOrCreate(
-            ['email' => 'admin@khacate.com'],
+            ['email' => 'admin123@gmail.com'],
             [
-                'name' => 'Chef Admin KhaCate',
+                'name' => 'Admin',
                 'phone' => '081234567890',
                 'password' => Hash::make('password123'),
                 'role' => 'admin',

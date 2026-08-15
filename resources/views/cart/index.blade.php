@@ -103,29 +103,55 @@
         }
     }
 
-    .pax-input-group {
+    .cart-qty-stepper {
         display: flex;
-        align-items: center;
+        align-items: stretch;
         background: var(--bg-input);
         border: 1px solid var(--border-color);
         border-radius: var(--radius-sm);
-        padding: 4px;
+        overflow: hidden;
         transition: all var(--transition-speed);
     }
 
-    .pax-input-group:focus-within {
+    .cart-qty-stepper:focus-within {
         border-color: var(--primary-orange);
         box-shadow: 0 0 10px var(--primary-glow);
     }
 
-    .pax-input {
-        width: 70px;
+    .cart-qty-stepper .qty-btn {
         background: transparent;
         border: none;
-        color: var(--text-primary);
+        color: var(--primary-orange);
+        width: 32px;
+        flex-shrink: 0;
+        font-size: 0.75rem;
+        cursor: pointer;
+        transition: all var(--transition-speed);
+    }
+
+    .cart-qty-stepper .qty-btn:hover {
+        background: var(--primary-orange);
+        color: #FFFFFF;
+    }
+
+    .cart-qty-input {
+        width: 58px;
+        min-width: 0;
         text-align: center;
+        background: transparent;
+        border: none;
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        color: var(--text-primary);
         font-weight: 700;
         outline: none;
+        -moz-appearance: textfield;
+    }
+
+    .cart-qty-input::-webkit-outer-spin-button,
+    .cart-qty-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 
     .btn-icon-danger {
@@ -222,10 +248,11 @@
                         </div>
 
                         <div class="cart-item-actions">
-                            <form action="{{ route('cart.update', $id) }}" method="POST" class="pax-input-group">
+                            <form action="{{ route('cart.update', $id) }}" method="POST" class="qty-stepper cart-qty-stepper" data-min="{{ $item['category'] === 'Custom / Tumpeng' ? 1 : 30 }}">
                                 @csrf
-                                <input type="number" name="pax_quantity" class="pax-input" value="{{ $item['pax_quantity'] }}" min="{{ $item['category'] === 'Custom / Tumpeng' ? 1 : 30 }}" onchange="this.form.submit()">
-                                <span style="font-size: 0.8rem; color: var(--text-muted); padding-right: 6px;">pack</span>
+                                <button type="button" class="qty-btn qty-minus" onclick="stepCartQty(this, -5)"><i class="fa-solid fa-minus"></i></button>
+                                <input type="number" name="pax_quantity" class="qty-input cart-qty-input" value="{{ $item['pax_quantity'] }}" min="{{ $item['category'] === 'Custom / Tumpeng' ? 1 : 30 }}" onchange="this.form.submit()">
+                                <button type="button" class="qty-btn qty-plus" onclick="stepCartQty(this, 5)"><i class="fa-solid fa-plus"></i></button>
                             </form>
 
                             <form action="{{ route('cart.remove', $id) }}" method="POST">
@@ -279,4 +306,19 @@
     @endif
 </div>
 
+@endsection
+
+@section('scripts')
+<script>
+    function stepCartQty(btn, amount) {
+        const form = btn.closest('.cart-qty-stepper');
+        const input = form.querySelector('.cart-qty-input');
+        const min = parseInt(form.dataset.min) || 1;
+        let current = parseInt(input.value) || min;
+        current += amount;
+        if (current < min) current = min;
+        input.value = current;
+        form.submit();
+    }
+</script>
 @endsection

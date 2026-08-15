@@ -20,7 +20,8 @@
         </div>
     </form>
 
-    <table>
+    <div class="table-scroll">
+<table>
         <thead>
             <tr>
                 <th>Pelanggan</th>
@@ -55,6 +56,7 @@
             @endforelse
         </tbody>
     </table>
+</div>
 </div>
 
 @endsection

@@ -26,7 +26,8 @@
         </div>
     </form>
 
-    <table>
+    <div class="table-scroll">
+<table>
         <thead>
             <tr>
                 <th>Foto</th>
@@ -42,7 +43,7 @@
             @forelse($menus as $menu)
                 <tr>
                     <td>
-                        <img src="{{ $menu->image }}" alt="{{ $menu->name }}" style="width: 46px; height: 46px; border-radius: 50%; object-fit: cover;">
+                        <img src="{{ $menu->image }}" alt="{{ $menu->name }}" style="width: 42px; height: 42px; border-radius: var(--radius-sm); object-fit: cover; border: 1px solid var(--border-color);">
                     </td>
                     <td>
                         <strong>{{ $menu->name }}</strong>
@@ -82,6 +83,7 @@
             @endforelse
         </tbody>
     </table>
+</div>
 </div>
 
 @endsection

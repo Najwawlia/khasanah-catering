@@ -112,6 +112,8 @@
     }
 
     .pill-btn {
+        position: relative;
+        overflow: hidden;
         background: var(--bg-card);
         border: 1.5px solid var(--border-color);
         color: var(--text-secondary);
@@ -120,11 +122,27 @@
         font-weight: 600;
         font-size: 0.88rem;
         cursor: pointer;
-        transition: all var(--transition-speed);
+        transition: color var(--transition-speed), border-color var(--transition-speed), box-shadow var(--transition-speed), transform var(--transition-speed);
+        z-index: 0;
+    }
+
+    .pill-btn::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary-orange);
+        border-radius: 30px;
+        transform: scale(0);
+        transform-origin: center;
+        transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+        z-index: -1;
+    }
+
+    .pill-btn:hover::before, .pill-btn.active::before {
+        transform: scale(1);
     }
 
     .pill-btn:hover, .pill-btn.active {
-        background: var(--primary-orange);
         color: #FFFFFF;
         border-color: var(--primary-orange);
         box-shadow: 0 6px 16px var(--primary-glow);
@@ -164,196 +182,212 @@
         color: var(--text-secondary);
     }
 
-    /* --- MENU GRID --- */
-    .menu-container {
-        max-width: 1200px;
-        margin: 0 auto 4rem;
+    /* --- MENU LIST (editorial style, not a generic card grid) --- */
+    .menu-list-container {
+        max-width: 1100px;
+        margin: 0 auto 2rem;
         padding: 0 1.5rem;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem 3rem;
     }
 
-    @keyframes cardRise {
-        from { opacity: 0; transform: translateY(22px); }
-        to { opacity: 1; transform: translateY(0); }
+    @media (max-width: 760px) {
+        .menu-list-container { grid-template-columns: 1fr; }
     }
 
-    .menu-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-lg);
-        overflow: hidden;
-        transition: all var(--transition-speed);
+    .menu-row {
         display: flex;
-        flex-direction: column;
-        position: relative;
-        box-shadow: var(--shadow-soft);
-        animation: cardRise 0.6s cubic-bezier(0.4,0,0.2,1) backwards;
+        gap: 1.1rem;
+        align-items: flex-start;
+        padding: 1.3rem 0;
+        border-bottom: 1px dashed var(--border-color);
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+        transition: clip-path 0.75s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.5s ease;
+        transition-delay: calc(var(--i, 0) * 0.07s);
     }
 
-    .menu-container .menu-card:nth-child(1) { animation-delay: 0.03s; }
-    .menu-container .menu-card:nth-child(2) { animation-delay: 0.09s; }
-    .menu-container .menu-card:nth-child(3) { animation-delay: 0.15s; }
-    .menu-container .menu-card:nth-child(4) { animation-delay: 0.21s; }
-    .menu-container .menu-card:nth-child(5) { animation-delay: 0.27s; }
-    .menu-container .menu-card:nth-child(6) { animation-delay: 0.33s; }
-
-    .menu-card:hover {
-        transform: translateY(-8px);
-        border-color: transparent;
-        box-shadow: var(--shadow-hover);
+    /* Pre-reveal state is only applied by JS (progressive enhancement) - if JS fails, rows stay visible by default */
+    .menu-row.js-ready {
+        opacity: 0;
+        clip-path: inset(0 100% 0 0);
     }
 
-    .card-img-wrapper {
+    .menu-row.js-ready.is-visible {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+    }
+
+    .menu-row-hidden { display: none; }
+
+    .menu-row-media {
         position: relative;
-        height: 210px;
+        width: 88px;
+        height: 88px;
+        flex-shrink: 0;
+        border-radius: 50%;
         overflow: hidden;
+        border: 3px solid var(--bg-card);
+        box-shadow: 0 5px 16px rgba(43, 33, 25, 0.14);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .card-img-wrapper::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, transparent 55%, rgba(43, 33, 25, 0.45) 100%);
-        pointer-events: none;
+    .menu-row:hover .menu-row-media {
+        transform: rotate(-6deg) scale(1.07);
     }
 
-    .card-img {
+    .menu-row-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
     }
 
-    .menu-card:hover .card-img {
-        transform: scale(1.07);
-    }
-
-    .card-category-badge {
+    .menu-row-star {
         position: absolute;
-        top: 14px;
-        left: 14px;
-        z-index: 2;
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(6px);
-        color: var(--tertiary-coral-dark);
-        padding: 4px 13px;
-        border-radius: 20px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-    }
-
-    .min-pax-badge {
-        position: absolute;
-        bottom: 14px;
-        right: 14px;
-        z-index: 2;
-        background: rgba(255,255,255,0.92);
-        backdrop-filter: blur(6px);
-        color: var(--primary-orange-hover);
-        padding: 4px 11px;
-        border-radius: 8px;
-        font-size: 0.72rem;
-        font-weight: 700;
-    }
-
-    .bestseller-badge {
-        position: absolute;
-        top: 14px;
-        right: 14px;
-        z-index: 2;
+        top: -5px;
+        left: -5px;
         background: linear-gradient(120deg, var(--secondary-gold), #D4A63C);
         color: #3D2600;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        font-weight: 800;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
-        gap: 4px;
-        box-shadow: 0 4px 10px rgba(184, 137, 43, 0.4);
+        justify-content: center;
+        font-size: 0.6rem;
+        box-shadow: 0 3px 8px rgba(184, 137, 43, 0.45);
     }
 
-    .menu-card-hidden {
-        display: none;
-    }
-
-    .card-body {
-        padding: 1.5rem;
-        display: flex;
-        flex-direction: column;
+    .menu-row-content {
         flex: 1;
+        min-width: 0;
     }
 
-    .menu-title {
+    .menu-row-top {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+
+    .menu-row-title {
         font-family: var(--font-heading);
-        font-size: 1.3rem;
+        font-size: 1.12rem;
         font-weight: 600;
-        margin-bottom: 0.5rem;
         color: var(--text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 60%;
     }
 
-    .menu-desc {
+    .menu-row-leader {
+        flex: 1;
+        min-width: 16px;
+        border-bottom: 2px dotted var(--border-color);
+        margin-bottom: 5px;
+    }
+
+    .menu-row-price {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        color: var(--primary-orange);
+        font-size: 1.02rem;
+        white-space: nowrap;
+    }
+
+    .menu-row-desc {
         color: var(--text-secondary);
-        font-size: 0.9rem;
-        line-height: 1.5;
-        margin-bottom: 1.2rem;
+        font-size: 0.87rem;
+        line-height: 1.55;
+        margin-bottom: 0.3rem;
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
 
-    .card-footer-row {
-        margin-top: auto;
-        display: flex;
-        justify-content: space-between;
+    .menu-row-desc.is-expanded {
+        display: block;
+        -webkit-line-clamp: unset;
+        overflow: visible;
+    }
+
+    .menu-row-readmore {
+        background: none;
+        border: none;
+        color: var(--primary-orange);
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 0;
+        margin-bottom: 0.8rem;
+        cursor: pointer;
+        display: inline-flex;
         align-items: center;
-        padding-top: 1rem;
-        border-top: 1px solid var(--border-color);
+        gap: 5px;
     }
 
-    .price-tag {
+    .menu-row-readmore:hover {
+        text-decoration: underline;
+    }
+
+    .menu-row-readmore i {
+        font-size: 0.65rem;
+        transition: transform 0.3s ease;
+    }
+
+    .menu-row-readmore.is-open i {
+        transform: rotate(180deg);
+    }
+
+    .menu-row-meta {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
-    .price-label {
-        font-size: 0.72rem;
-        color: var(--text-secondary);
+    .menu-row-tag {
+        font-size: 0.68rem;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.3px;
+        color: var(--tertiary-coral-dark);
+        background: var(--tertiary-coral-light);
+        padding: 3px 11px;
+        border-radius: 20px;
     }
 
-    .price-amount {
-        font-family: var(--font-heading);
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--primary-orange);
+    .menu-row-minpax {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
     }
 
-    .btn-order-pill {
+    .menu-row-cta {
+        margin-left: auto;
         background: transparent;
         border: 1.5px solid var(--primary-orange);
         color: var(--primary-orange);
         font-weight: 700;
-        font-size: 0.85rem;
-        padding: 9px 18px;
+        font-size: 0.78rem;
+        padding: 6px 14px;
         border-radius: 30px;
         cursor: pointer;
-        transition: all var(--transition-speed);
         display: inline-flex;
         align-items: center;
-        gap: 7px;
+        gap: 6px;
+        transition: all var(--transition-speed);
     }
 
-    .btn-order-pill:hover {
+    .menu-row-cta:hover {
         background: var(--primary-orange);
         color: #FFFFFF;
-        box-shadow: 0 8px 18px var(--primary-glow);
-        transform: translateY(-2px);
+        box-shadow: 0 6px 14px var(--primary-glow);
+        transform: translateY(-1px);
     }
 
     /* --- MODAL DIALOG --- */
@@ -462,6 +496,63 @@
         box-shadow: 0 0 10px var(--primary-glow);
     }
 
+    /* --- QUANTITY STEPPER (plus/minus) --- */
+    .qty-stepper {
+        display: flex;
+        align-items: stretch;
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        transition: all var(--transition-speed);
+    }
+
+    .qty-stepper:focus-within {
+        border-color: var(--primary-orange);
+        box-shadow: 0 0 10px var(--primary-glow);
+    }
+
+    .qty-btn {
+        background: transparent;
+        border: none;
+        color: var(--primary-orange);
+        width: 48px;
+        flex-shrink: 0;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all var(--transition-speed);
+    }
+
+    .qty-btn:hover {
+        background: var(--primary-orange);
+        color: #FFFFFF;
+    }
+
+    .qty-btn:active {
+        transform: scale(0.9);
+    }
+
+    .qty-input {
+        flex: 1;
+        min-width: 0;
+        text-align: center;
+        background: transparent;
+        border: none;
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        color: var(--text-primary);
+        font-size: 1.05rem;
+        font-weight: 700;
+        outline: none;
+        -moz-appearance: textfield;
+    }
+
+    .qty-input::-webkit-outer-spin-button,
+    .qty-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
     .subtotal-preview {
         background: var(--primary-orange-light);
         border: 1px dashed var(--primary-orange);
@@ -514,74 +605,99 @@
         font-size: 1.05rem;
     }
 
-    /* --- HOW IT WORKS --- */
+    /* --- HOW IT WORKS (connected path, not boxed cards) --- */
     .how-it-works {
         background: var(--bg-soft);
         padding: 4.5rem 1.5rem;
     }
 
-    .steps-grid {
+    .steps-path {
         max-width: 1100px;
         margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
-    }
-
-    .step-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-lg);
-        padding: 2.2rem 1.8rem;
-        text-align: center;
-        transition: all var(--transition-speed);
-        box-shadow: var(--shadow-soft);
-    }
-
-    .step-card:hover {
-        transform: translateY(-6px) scale(1.02);
-        box-shadow: var(--shadow-hover);
-        border-color: transparent;
-    }
-
-    .step-number {
-        width: 48px;
-        height: 48px;
-        margin: 0 auto 1.2rem;
-        border-radius: 50%;
-        background: var(--primary-orange);
-        color: #fff;
         display: flex;
-        align-items: center;
-        justify-content: center;
+        align-items: flex-start;
+    }
+
+    @media (max-width: 760px) {
+        .steps-path { flex-direction: column; }
+    }
+
+    .step-item {
+        flex: 1;
+        text-align: left;
+        padding: 0 1.4rem;
+    }
+
+    @media (max-width: 760px) {
+        .step-item { padding: 0 0 2.2rem 1.4rem; }
+    }
+
+    .step-num {
         font-family: var(--font-heading);
-        font-weight: 700;
-        font-size: 1.3rem;
-        box-shadow: 0 6px 16px var(--primary-glow);
+        font-size: 3.2rem;
+        font-weight: 600;
+        line-height: 1;
+        color: transparent;
+        -webkit-text-stroke: 1.5px var(--primary-orange);
+        margin-bottom: 0.9rem;
+        transition: -webkit-text-stroke-color 0.4s, color 0.4s;
     }
 
-    .step-card:nth-child(2) .step-number {
-        background: var(--secondary-gold-dark);
-        box-shadow: 0 6px 16px rgba(184, 137, 43, 0.3);
+    .step-item:hover .step-num {
+        color: var(--primary-orange);
     }
 
-    .step-card:nth-child(3) .step-number {
-        background: var(--quaternary-olive-dark);
-        box-shadow: 0 6px 16px rgba(79, 95, 65, 0.3);
+    .step-connector {
+        width: 70px;
+        height: 2px;
+        margin-top: 42px;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+        background: repeating-linear-gradient(90deg, var(--border-color) 0 6px, transparent 6px 13px);
     }
 
-    .step-card h3 {
+    @media (max-width: 760px) {
+        .step-connector {
+            width: 2px;
+            height: 46px;
+            margin: -1rem 0 -1rem 2.1rem;
+            background: repeating-linear-gradient(180deg, var(--border-color) 0 6px, transparent 6px 13px);
+        }
+    }
+
+    .step-connector::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary-orange);
+        transform-origin: left top;
+        transform: scaleX(0);
+        transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1) 0.3s;
+    }
+
+    @media (max-width: 760px) {
+        .step-connector::after { transform-origin: top left; transform: scaleY(0); }
+        .step-connector.is-visible::after { transform: scaleY(1); }
+    }
+
+    .step-connector.is-visible::after {
+        transform: scaleX(1);
+    }
+
+    .step-item h3 {
         font-family: var(--font-heading);
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         font-weight: 600;
         color: var(--text-primary);
         margin-bottom: 0.6rem;
     }
 
-    .step-card p {
+    .step-item p {
         color: var(--text-secondary);
-        font-size: 0.95rem;
+        font-size: 0.92rem;
         line-height: 1.6;
+        max-width: 280px;
     }
 
     /* --- TESTIMONIALS (auto-scrolling marquee) --- */
@@ -674,62 +790,137 @@
         font-size: 0.85rem;
     }
 
-    /* --- CTA BANNER --- */
-    .cta-banner {
-        max-width: 1100px;
+    /* --- CTA BANNER (invitation ticket-stub style, not a generic gradient box) --- */
+    .invite-banner {
+        max-width: 1000px;
         margin: 0 auto 4.5rem;
-        padding: 3.5rem 2rem;
-        border-radius: 24px;
-        background: linear-gradient(120deg, var(--primary-orange) 0%, var(--tertiary-coral-dark) 100%);
-        text-align: center;
-        box-shadow: 0 20px 40px var(--primary-glow);
-        position: relative;
+        display: flex;
+        background: var(--charcoal);
+        border-radius: 20px;
         overflow: hidden;
+        box-shadow: 0 24px 46px rgba(43, 33, 25, 0.22);
+        position: relative;
     }
 
-    .cta-banner::before {
-        content: '';
-        position: absolute;
-        width: 260px; height: 260px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.08);
-        top: -100px; right: -60px;
+    @media (max-width: 700px) {
+        .invite-banner { flex-direction: column; }
     }
 
-    .cta-banner h2 {
+    .invite-main {
+        flex: 1;
+        padding: 3rem 2.6rem;
+        position: relative;
+    }
+
+    .invite-eyebrow {
+        color: var(--secondary-gold);
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.8rem;
+        display: block;
+    }
+
+    .invite-main h2 {
         font-family: var(--font-heading);
         font-style: italic;
         color: #fff;
-        font-size: 2.1rem;
-        font-weight: 600;
-        margin-bottom: 0.8rem;
+        font-size: 2rem;
+        font-weight: 500;
+        line-height: 1.3;
+        margin-bottom: 1rem;
+        max-width: 420px;
+    }
+
+    .invite-main p {
+        color: rgba(255, 255, 255, 0.65);
+        max-width: 400px;
+        line-height: 1.7;
+        font-size: 0.94rem;
+    }
+
+    /* Perforated ticket divider */
+    .invite-divider {
+        width: 0;
         position: relative;
+        border-left: 2px dashed rgba(255, 255, 255, 0.25);
+        margin: 24px 0;
     }
 
-    .cta-banner p {
-        color: rgba(255, 255, 255, 0.9);
-        max-width: 550px;
-        margin: 0 auto 2rem;
-        line-height: 1.6;
+    .invite-divider::before,
+    .invite-divider::after {
+        content: '';
+        position: absolute;
+        left: -14px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--bg-main);
     }
 
-    .cta-banner .btn-primary {
-        background: #fff;
-        color: var(--primary-orange-hover);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    .invite-divider::before { top: -14px; }
+    .invite-divider::after { bottom: -14px; }
+
+    @media (max-width: 700px) {
+        .invite-divider {
+            border-left: none;
+            border-top: 2px dashed rgba(255, 255, 255, 0.25);
+            width: auto;
+            height: 0;
+            margin: 0 24px;
+        }
+        .invite-divider::before { left: -14px; top: -14px; }
+        .invite-divider::after { left: auto; right: -14px; top: -14px; bottom: auto; }
     }
 
-    .cta-banner .btn-primary:hover {
-        background: var(--charcoal);
-        color: #fff;
-        transform: translateY(-3px) scale(1.03);
+    .invite-stub {
+        width: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    @media (max-width: 700px) {
+        .invite-stub { width: auto; padding: 2rem 2.6rem 2.6rem; }
+    }
+
+    .invite-stamp {
+        width: 132px;
+        height: 132px;
+        border-radius: 50%;
+        border: 2px dashed rgba(255, 215, 130, 0.55);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        color: var(--secondary-gold);
+        font-family: var(--font-heading);
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-align: center;
+        line-height: 1.25;
+        transform: rotate(-9deg);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s, color 0.3s;
+        cursor: pointer;
+    }
+
+    .invite-stamp i {
+        font-size: 1.3rem;
+        margin-bottom: 4px;
+    }
+
+    .invite-stamp:hover {
+        transform: rotate(0deg) scale(1.08);
+        background: var(--secondary-gold);
+        color: var(--charcoal);
+        border-style: solid;
+        border-color: var(--secondary-gold);
     }
 
     @media (max-width: 900px) {
-        .steps-grid {
-            grid-template-columns: 1fr;
-        }
-
         .hero-title {
             font-size: 2.2rem;
         }
@@ -738,7 +929,7 @@
             font-size: 1.7rem;
         }
 
-        .cta-banner h2 {
+        .invite-main h2 {
             font-size: 1.5rem;
         }
 
@@ -748,12 +939,6 @@
 
         .testimonial-track {
             animation-duration: 22s;
-        }
-    }
-
-    @media (min-width: 901px) and (max-width: 1200px) {
-        .steps-grid {
-            grid-template-columns: repeat(2, 1fr);
         }
     }
 </style>
@@ -811,37 +996,38 @@
     </form>
 </section>
 
-<!-- MENU GRID -->
-<section class="menu-container reveal-up">
+<!-- MENU LIST (editorial style) -->
+<section class="menu-list-container">
     @forelse($menus as $index => $menu)
-        <div class="menu-card {{ !is_null($bestsellerCount) && $index >= $bestsellerCount ? 'menu-card-hidden' : '' }}">
-            <div class="card-img-wrapper">
-                <img src="{{ $menu->image }}" alt="{{ $menu->name }}" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=800'">
-                <span class="card-category-badge">{{ $menu->category }}</span>
+        <article class="menu-row {{ !is_null($bestsellerCount) && $index >= $bestsellerCount ? 'menu-row-hidden' : '' }}" style="--i: {{ $index % 6 }}">
+            <div class="menu-row-media">
+                <img src="{{ $menu->image }}" alt="{{ $menu->name }}" class="menu-row-img" onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=800'">
                 @if($menu->is_bestseller)
-                    <span class="bestseller-badge"><i class="fa-solid fa-star"></i> Bestseller</span>
-                @endif
-                @if($menu->category !== 'Custom / Tumpeng')
-                    <span class="min-pax-badge"><i class="fa-solid fa-users"></i> Min. {{ $menu->min_pax }} Pack</span>
+                    <span class="menu-row-star" title="Bestseller"><i class="fa-solid fa-star"></i></span>
                 @endif
             </div>
-            <div class="card-body">
-                <h3 class="menu-title">{{ $menu->name }}</h3>
-                <p class="menu-desc">{{ $menu->description }}</p>
-                
-                <div class="card-footer-row">
-                    <div class="price-tag">
-                        <span class="price-label">Harga per Pack</span>
-                        <span class="price-amount">Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</span>
-                    </div>
-
-                    <button class="btn-order-pill"
+            <div class="menu-row-content">
+                <div class="menu-row-top">
+                    <h3 class="menu-row-title">{{ $menu->name }}</h3>
+                    <span class="menu-row-leader"></span>
+                    <span class="menu-row-price" data-price="{{ $menu->price_per_pax }}">Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</span>
+                </div>
+                <p class="menu-row-desc" id="desc-{{ $menu->id }}">{{ $menu->description }}</p>
+                <button type="button" class="menu-row-readmore" id="readmore-{{ $menu->id }}" onclick="toggleDesc('{{ $menu->id }}')">
+                    Selengkapnya <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="menu-row-meta">
+                    <span class="menu-row-tag">{{ $menu->category }}</span>
+                    @if($menu->category !== 'Custom / Tumpeng')
+                        <span class="menu-row-minpax"><i class="fa-solid fa-users"></i> Min. {{ $menu->min_pax }} Pack</span>
+                    @endif
+                    <button type="button" class="menu-row-cta"
                             onclick="openOrderModal('{{ $menu->id }}', '{{ addslashes($menu->name) }}', '{{ $menu->price_per_pax }}', '{{ $menu->min_pax }}', '{{ addslashes($menu->category) }}')">
-                        <i class="fa-solid fa-cart-plus"></i> Pesan
+                        <i class="fa-solid fa-cart-plus"></i> Tambah
                     </button>
                 </div>
             </div>
-        </div>
+        </article>
     @empty
         <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
             <i class="fa-solid fa-utensils" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
@@ -852,7 +1038,7 @@
 </section>
 
 @if(!is_null($bestsellerCount) && $menus->count() > $bestsellerCount)
-    <div style="text-align: center; margin: -1rem auto 3rem;">
+    <div style="text-align: center; margin: 0.5rem auto 3rem;">
         <button id="showMoreMenuBtn" class="btn-secondary" onclick="showMoreMenu()">
             Lihat Menu Lainnya <i class="fa-solid fa-chevron-down"></i>
         </button>
@@ -866,19 +1052,21 @@
         <h2>Cara <span>Kerjanya</span></h2>
         <p>Tiga langkah mudah menuju hidangan katering sempurna untuk acara Anda.</p>
     </div>
-    <div class="steps-grid">
-        <div class="step-card">
-            <div class="step-number">1</div>
+    <div class="steps-path">
+        <div class="step-item">
+            <div class="step-num">01</div>
             <h3>Pilih Menu Favorit</h3>
             <p>Jelajahi katalog menu kami dan pilih paket prasmanan, nasi kotak, atau hidangan spesial sesuai selera acara Anda.</p>
         </div>
-        <div class="step-card">
-            <div class="step-number">2</div>
+        <span class="step-connector"></span>
+        <div class="step-item">
+            <div class="step-num" style="-webkit-text-stroke-color: var(--secondary-gold-dark);">02</div>
             <h3>Lakukan Pemesanan</h3>
             <p>Tentukan jumlah pack, isi data pengiriman, dan selesaikan pembayaran DP atau lunas dengan aman.</p>
         </div>
-        <div class="step-card">
-            <div class="step-number">3</div>
+        <span class="step-connector"></span>
+        <div class="step-item">
+            <div class="step-num" style="-webkit-text-stroke-color: var(--quaternary-olive-dark);">03</div>
             <h3>Kami Antar Tepat Waktu</h3>
             <p>Duduk santai — hidangan segar kami akan disiapkan dan diantar langsung ke lokasi acara Anda.</p>
         </div>
@@ -920,13 +1108,20 @@
     </div>
 </section>
 
-<!-- CTA BANNER -->
-<div class="cta-banner reveal-up">
-    <h2>Jadikan Acara Anda Tak Terlupakan</h2>
-    <p>Pesan sekarang dan biarkan kami yang mengurus hidangannya, sementara Anda menikmati momen bersama orang-orang tercinta.</p>
-    <a href="#katalog" class="btn-primary">
-        <i class="fa-solid fa-utensils"></i> Pesan Sekarang
-    </a>
+<!-- CTA BANNER (invitation ticket style) -->
+<div class="invite-banner reveal-up">
+    <div class="invite-main">
+        <span class="invite-eyebrow">Undangan Khusus Untuk Anda</span>
+        <h2>Jadikan acara Anda tak terlupakan.</h2>
+        <p>Pesan sekarang dan biarkan kami yang mengurus hidangannya, sementara Anda menikmati momen bersama orang-orang tercinta.</p>
+    </div>
+    <div class="invite-divider"></div>
+    <div class="invite-stub">
+        <a href="#katalog" class="invite-stamp">
+            <i class="fa-solid fa-utensils"></i>
+            Pesan<br>Sekarang
+        </a>
+    </div>
 </div>
 
 <!-- MODAL TAMBAH KE KERANJANG -->
@@ -942,7 +1137,11 @@
             
             <div class="form-group">
                 <label for="paxInput">Jumlah Porsi (Pack) <span id="modalMinHint" style="color: var(--primary-orange);">(Minimal 30 Pack)</span></label>
-                <input type="number" name="pax_quantity" id="paxInput" class="form-input" min="30" value="30" oninput="calculateSubtotal()" required>
+                <div class="qty-stepper">
+                    <button type="button" class="qty-btn qty-minus" onclick="stepPax(-5)"><i class="fa-solid fa-minus"></i></button>
+                    <input type="number" name="pax_quantity" id="paxInput" class="qty-input" min="30" value="30" oninput="calculateSubtotal()" required>
+                    <button type="button" class="qty-btn qty-plus" onclick="stepPax(5)"><i class="fa-solid fa-plus"></i></button>
+                </div>
                 <small id="modalMinNote" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; display: block;">
                     <i class="fa-solid fa-circle-info" style="color: var(--primary-orange);"></i> Pemesanan di bawah 30 pack akan ditolak oleh sistem katering.
                 </small>
@@ -965,6 +1164,88 @@
 @section('scripts')
 <script>
     let currentPrice = 0;
+
+    // --- Unique reveal animation for menu rows (clip-path unfold + price count-up) ---
+    function animatePriceIn(el) {
+        if (!el || el.dataset.animated === '1') return;
+        el.dataset.animated = '1';
+        const target = parseFloat(el.dataset.price) || 0;
+        const duration = 700;
+        const start = performance.now();
+
+        function tick(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(target * eased);
+            el.textContent = 'Rp ' + current.toLocaleString('id-ID');
+            if (progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        try {
+            const menuRows = document.querySelectorAll('.menu-row:not(.menu-row-hidden)');
+            if (menuRows.length && 'IntersectionObserver' in window) {
+                const rowObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            animatePriceIn(entry.target.querySelector('.menu-row-price'));
+                            rowObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                menuRows.forEach(row => {
+                    row.classList.add('js-ready'); // only hide once JS confirmed working
+                    rowObserver.observe(row);
+                });
+
+                // Safety net: force-reveal anything still hidden after 2.5s (in case observer misses an element)
+                setTimeout(() => {
+                    document.querySelectorAll('.menu-row.js-ready:not(.is-visible)').forEach(row => {
+                        row.classList.add('is-visible');
+                        animatePriceIn(row.querySelector('.menu-row-price'));
+                    });
+                }, 2500);
+            } else {
+                // No IntersectionObserver support: just show the price directly, no animation
+                document.querySelectorAll('.menu-row-price').forEach(animatePriceIn);
+            }
+        } catch (e) {
+            console.error('Menu reveal animation failed, showing content directly:', e);
+            document.querySelectorAll('.menu-row').forEach(row => row.classList.add('is-visible'));
+        }
+
+        // --- Step connector line-draw animation ---
+        try {
+            const connectors = document.querySelectorAll('.step-connector');
+            if (connectors.length && 'IntersectionObserver' in window) {
+                const connectorObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, i) => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => entry.target.classList.add('is-visible'), i * 200);
+                            connectorObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.3 });
+                connectors.forEach(c => connectorObserver.observe(c));
+            }
+        } catch (e) {
+            console.error('Step connector animation failed:', e);
+        }
+    });
+
+    function toggleDesc(id) {
+        const desc = document.getElementById('desc-' + id);
+        const btn = document.getElementById('readmore-' + id);
+        const isOpen = desc.classList.toggle('is-expanded');
+        btn.classList.toggle('is-open', isOpen);
+        btn.innerHTML = isOpen
+            ? 'Sembunyikan <i class="fa-solid fa-chevron-down"></i>'
+            : 'Selengkapnya <i class="fa-solid fa-chevron-down"></i>';
+    }
 
     function openOrderModal(id, name, price, minPax, category) {
         currentPrice = parseFloat(price);
@@ -998,11 +1279,11 @@
     }
 
     function showMoreMenu() {
-        document.querySelectorAll('.menu-card-hidden').forEach(function (card) {
-            card.classList.remove('menu-card-hidden');
-            card.classList.add('reveal-up');
+        document.querySelectorAll('.menu-row-hidden').forEach(function (row) {
+            row.classList.remove('menu-row-hidden');
             requestAnimationFrame(function () {
-                card.classList.add('is-visible');
+                row.classList.add('is-visible');
+                animatePriceIn(row.querySelector('.menu-row-price'));
             });
         });
 
@@ -1014,6 +1295,16 @@
         const pax = parseInt(document.getElementById('paxInput').value) || 0;
         const subtotal = pax * currentPrice;
         document.getElementById('subtotalText').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
+    }
+
+    function stepPax(amount) {
+        const input = document.getElementById('paxInput');
+        const min = parseInt(input.min) || 1;
+        let current = parseInt(input.value) || min;
+        current += amount;
+        if (current < min) current = min;
+        input.value = current;
+        calculateSubtotal();
     }
 
     // Modal click outside to close

@@ -58,7 +58,7 @@
         color: var(--primary-orange);
     }
 
-    /* --- DUMMY QRIS IMAGE CONTAINER --- */
+    /* --- QRIS IMAGE CONTAINER --- */
     .qris-box {
         background: #FFFFFF;
         border: 1px solid var(--border-color);
@@ -118,9 +118,8 @@
             <p style="font-size: 0.85rem; color: var(--text-muted);">Buka aplikasi GoPay, OVO, Dana, ShopeePay, atau Mobile Banking pilihan Anda.</p>
 
             <div class="qris-box">
-                <!-- DUMMY BARCODE QRIS STATIC -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=KHACATE-CATERING-BOOKING-{{ $order->order_code }}" alt="Dummy QRIS Barcode" class="qris-img">
-                <div style="color: #111; font-weight: 800; font-size: 0.85rem; margin-top: 8px;">NMAS: KHACATE CATERING OFFICIAL</div>
+                <img src="{{ asset('images/qris-khasanah-catering.jpeg') }}" alt="QRIS Khasanah Snack N Nasi Box" class="qris-img" style="width: 260px; height: auto; object-fit: contain;">
+                <div style="color: #111; font-weight: 800; font-size: 0.85rem; margin-top: 8px;">NMID: ID1026487951174 — KHASANAH SNACK N NASI BOX, BNYMNK</div>
             </div>
         @elseif(in_array($order->payment_method, ['bca', 'mandiri', 'bri']))
             <div class="bank-account-box">
