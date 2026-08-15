@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\MenuController as AdminMenuController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,4 +66,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Data Pelanggan
     Route::get('/customers', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('customers.index');
+
+    // Laporan Penjualan
+    Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
 });

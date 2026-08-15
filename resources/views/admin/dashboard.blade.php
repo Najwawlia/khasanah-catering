@@ -1,153 +1,176 @@
 @extends('layouts.admin')
-
 @section('title', 'Dashboard - Admin Khasanah Catering')
 @section('admin-title', 'Dashboard')
 
 @section('content')
 
-<div class="admin-header">
+<div class="ph">
     <div>
-        <h1 class="admin-title">Ringkasan Operasional</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">{{ \Carbon\Carbon::now()->format('l, d F Y') }} — pantau performa dapur & pemesanan katering di sini.</p>
+        <h1 class="ph-title">Ringkasan Operasional</h1>
+        <p class="ph-sub">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</p>
     </div>
 </div>
 
-<!-- KPI STRIP: satu bar tunggal dengan pembatas garis tipis, bukan kartu terpisah -->
-<div class="kpi-strip" style="margin-bottom: 1.5rem;">
-    <div class="kpi-item" style="animation-delay:.03s;">
-        <div class="kpi-label"><span class="kpi-dot" style="background: var(--primary-orange);"></span>Pendapatan Bulan Ini</div>
-        <div class="kpi-value kpi-value-lg">Rp {{ number_format($revenueThisMonth, 0, ',', '.') }}</div>
+{{-- STAT ROW --}}
+<div class="stat-row">
+    <div class="stat">
+        <div class="stat-label">Pendapatan Bulan Ini</div>
+        <div class="stat-val accent" style="font-size:1.2rem;">Rp {{ number_format($revenueThisMonth, 0, ',', '.') }}</div>
+        <div class="stat-foot">Omset aktif</div>
     </div>
-    <div class="kpi-item" style="animation-delay:.08s;">
-        <div class="kpi-label"><span class="kpi-dot" style="background: var(--secondary-gold-dark);"></span>Total Menu</div>
-        <div class="kpi-value">{{ $totalMenus }}</div>
+    <div class="stat">
+        <div class="stat-label">Total Menu</div>
+        <div class="stat-val">{{ $totalMenus }}</div>
+        <div class="stat-foot">Menu aktif di katalog</div>
     </div>
-    <div class="kpi-item" style="animation-delay:.13s;">
-        <div class="kpi-label"><span class="kpi-dot" style="background: var(--quaternary-olive-dark);"></span>Total Pelanggan</div>
-        <div class="kpi-value">{{ $totalCustomers }}</div>
+    <div class="stat">
+        <div class="stat-label">Pelanggan</div>
+        <div class="stat-val">{{ $totalCustomers }}</div>
+        <div class="stat-foot">Akun terdaftar</div>
     </div>
-    <div class="kpi-item" style="animation-delay:.18s;">
-        <div class="kpi-label"><span class="kpi-dot" style="background: var(--tertiary-coral-dark);"></span>Pesanan Hari Ini</div>
-        <div class="kpi-value">{{ $ordersToday }}</div>
+    <div class="stat">
+        <div class="stat-label">Pesanan Hari Ini</div>
+        <div class="stat-val">{{ $ordersToday }}</div>
+        <div class="stat-foot">Masuk hari ini</div>
     </div>
-    <div class="kpi-item" style="animation-delay:.23s;">
-        <div class="kpi-label"><span class="kpi-dot" style="background: var(--error);"></span>Menunggu Bayar</div>
-        <div class="kpi-value">{{ $pendingOrders->count() }}</div>
+    <div class="stat">
+        <div class="stat-label">Menunggu Bayar</div>
+        <div class="stat-val" style="color:var(--gold);">{{ $pendingOrders->count() }}</div>
+        <div class="stat-foot">Perlu verifikasi</div>
     </div>
 </div>
 
-<div class="dashboard-grid">
-    <!-- SEBARAN KATEGORI: satu bar tersegmentasi, bukan chart / progress bar terpisah -->
-    <div class="list-panel">
-        <div class="section-label">
-            <span class="tick"></span>
+<div class="g2">
+    {{-- Sebaran Kategori --}}
+    <div class="box">
+        <div class="box-head">
             <div>
-                <h3>Sebaran Menu per Kategori</h3>
-                <span class="sub">Proporsi jumlah menu pada tiap kategori katalog</span>
+                <div class="box-title">Sebaran Menu per Kategori</div>
+                <div class="box-sub">Proporsi jumlah menu tiap kategori</div>
             </div>
         </div>
-
-        @php
-            $catColors = ['#B5502E', '#B8892B', '#C97B6D', '#6B7F5B'];
-            $catTotal = $categoryDistribution->sum('total') ?: 1;
-        @endphp
-
-        <div class="segment-bar">
-            @foreach($categoryDistribution as $i => $cat)
-                <div class="segment" style="width: {{ ($cat->total / $catTotal) * 100 }}%; background: {{ $catColors[$i % 4] }};" title="{{ $cat->category }}: {{ $cat->total }} menu"></div>
-            @endforeach
-        </div>
-
-        <div class="segment-legend">
-            @foreach($categoryDistribution as $i => $cat)
-                <div class="segment-legend-item">
-                    <span class="segment-legend-swatch" style="background: {{ $catColors[$i % 4] }};"></span>
-                    <strong>{{ $cat->category }}</strong>
-                    <span class="count">({{ round(($cat->total / $catTotal) * 100) }}%, {{ $cat->total }} menu)</span>
-                </div>
-            @endforeach
+        <div class="box-body">
+            @php
+                $catColors = ['#C4561A','#1A7DC4','#6B5EC4','#2A7D4F'];
+                $catTotal  = $categoryDistribution->sum('total') ?: 1;
+            @endphp
+            <div class="seg" style="margin-bottom:16px;">
+                @foreach($categoryDistribution as $i => $cat)
+                    <div class="seg-s"
+                         style="width:{{ ($cat->total/$catTotal)*100 }}%; background:{{ $catColors[$i%4] }};"
+                         title="{{ $cat->category }}: {{ $cat->total }} menu"></div>
+                @endforeach
+            </div>
+            <div class="seg-leg">
+                @foreach($categoryDistribution as $i => $cat)
+                    <div class="seg-leg-item">
+                        <span class="seg-leg-dot" style="background:{{ $catColors[$i%4] }};"></span>
+                        <strong>{{ $cat->category }}</strong>
+                        <span>{{ round(($cat->total/$catTotal)*100) }}% &middot; {{ $cat->total }}</span>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 
-    <!-- MENUNGGU VERIFIKASI -->
-    <div class="list-panel">
-        <div class="section-label" style="justify-content: space-between; width: 100%;">
-            <div style="display: flex; align-items: baseline; gap: 10px;">
-                <span class="tick" style="background: var(--secondary-gold-dark);"></span>
-                <div>
-                    <h3>Menunggu Verifikasi</h3>
-                    <span class="sub">Pesanan dengan status bayar pending</span>
-                </div>
-            </div>
-        </div>
-        @forelse($pendingOrders as $order)
-            <a href="{{ route('admin.orders.show', $order->id) }}" class="list-row">
-                <div>
-                    <strong style="font-size: 0.87rem;">{{ $order->customer_name }}</strong>
-                    <div style="font-size: 0.76rem; color: var(--text-muted);">{{ $order->order_code }}</div>
-                </div>
-                <span style="font-weight: 700; color: var(--primary-orange); font-size: 0.85rem;">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
-            </a>
-        @empty
-            <p style="color: var(--text-muted); text-align: center; padding: 1.5rem 0;">Semua pesanan sudah terverifikasi.</p>
-        @endforelse
-    </div>
-</div>
-
-<div class="list-panel" style="margin-top: 1.5rem;">
-    <div class="section-label" style="justify-content: space-between; width: 100%;">
-        <div style="display: flex; align-items: baseline; gap: 10px;">
-            <span class="tick" style="background: var(--quaternary-olive-dark);"></span>
+    {{-- Pending --}}
+    <div class="box">
+        <div class="box-head">
             <div>
-                <h3>Pesanan Terbaru Masuk</h3>
-                <span class="sub">5 transaksi booking terakhir — ubah timeline langsung di sini</span>
+                <div class="box-title">Menunggu Verifikasi</div>
+                <div class="box-sub">Pembayaran belum dikonfirmasi</div>
             </div>
+            <span class="tag t-warn">{{ $pendingOrders->count() }}</span>
         </div>
-        <a href="{{ route('admin.orders.index') }}" style="color: var(--primary-orange); font-weight: 700; font-size: 0.85rem;">Lihat Semua</a>
-    </div>
-
-    <div class="table-scroll">
-    <table>
-        <thead>
-            <tr>
-                <th>Kode Booking</th>
-                <th>Pemesan</th>
-                <th>Tgl Acara</th>
-                <th>Total</th>
-                <th>Status Bayar</th>
-                <th>Timeline Proses</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($recentOrders as $order)
-                <tr>
-                    <td><strong style="color: var(--primary-orange);">{{ $order->order_code }}</strong></td>
-                    <td>{{ $order->customer_name }}</td>
-                    <td>{{ \Carbon\Carbon::parse($order->event_date)->format('d M Y') }}</td>
-                    <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
-                    <td>
-                        <span class="pill-badge {{ $order->payment_status === 'pending' ? 'pill-gold' : 'pill-olive' }}">
-                            {{ strtoupper($order->payment_status) }}
-                        </span>
-                    </td>
-                    <td>
-                        <form action="{{ route('admin.orders.update_tracking', $order->id) }}" method="POST" class="tracking-inline-form">
-                            @csrf
-                            @method('PUT')
-                            <select name="tracking_status" onchange="this.form.submit()" class="tracking-select tracking-{{ $order->tracking_status }}">
-                                <option value="booking_received" {{ $order->tracking_status == 'booking_received' ? 'selected' : '' }}>1. Booking Diterima</option>
-                                <option value="payment_verified" {{ $order->tracking_status == 'payment_verified' ? 'selected' : '' }}>2. Pembayaran Diverifikasi</option>
-                                <option value="kitchen_prep" {{ $order->tracking_status == 'kitchen_prep' ? 'selected' : '' }}>3. Sedang Diproses Dapur</option>
-                                <option value="ready" {{ $order->tracking_status == 'ready' ? 'selected' : '' }}>4. Siap Diambil / Dikirim</option>
-                            </select>
-                        </form>
-                    </td>
-                </tr>
+        <div class="box-body" style="padding-top:6px;">
+            @forelse($pendingOrders as $order)
+                <a href="{{ route('admin.orders.show', $order->id) }}" class="pend" style="display:flex; align-items:center;">
+                    <div class="pend-av">{{ strtoupper(substr($order->customer_name,0,1)) }}</div>
+                    <div style="flex:1; min-width:0; margin-left:10px;">
+                        <div class="pend-name">{{ $order->customer_name }}</div>
+                        <div class="pend-code">{{ $order->order_code }}</div>
+                    </div>
+                    <div class="pend-amt">Rp {{ number_format($order->total_amount,0,',','.') }}</div>
+                </a>
             @empty
-                <tr><td colspan="6" style="text-align:center; color: var(--text-muted); padding: 1.5rem 0;">Belum ada pesanan masuk.</td></tr>
+                <div style="text-align:center; padding:2rem 0; color:var(--ink-3); font-size:.8rem;">
+                    <i class="fa-solid fa-check-circle" style="font-size:1.2rem; color:var(--green); display:block; margin-bottom:6px;"></i>
+                    Semua pesanan sudah terverifikasi
+                </div>
             @endforelse
-        </tbody>
-    </table>
+        </div>
+    </div>
+</div>
+
+{{-- Tabel Pesanan Terbaru --}}
+<div class="box">
+    <div class="box-head">
+        <div>
+            <div class="box-title">Pesanan Terbaru</div>
+            <div class="box-sub">5 booking terakhir</div>
+        </div>
+        <a href="{{ route('admin.orders.index') }}" class="box-link">Lihat semua →</a>
+    </div>
+    <div class="t-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Kode</th>
+                    <th>Pemesan</th>
+                    <th>Tgl Acara</th>
+                    <th>Total</th>
+                    <th>Status Bayar</th>
+                    <th>Timeline</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($recentOrders as $order)
+                    <tr>
+                        <td>
+                            <a href="{{ route('admin.orders.show', $order->id) }}" class="t-acc">{{ $order->order_code }}</a>
+                        </td>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div class="t-av">{{ strtoupper(substr($order->customer_name,0,1)) }}</div>
+                                <span class="t-bold">{{ $order->customer_name }}</span>
+                            </div>
+                        </td>
+                        <td class="t-mono">{{ \Carbon\Carbon::parse($order->event_date)->format('d M Y') }}</td>
+                        <td class="t-bold">Rp {{ number_format($order->total_amount,0,',','.') }}</td>
+                        <td>
+                            @if($order->payment_status==='pending')
+                                <span class="tag t-warn"><span class="tag-dot" style="background:var(--gold);"></span>Pending</span>
+                            @elseif($order->payment_status==='paid')
+                                <span class="tag t-ok"><span class="tag-dot" style="background:var(--green);"></span>Lunas</span>
+                            @elseif($order->payment_status==='dp_paid')
+                                <span class="tag t-acc-t"><span class="tag-dot" style="background:var(--accent);"></span>DP Paid</span>
+                            @else
+                                <span class="tag t-neu">{{ strtoupper($order->payment_status) }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            <form action="{{ route('admin.orders.update_tracking', $order->id) }}" method="POST">
+                                @csrf @method('PUT')
+                                <select name="tracking_status" onchange="this.form.submit()"
+                                        class="tsel tsel-{{ $order->tracking_status }}">
+                                    <option value="booking_received"  {{ $order->tracking_status=='booking_received'  ? 'selected':'' }}>1. Booking</option>
+                                    <option value="payment_verified" {{ $order->tracking_status=='payment_verified' ? 'selected':'' }}>2. Terverifikasi</option>
+                                    <option value="kitchen_prep"     {{ $order->tracking_status=='kitchen_prep'     ? 'selected':'' }}>3. Dapur</option>
+                                    <option value="ready"            {{ $order->tracking_status=='ready'            ? 'selected':'' }}>4. Siap</option>
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" style="text-align:center; color:var(--ink-3); padding:2.5rem 0; font-size:.8rem;">
+                            <i class="fa-solid fa-inbox" style="font-size:1.2rem; display:block; margin-bottom:8px; opacity:.4;"></i>
+                            Belum ada pesanan masuk
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 

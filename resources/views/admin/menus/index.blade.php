@@ -1,89 +1,83 @@
 @extends('layouts.admin')
-
-@section('title', 'Kelola Menu Katering - Admin')
-
+@section('title', 'Kelola Menu - Admin')
 @section('admin-title', 'Kelola Menu')
-
 @section('content')
-
-<div class="admin-header">
+<div class="ph">
     <div>
-        <h1 class="admin-title">Kelola Menu Katering</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Kelola data katalog menu katering, harga per pack, dan ketersediaan.</p>
+        <h1 class="ph-title">Kelola Menu Katering</h1>
+        <p class="ph-sub">Atur katalog menu, harga, dan ketersediaan.</p>
     </div>
-
-    <a href="{{ route('admin.menus.create') }}" class="btn-sm btn-orange" style="padding: 11px 20px; font-size: 0.88rem;">
-        <i class="fa-solid fa-plus"></i> Tambah Menu Baru
+    <a href="{{ route('admin.menus.create') }}" class="btn btn-p">
+        <i class="fa-solid fa-plus"></i> Tambah Menu
     </a>
 </div>
-
-<div class="card-table">
-    <!-- SEARCH BAR -->
-    <form action="{{ route('admin.menus.index') }}" method="GET" style="margin-bottom: 1.5rem;">
-        <div class="admin-search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" name="search" placeholder="Cari nama menu / kategori..." value="{{ request('search') }}">
-        </div>
-    </form>
-
-    <div class="table-scroll">
-<table>
-        <thead>
-            <tr>
-                <th>Foto</th>
-                <th>Nama Menu</th>
-                <th>Kategori</th>
-                <th>Harga / Pack</th>
-                <th>Min. Pack</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($menus as $menu)
+<div class="box">
+    <div class="box-body" style="padding-bottom:0;">
+        <form action="{{ route('admin.menus.index') }}" method="GET" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <div class="srch" style="flex:1; min-width:200px; max-width:340px;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" name="search" placeholder="Cari nama menu atau kategori..." value="{{ request('search') }}">
+            </div>
+            @if(request('search'))
+                <a href="{{ route('admin.menus.index') }}" class="btn btn-g btn-sm"><i class="fa-solid fa-xmark"></i> Reset</a>
+            @endif
+        </form>
+    </div>
+    <div class="t-wrap" style="margin-top:12px;">
+        <table>
+            <thead>
                 <tr>
-                    <td>
-                        <img src="{{ $menu->image }}" alt="{{ $menu->name }}" style="width: 42px; height: 42px; border-radius: var(--radius-sm); object-fit: cover; border: 1px solid var(--border-color);">
-                    </td>
-                    <td>
-                        <strong>{{ $menu->name }}</strong>
-                        @if($menu->is_bestseller)
-                            <i class="fa-solid fa-star" style="color: var(--secondary-gold-dark); margin-left: 4px;" title="Bestseller"></i>
-                        @endif
-                    </td>
-                    <td><span class="pill-badge pill-rose">{{ $menu->category }}</span></td>
-                    <td>Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</td>
-                    <td>{{ $menu->min_pax }} Pack</td>
-                    <td>
-                        @if($menu->is_available)
-                            <span class="pill-badge pill-olive">Tersedia</span>
-                        @else
-                            <span class="pill-badge pill-red">Habis</span>
-                        @endif
-                    </td>
-                    <td>
-                        <div style="display: flex; gap: 6px;">
-                            <a href="{{ route('admin.menus.edit', $menu->id) }}" class="btn-sm btn-blue" title="Edit Menu">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                            <form action="{{ route('admin.menus.destroy', $menu->id) }}" method="POST" onsubmit="return confirm('Yakin mau menghapus menu ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-sm btn-red" title="Hapus Menu">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
+                    <th>Foto</th><th>Nama Menu</th><th>Kategori</th>
+                    <th>Harga / Pack</th><th>Min. Pack</th><th>Status</th><th>Aksi</th>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem 0;">Belum ada data menu.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse($menus as $menu)
+                    <tr>
+                        <td><img src="{{ $menu->image }}" alt="{{ $menu->name }}" class="t-thumb"
+                                 onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=100'"></td>
+                        <td>
+                            <div class="t-bold">{{ $menu->name }}</div>
+                            @if($menu->is_bestseller)
+                                <span class="tag t-warn" style="margin-top:3px;"><i class="fa-solid fa-star" style="font-size:.55rem;"></i> Bestseller</span>
+                            @endif
+                        </td>
+                        <td><span class="tag t-acc-t">{{ $menu->category }}</span></td>
+                        <td class="t-bold">Rp {{ number_format($menu->price_per_pax,0,',','.') }}</td>
+                        <td class="t-mono">{{ $menu->min_pax }} pack</td>
+                        <td>
+                            @if($menu->is_available)
+                                <span class="tag t-ok"><span class="tag-dot" style="background:var(--green);"></span>Tersedia</span>
+                            @else
+                                <span class="tag t-err"><span class="tag-dot" style="background:var(--red);"></span>Habis</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:6px;">
+                                <a href="{{ route('admin.menus.edit', $menu->id) }}" class="btn btn-g btn-sm btn-sq" title="Edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                <form action="{{ route('admin.menus.destroy', $menu->id) }}" method="POST"
+                                      onsubmit="return confirm('Hapus menu ini?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-r btn-sm btn-sq" title="Hapus">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" style="text-align:center; color:var(--ink-3); padding:2.5rem 0; font-size:.8rem;">
+                            <i class="fa-solid fa-utensils" style="font-size:1.3rem; display:block; margin-bottom:8px; opacity:.35;"></i>
+                            Belum ada data menu.
+                            <a href="{{ route('admin.menus.create') }}" style="color:var(--accent); font-weight:600;"> Tambah sekarang →</a>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
-</div>
-
 @endsection

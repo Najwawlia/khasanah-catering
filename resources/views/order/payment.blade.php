@@ -142,7 +142,7 @@
         <form action="{{ route('order.confirm', $order->order_code) }}" method="POST" style="margin-top: 2rem;">
             @csrf
             <button type="submit" class="btn-primary" style="width: 100%; padding: 14px; font-size: 1.1rem;">
-                <i class="fa-solid fa-circle-check"></i> Konfirmasi Pembayaran (Simulasi Bayar)
+                <i class="fa-solid fa-circle-check"></i> Konfirmasi Pembayaran
             </button>
         </form>
     </div>

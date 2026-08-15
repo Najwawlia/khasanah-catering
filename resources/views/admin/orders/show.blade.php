@@ -1,123 +1,189 @@
 @extends('layouts.admin')
-
-@section('title', 'Detail Pesanan ' . $order->order_code . ' - Admin')
+@section('title', 'Detail Pesanan - Admin')
 @section('admin-title', 'Detail Pesanan')
-
 @section('content')
-
-<div class="admin-header">
+<div class="ph">
     <div>
-        <h1 class="admin-title">Detail Booking #{{ $order->order_code }}</h1>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">Dibuat pada {{ $order->created_at->format('d M Y, H:i') }} WIB</p>
+        <h1 class="ph-title">Booking #{{ $order->order_code }}</h1>
+        <p class="ph-sub">
+            Dibuat {{ $order->created_at->format('d M Y, H:i') }} WIB &nbsp;&middot;&nbsp;
+            @if($order->payment_status==='pending') <span class="tag t-warn">Pending</span>
+            @elseif($order->payment_status==='paid') <span class="tag t-ok">Lunas</span>
+            @elseif($order->payment_status==='dp_paid') <span class="tag t-acc-t">DP Paid</span>
+            @else <span class="tag t-err">{{ strtoupper($order->payment_status) }}</span>
+            @endif
+        </p>
     </div>
-
-    <a href="{{ route('admin.orders.index') }}" class="btn-sm btn-blue" style="padding: 10px 18px;">
-        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Pesanan
-    </a>
+    <a href="{{ route('admin.orders.index') }}" class="btn btn-g"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
 </div>
 
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
-    <div>
-        <!-- FORM UPDATE STATUS TRANSAKSI & PROGRESS -->
-        <div class="card-table" style="margin-bottom: 2rem;">
-            <h3 style="margin-bottom: 1.2rem; color: var(--primary-orange);"><i class="fa-solid fa-sliders"></i> Update Status Pesanan & Pembayaran</h3>
+<div style="display:grid; grid-template-columns:1.7fr 1fr; gap:14px;">
 
-            <form action="{{ route('admin.orders.update_status', $order->id) }}" method="POST" style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 1rem; align-items: end;">
-                @csrf
-                @method('PUT')
+    <div style="display:flex; flex-direction:column; gap:14px;">
 
+        {{-- Update Status --}}
+        <div class="box">
+            <div class="box-head">
                 <div>
-                    <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem;">Status Pembayaran</label>
-                    <select name="payment_status" style="width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: var(--radius-sm); outline: none;">
-                        <option value="pending" {{ $order->payment_status == 'pending' ? 'selected' : '' }}>Pending (Belum Bayar)</option>
-                        <option value="dp_paid" {{ $order->payment_status == 'dp_paid' ? 'selected' : '' }}>DP Paid (DP 50% Lunas)</option>
-                        <option value="paid" {{ $order->payment_status == 'paid' ? 'selected' : '' }}>Paid (Lunas 100%)</option>
-                        <option value="cancelled" {{ $order->payment_status == 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-                    </select>
+                    <div class="box-title">Update Status</div>
+                    <div class="box-sub">Pembayaran &amp; progress dapur</div>
                 </div>
-
-                <div>
-                    <label style="display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem;">Status Progress Dapur</label>
-                    <select name="tracking_status" style="width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: var(--radius-sm); outline: none;">
-                        <option value="booking_received" {{ $order->tracking_status == 'booking_received' ? 'selected' : '' }}>1. Booking Diterima</option>
-                        <option value="payment_verified" {{ $order->tracking_status == 'payment_verified' ? 'selected' : '' }}>2. Pembayaran Diverifikasi</option>
-                        <option value="kitchen_prep" {{ $order->tracking_status == 'kitchen_prep' ? 'selected' : '' }}>3. Persiapan Dapur</option>
-                        <option value="ready" {{ $order->tracking_status == 'ready' ? 'selected' : '' }}>4. Pesanan Siap (Dikirim/Pickup)</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-sm btn-orange" style="padding: 10px 20px; font-size: 0.95rem;">
-                    <i class="fa-solid fa-floppy-disk"></i> Simpan Status
-                </button>
-            </form>
+            </div>
+            <div class="box-body">
+                <form action="{{ route('admin.orders.update_status', $order->id) }}" method="POST">
+                    @csrf @method('PUT')
+                    <div class="f2" style="margin-bottom:14px;">
+                        <div class="fg" style="margin-bottom:0;">
+                            <label class="fl">Status Pembayaran</label>
+                            <select name="payment_status" class="fi" style="cursor:pointer;">
+                                <option value="pending"   {{ $order->payment_status=='pending'   ? 'selected':'' }}>Pending</option>
+                                <option value="dp_paid"   {{ $order->payment_status=='dp_paid'   ? 'selected':'' }}>DP Paid</option>
+                                <option value="paid"      {{ $order->payment_status=='paid'      ? 'selected':'' }}>Lunas (100%)</option>
+                                <option value="cancelled" {{ $order->payment_status=='cancelled' ? 'selected':'' }}>Dibatalkan</option>
+                            </select>
+                        </div>
+                        <div class="fg" style="margin-bottom:0;">
+                            <label class="fl">Progress Dapur</label>
+                            <select name="tracking_status" class="fi" style="cursor:pointer;">
+                                <option value="booking_received"  {{ $order->tracking_status=='booking_received'  ? 'selected':'' }}>1. Booking Diterima</option>
+                                <option value="payment_verified" {{ $order->tracking_status=='payment_verified' ? 'selected':'' }}>2. Pembayaran Terverifikasi</option>
+                                <option value="kitchen_prep"     {{ $order->tracking_status=='kitchen_prep'     ? 'selected':'' }}>3. Persiapan Dapur</option>
+                                <option value="ready"            {{ $order->tracking_status=='ready'            ? 'selected':'' }}>4. Pesanan Siap</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-p"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
+                </form>
+            </div>
         </div>
 
-        <!-- RINCIAN MENU DITESAN -->
-        <div class="card-table">
-            <h3 style="margin-bottom: 1.2rem;"><i class="fa-solid fa-utensils"></i> Menu Katering Dipesan</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Menu</th>
-                        <th>Harga / Pack</th>
-                        <th>Jumlah Pack</th>
-                        <th>Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($order->items as $item)
-                        <tr>
-                            <td><strong>{{ $item->menu_name }}</strong></td>
-                            <td>Rp {{ number_format($item->price_per_pax, 0, ',', '.') }}</td>
-                            <td><strong>{{ $item->pax_quantity }} Pack</strong></td>
-                            <td><strong style="color: var(--primary-orange);">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</strong></td>
-                        </tr>
+        {{-- Timeline --}}
+        <div class="box">
+            <div class="box-head"><div class="box-title">Timeline Progress</div></div>
+            <div class="box-body">
+                @php
+                    $steps = [
+                        ['key'=>'booking_received',  'lbl'=>'Booking Diterima',         'sub'=>'Pesanan berhasil masuk'],
+                        ['key'=>'payment_verified',  'lbl'=>'Pembayaran Terverifikasi',  'sub'=>'Admin konfirmasi pembayaran'],
+                        ['key'=>'kitchen_prep',      'lbl'=>'Persiapan Dapur',           'sub'=>'Tim dapur sedang menyiapkan'],
+                        ['key'=>'ready',             'lbl'=>'Pesanan Siap',              'sub'=>'Siap diambil atau dikirim'],
+                    ];
+                    $stepIdx = array_search($order->tracking_status, array_column($steps,'key'));
+                @endphp
+                <div class="tl">
+                    @foreach($steps as $si => $step)
+                        <div class="tl-step">
+                            <div class="tl-dot {{ $si<$stepIdx ? 'done' : ($si===$stepIdx ? 'cur':'') }}">
+                                @if($si<$stepIdx) <i class="fa-solid fa-check"></i>
+                                @elseif($si===$stepIdx) <i class="fa-solid fa-circle-dot"></i>
+                                @else {{ $si+1 }} @endif
+                            </div>
+                            <div class="tl-body">
+                                <div class="tl-lbl" style="{{ $si>$stepIdx ? 'opacity:.35;':'' }}">{{ $step['lbl'] }}</div>
+                                <div class="tl-sub" style="{{ $si>$stepIdx ? 'opacity:.3;':'' }}">{{ $step['sub'] }}</div>
+                            </div>
+                        </div>
                     @endforeach
-                </tbody>
-            </table>
+                </div>
+            </div>
+        </div>
+
+        {{-- Menu Dipesan --}}
+        <div class="box">
+            <div class="box-head"><div class="box-title">Menu Dipesan</div></div>
+            <div class="t-wrap">
+                <table>
+                    <thead><tr><th>Menu</th><th>Harga/Pack</th><th>Pack</th><th>Subtotal</th></tr></thead>
+                    <tbody>
+                        @foreach($order->items as $item)
+                            <tr>
+                                <td class="t-bold">{{ $item->menu_name }}</td>
+                                <td class="t-mono">Rp {{ number_format($item->price_per_pax,0,',','.') }}</td>
+                                <td><span class="tag t-neu">{{ $item->pax_quantity }} pack</span></td>
+                                <td class="t-acc">Rp {{ number_format($item->subtotal,0,',','.') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- DETAIL INFORMASI CUSTOMER -->
-    <div>
-        <div class="card-table">
-            <h3 style="margin-bottom: 1rem; color: var(--primary-orange);"><i class="fa-solid fa-address-card"></i> Data Customer</h3>
-            
-            <div style="font-size: 0.95rem; line-height: 1.8;">
-                <p><strong>Nama:</strong> {{ $order->customer_name }}</p>
-                <p><strong>Email:</strong> {{ $order->customer_email }}</p>
-                <p>
-                    <strong>WhatsApp:</strong> 
-                    <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $order->customer_phone) }}" target="_blank" style="color: var(--success); font-weight: 700;">
-                        {{ $order->customer_phone }} <i class="fa-brands fa-whatsapp"></i>
-                    </a>
-                </p>
-                <p><strong>Tanggal Acara:</strong> <span style="color: var(--primary-orange); font-weight: 700;">{{ \Carbon\Carbon::parse($order->event_date)->format('d F Y') }}</span></p>
-                <p><strong>Tipe Layanan:</strong> {{ strtoupper($order->delivery_type) }}</p>
-                @if($order->shipping_address)
-                    <p><strong>Alamat Pengiriman:</strong><br>{{ $order->shipping_address }}</p>
-                @endif
-                
+    <div style="display:flex; flex-direction:column; gap:14px;">
+
+        {{-- Customer --}}
+        <div class="box">
+            <div class="box-head"><div class="box-title">Data Customer</div></div>
+            <div class="box-body">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+                    <div style="width:40px; height:40px; border-radius:10px; background:var(--accent); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.95rem; color:#fff;">
+                        {{ strtoupper(substr($order->customer_name,0,1)) }}
+                    </div>
+                    <div>
+                        <div style="font-weight:700; font-size:.9rem;">{{ $order->customer_name }}</div>
+                        <div class="t-muted">Customer</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:9px; font-size:.82rem;">
+                    <div style="display:flex; gap:9px; align-items:flex-start;">
+                        <i class="fa-solid fa-envelope" style="color:var(--ink-4); width:14px; margin-top:2px; flex-shrink:0;"></i>
+                        <span>{{ $order->customer_email }}</span>
+                    </div>
+                    <div style="display:flex; gap:9px; align-items:center;">
+                        <i class="fa-brands fa-whatsapp" style="color:#22C55E; width:14px; flex-shrink:0;"></i>
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/','',$order->customer_phone) }}"
+                           target="_blank" style="color:var(--green); font-weight:600;">{{ $order->customer_phone }}</a>
+                    </div>
+                    <div style="display:flex; gap:9px; align-items:center;">
+                        <i class="fa-solid fa-calendar-days" style="color:var(--accent); width:14px; flex-shrink:0;"></i>
+                        <span style="font-weight:700; color:var(--accent);">{{ \Carbon\Carbon::parse($order->event_date)->format('d F Y') }}</span>
+                    </div>
+                    <div style="display:flex; gap:9px; align-items:center;">
+                        <i class="fa-solid fa-truck" style="color:var(--ink-4); width:14px; flex-shrink:0;"></i>
+                        <span>{{ strtoupper($order->delivery_type) }}</span>
+                    </div>
+                    @if($order->shipping_address)
+                        <div style="display:flex; gap:9px; align-items:flex-start;">
+                            <i class="fa-solid fa-location-dot" style="color:var(--ink-4); width:14px; flex-shrink:0; margin-top:2px;"></i>
+                            <span style="color:var(--ink-2);">{{ $order->shipping_address }}</span>
+                        </div>
+                    @endif
+                </div>
                 @if($order->special_notes)
-                    <div style="margin-top: 1rem; background: var(--bg-input); padding: 12px; border-radius: var(--radius-sm); border-left: 3px solid var(--primary-orange);">
-                        <strong>Catatan Khusus / Dietary Notes:</strong><br>
-                        <small style="color: var(--text-muted);">{{ $order->special_notes }}</small>
+                    <div style="margin-top:14px; padding:10px 12px; background:var(--accent-s); border-radius:6px; border-left:3px solid var(--accent);">
+                        <div style="font-size:.72rem; font-weight:700; color:var(--accent); margin-bottom:3px;"><i class="fa-solid fa-note-sticky"></i> Catatan</div>
+                        <div style="font-size:.8rem; color:var(--ink-2);">{{ $order->special_notes }}</div>
                     </div>
                 @endif
             </div>
+        </div>
 
-            <hr style="border: none; border-top: 1px dashed var(--border-color); margin: 1.5rem 0;">
-
-            <div style="font-size: 1.1rem; font-weight: 800; display: flex; justify-content: space-between;">
-                <span>Total Tagihan:</span>
-                <span style="color: var(--primary-orange);">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
-            </div>
-            <div style="font-size: 0.9rem; color: var(--text-muted); display: flex; justify-content: space-between; margin-top: 6px;">
-                <span>Telah Dibayar:</span>
-                <span style="color: var(--success); font-weight: 700;">Rp {{ number_format($order->paid_amount, 0, ',', '.') }}</span>
+        {{-- Tagihan --}}
+        <div class="box">
+            <div class="box-head"><div class="box-title">Ringkasan Tagihan</div></div>
+            <div class="box-body">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="color:var(--ink-3); font-size:.82rem;">Total Tagihan</span>
+                    <span style="font-weight:800; font-size:1.1rem; color:var(--accent);">Rp {{ number_format($order->total_amount,0,',','.') }}</span>
+                </div>
+                <div style="height:1px; background:var(--border-2); margin-bottom:10px;"></div>
+                <div style="display:flex; justify-content:space-between; font-size:.82rem; margin-bottom:7px;">
+                    <span style="color:var(--ink-3);">Telah Dibayar</span>
+                    <span style="font-weight:700; color:var(--green);">Rp {{ number_format($order->paid_amount,0,',','.') }}</span>
+                </div>
+                @php $sisa = $order->total_amount - $order->paid_amount; @endphp
+                @if($sisa > 0)
+                    <div style="display:flex; justify-content:space-between; font-size:.82rem;">
+                        <span style="color:var(--ink-3);">Sisa</span>
+                        <span style="font-weight:700; color:var(--red);">Rp {{ number_format($sisa,0,',','.') }}</span>
+                    </div>
+                @else
+                    <div style="text-align:center; padding:7px; background:var(--green-s); border-radius:6px; font-size:.76rem; font-weight:700; color:var(--green);">
+                        <i class="fa-solid fa-check-circle"></i> Pembayaran Lunas
+                    </div>
+                @endif
             </div>
         </div>
     </div>
 </div>
-
 @endsection
