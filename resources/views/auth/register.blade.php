@@ -46,14 +46,15 @@
     }
 
     .auth-icon-circle {
-        width: 58px;
-        height: 58px;
-        border-radius: 16px;
-        background: var(--primary-orange-light);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
         margin: 0 auto 1.1rem;
+    }
+
+    .auth-icon-circle img {
+        display: block;
+        width: 88px;
+        height: auto;
+        object-fit: contain;
     }
 
     .auth-header i {
@@ -158,7 +159,7 @@
 <div class="auth-wrapper">
     <div class="auth-card">
         <div class="auth-header">
-            <div class="auth-icon-circle"><i class="fa-solid fa-user-plus"></i></div>
+            <div class="auth-icon-circle"><img src="{{ asset('storage/images/logo__1_-removebg-preview.png') }}" alt="Khasanah Catering"></div>
             <h2 class="auth-title">Daftar Akun Kedai Khasanah</h2>
             <p class="auth-subtitle">Buat akun untuk kemudahan booking katering acara Anda</p>
         </div>

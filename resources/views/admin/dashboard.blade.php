@@ -4,10 +4,20 @@
 
 @section('content')
 
+@php
+    $hour = \Carbon\Carbon::now()->hour;
+    if ($hour < 11) { $greet = 'Selamat Pagi'; $greetIcon = 'fa-mug-hot'; }
+    elseif ($hour < 15) { $greet = 'Selamat Siang'; $greetIcon = 'fa-sun'; }
+    elseif ($hour < 18) { $greet = 'Selamat Sore'; $greetIcon = 'fa-cloud-sun'; }
+    else { $greet = 'Selamat Malam'; $greetIcon = 'fa-moon'; }
+@endphp
+
 <div class="ph">
     <div>
-        <h1 class="ph-title">Ringkasan Operasional</h1>
-        <p class="ph-sub">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }}</p>
+        <h1 class="ph-title" style="font-style: italic; font-weight: 500;">
+            <i class="fa-solid {{ $greetIcon }}" style="color: var(--gold); font-style: normal; margin-right: 8px; font-size: .85em;"></i>{{ $greet }}, Admin.
+        </h1>
+        <p class="ph-sub">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }} — begini rangkuman dapur hari ini.</p>
     </div>
 </div>
 
@@ -51,7 +61,7 @@
         </div>
         <div class="box-body">
             @php
-                $catColors = ['#C4561A','#1A7DC4','#6B5EC4','#2A7D4F'];
+                $catColors = ['#B5502E','#8C6A1F','#A65B4E','#4F5F41'];
                 $catTotal  = $categoryDistribution->sum('total') ?: 1;
             @endphp
             <div class="seg" style="margin-bottom:16px;">

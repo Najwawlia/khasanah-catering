@@ -86,10 +86,10 @@ new Chart(document.getElementById('chart'), {
             data: {!! json_encode($monthlyRevenue->pluck('total')) !!},
             backgroundColor: function(ctx) {
                 const {chart: c} = ctx, {chartArea: a} = c;
-                if (!a) return 'rgba(196,86,26,.7)';
+                if (!a) return 'rgba(181,80,46,.7)';
                 const g = c.ctx.createLinearGradient(0, a.top, 0, a.bottom);
-                g.addColorStop(0, 'rgba(196,86,26,.85)');
-                g.addColorStop(1, 'rgba(196,86,26,.35)');
+                g.addColorStop(0, 'rgba(181,80,46,.85)');
+                g.addColorStop(1, 'rgba(181,80,46,.35)');
                 return g;
             },
             borderRadius: 6,
@@ -103,28 +103,31 @@ new Chart(document.getElementById('chart'), {
         plugins: {
             legend: { display: false },
             tooltip: {
-                backgroundColor: '#191309',
-                titleColor: '#D4C0AC',
-                bodyColor: '#C4561A',
+                backgroundColor: '#FFFFFF',
+                titleColor: '#8A7C6D',
+                bodyColor: '#B5502E',
+                bodyFont: { weight: 'bold' },
                 padding: 12,
-                borderColor: 'rgba(255,255,255,.08)',
+                cornerRadius: 8,
+                borderColor: '#EFE4D4',
                 borderWidth: 1,
+                boxPadding: 4,
                 callbacks: { label: ctx => 'Rp ' + ctx.raw.toLocaleString('id-ID') }
             }
         },
         scales: {
             y: {
                 beginAtZero: true,
-                grid: { color: 'rgba(226,221,213,.7)' },
+                grid: { color: 'rgba(239,228,212,.7)' },
                 ticks: {
-                    color: '#8A7A6A',
+                    color: '#8A7C6D',
                     font: { family: "'JetBrains Mono', monospace", size: 10 },
                     callback: v => v>=1000000 ? 'Rp'+(v/1000000).toFixed(1)+'jt' : 'Rp'+(v/1000)+'k'
                 }
             },
             x: {
                 grid: { display: false },
-                ticks: { color: '#8A7A6A', font: { family: "'JetBrains Mono', monospace", size: 10 } }
+                ticks: { color: '#8A7C6D', font: { family: "'JetBrains Mono', monospace", size: 10 } }
             }
         }
     }

@@ -182,126 +182,135 @@
         color: var(--text-secondary);
     }
 
-    /* --- MENU LIST (editorial style, not a generic card grid) --- */
+    /* --- MENU GRID (4 kolom, minimalis) --- */
     .menu-list-container {
-        max-width: 1100px;
+        max-width: 1200px;
         margin: 0 auto 2rem;
         padding: 0 1.5rem;
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.4rem 3rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.4rem;
     }
 
-    @media (max-width: 760px) {
+    @media (max-width: 1024px) {
+        .menu-list-container { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 700px) {
+        .menu-list-container { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    }
+
+    @media (max-width: 420px) {
         .menu-list-container { grid-template-columns: 1fr; }
     }
 
     .menu-row {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        overflow: hidden;
         display: flex;
-        gap: 1.1rem;
-        align-items: flex-start;
-        padding: 1.3rem 0;
-        border-bottom: 1px dashed var(--border-color);
-        opacity: 1;
-        clip-path: inset(0 0 0 0);
-        transition: clip-path 0.75s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.5s ease;
-        transition-delay: calc(var(--i, 0) * 0.07s);
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Pre-reveal state is only applied by JS (progressive enhancement) - if JS fails, rows stay visible by default */
+    .menu-row:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(43, 33, 25, 0.10);
+        border-color: var(--primary-orange);
+    }
+
     .menu-row.js-ready {
         opacity: 0;
-        clip-path: inset(0 100% 0 0);
+        transform: translateY(16px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        transition-delay: calc(var(--i, 0) * 0.07s);
     }
 
     .menu-row.js-ready.is-visible {
         opacity: 1;
-        clip-path: inset(0 0 0 0);
+        transform: translateY(0);
     }
 
     .menu-row-hidden { display: none; }
 
+    /* Foto di atas */
     .menu-row-media {
         position: relative;
-        width: 88px;
-        height: 88px;
-        flex-shrink: 0;
-        border-radius: 50%;
+        width: 100%;
+        aspect-ratio: 4 / 3;
         overflow: hidden;
-        border: 3px solid var(--bg-card);
-        box-shadow: 0 5px 16px rgba(43, 33, 25, 0.14);
-        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .menu-row:hover .menu-row-media {
-        transform: rotate(-6deg) scale(1.07);
+        flex-shrink: 0;
     }
 
     .menu-row-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .menu-row:hover .menu-row-img {
+        transform: scale(1.06);
     }
 
     .menu-row-star {
         position: absolute;
-        top: -5px;
-        left: -5px;
+        top: 10px;
+        left: 10px;
         background: linear-gradient(120deg, var(--secondary-gold), #D4A63C);
         color: #3D2600;
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
+        padding: 3px 9px;
+        border-radius: 20px;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 0.6rem;
-        box-shadow: 0 3px 8px rgba(184, 137, 43, 0.45);
+        gap: 4px;
+        box-shadow: 0 2px 8px rgba(184, 137, 43, 0.35);
     }
 
+    /* Info di bawah */
     .menu-row-content {
         flex: 1;
-        min-width: 0;
+        padding: 1rem 1.1rem 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
     }
 
     .menu-row-top {
         display: flex;
-        align-items: baseline;
-        gap: 8px;
-        margin-bottom: 6px;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 6px;
     }
 
     .menu-row-title {
         font-family: var(--font-heading);
-        font-size: 1.12rem;
+        font-size: 0.95rem;
         font-weight: 600;
         color: var(--text-primary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 60%;
+        line-height: 1.3;
+        flex: 1;
     }
 
-    .menu-row-leader {
-        flex: 1;
-        min-width: 16px;
-        border-bottom: 2px dotted var(--border-color);
-        margin-bottom: 5px;
-    }
+    .menu-row-leader { display: none; }
 
     .menu-row-price {
         font-family: var(--font-heading);
         font-weight: 700;
         color: var(--primary-orange);
-        font-size: 1.02rem;
+        font-size: 0.88rem;
         white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .menu-row-desc {
         color: var(--text-secondary);
-        font-size: 0.87rem;
-        line-height: 1.55;
-        margin-bottom: 0.3rem;
+        font-size: 0.8rem;
+        line-height: 1.5;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -318,76 +327,74 @@
         background: none;
         border: none;
         color: var(--primary-orange);
-        font-size: 0.78rem;
+        font-size: 0.72rem;
         font-weight: 700;
         padding: 0;
-        margin-bottom: 0.8rem;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        gap: 5px;
+        gap: 4px;
     }
 
-    .menu-row-readmore:hover {
-        text-decoration: underline;
-    }
+    .menu-row-readmore:hover { text-decoration: underline; }
 
     .menu-row-readmore i {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
         transition: transform 0.3s ease;
     }
 
-    .menu-row-readmore.is-open i {
-        transform: rotate(180deg);
-    }
+    .menu-row-readmore.is-open i { transform: rotate(180deg); }
 
     .menu-row-meta {
         display: flex;
         align-items: center;
-        gap: 10px;
+        justify-content: space-between;
+        gap: 6px;
         flex-wrap: wrap;
+        margin-top: auto;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border-color);
     }
 
     .menu-row-tag {
-        font-size: 0.68rem;
+        font-size: 0.64rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.3px;
         color: var(--tertiary-coral-dark);
         background: var(--tertiary-coral-light);
-        padding: 3px 11px;
+        padding: 2px 9px;
         border-radius: 20px;
     }
 
     .menu-row-minpax {
-        font-size: 0.72rem;
+        font-size: 0.68rem;
         color: var(--text-muted);
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 3px;
     }
 
     .menu-row-cta {
-        margin-left: auto;
-        background: transparent;
-        border: 1.5px solid var(--primary-orange);
-        color: var(--primary-orange);
+        background: var(--primary-orange);
+        border: none;
+        color: #fff;
         font-weight: 700;
-        font-size: 0.78rem;
-        padding: 6px 14px;
-        border-radius: 30px;
+        font-size: 0.72rem;
+        padding: 5px 12px;
+        border-radius: 20px;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        transition: all var(--transition-speed);
+        gap: 5px;
+        transition: all 0.25s ease;
+        margin-left: auto;
     }
 
     .menu-row-cta:hover {
-        background: var(--primary-orange);
-        color: #FFFFFF;
-        box-shadow: 0 6px 14px var(--primary-glow);
+        background: var(--primary-orange-hover);
         transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--primary-glow);
     }
 
     /* --- MODAL DIALOG --- */
@@ -948,13 +955,13 @@
 <section class="hero-section">
     <div class="hero-content">
         <div class="hero-badge">
-            <i class="fa-solid fa-crown"></i> Catering Bintang Lima
+            <i class="fa-solid fa-kitchen-set"></i> Dari Dapur Rumahan, Sejak 2019
         </div>
         <h1 class="hero-title">
-            Nikmati Kelezatan Kuliner <br> untuk <span>Setiap Acara Spesial Anda</span>
+            Masakan Rumahan yang <br> Bikin Tamu <span>Nanya Resepnya</span>
         </h1>
         <p class="hero-subtitle">
-            Sistem Booking Katering Online Terpercaya. Prasmanan Modern, Nasi Kotak, hingga Custom Tumpeng dengan Garansi Kualitas Rasa Terbaik.
+            Resep keluarga yang biasa kami masak sendiri, sekarang bisa dipesan online. Buat rapat kantor, nikahan, syukuran, sampai ulang tahun anak — kami masak dari pagi, bukan dari gudang beku.
         </p>
         <div class="hero-buttons">
             <a href="#katalog" class="btn-primary">
@@ -1010,7 +1017,7 @@
                 <div class="menu-row-top">
                     <h3 class="menu-row-title">{{ $menu->name }}</h3>
                     <span class="menu-row-leader"></span>
-                    <span class="menu-row-price" data-price="{{ $menu->price_per_pax }}">Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</span>
+                    <span class="menu-row-price">Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</span>
                 </div>
                 <p class="menu-row-desc" id="desc-{{ $menu->id }}">{{ $menu->description }}</p>
                 <button type="button" class="menu-row-readmore" id="readmore-{{ $menu->id }}" onclick="toggleDesc('{{ $menu->id }}')">
@@ -1021,9 +1028,9 @@
                     @if($menu->category !== 'Custom / Tumpeng')
                         <span class="menu-row-minpax"><i class="fa-solid fa-users"></i> Min. {{ $menu->min_pax }} Pack</span>
                     @endif
-                    <button type="button" class="menu-row-cta"
+                    <button type="button" class="menu-row-cta" title="Tambah ke Keranjang"
                             onclick="openOrderModal('{{ $menu->id }}', '{{ addslashes($menu->name) }}', '{{ $menu->price_per_pax }}', '{{ $menu->min_pax }}', '{{ addslashes($menu->category) }}')">
-                        <i class="fa-solid fa-cart-plus"></i> Tambah
+                        <i class="fa-solid fa-cart-plus"></i>
                     </button>
                 </div>
             </div>
@@ -1084,9 +1091,10 @@
         <div class="testimonial-track">
             @php
                 $testimonials = [
-                    ['stars' => 5, 'text' => 'Prasmanannya enak banget, tamu ulang tahun anak saya semua puas. Pasti pesan lagi untuk acara berikutnya!', 'initial' => 'T', 'name' => 'Tania Dwi', 'event' => 'Ulang Tahun'],
-                    ['stars' => 5, 'text' => 'Pemesanan gampang, makanan datang segar dan tepat waktu. Nasi kotaknya jadi favorit di acara syukuran keluarga kami.', 'initial' => 'O', 'name' => 'Ogi Winarni', 'event' => 'Syukuran Keluarga'],
-                    ['stars' => 5, 'text' => 'Cocok banget buat acara kantor! Variasi menunya lengkap, semua rekan jadi ketagihan sama makanannya.', 'initial' => 'A', 'name' => 'Agung Tri', 'event' => 'Acara Kantor'],
+                    ['stars' => 5, 'text' => 'Pesen paket prasmanan nasi kebuli buat ulang tahun anak saya, tamu pada nanya resepnya. Minta waktu hidang dimajuin 30 menit juga masih bisa, makasih Bu Dean!', 'initial' => 'T', 'name' => 'Tania Dwi', 'event' => 'Ulang Tahun Anak'],
+                    ['stars' => 5, 'text' => 'Order nasi kotak buat syukuran 17-an di RT, 50 kotak habis semua sebelum acara kelar. Rasanya emang beda kalau masakan rumahan, ga kayak katering biasa yang hambar.', 'initial' => 'O', 'name' => 'Ogi Winarni', 'event' => 'Syukuran RT'],
+                    ['stars' => 4, 'text' => 'Buat rapat kantor udah pas, snack box-nya habis semua. Cuma waktu itu pengirimannya telat 15 menitan karena macet, untungnya tim WA duluan ngasih kabar jadi ga bingung.', 'initial' => 'A', 'name' => 'Agung Tri', 'event' => 'Rapat Kantor'],
+                    ['stars' => 5, 'text' => 'Pesan tumpeng buat syukuran rumah baru, cuma buat 20 orang, request porsinya dikecilin ternyata bisa. Ayam goreng lengkuasnya juara, sisa tamu pada nanyain nomor WA-nya.', 'initial' => 'R', 'name' => 'Rina Kusuma', 'event' => 'Syukuran Rumah Baru'],
                 ];
             @endphp
             @for ($i = 0; $i < 2; $i++)

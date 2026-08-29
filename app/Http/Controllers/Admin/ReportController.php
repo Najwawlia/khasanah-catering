@@ -13,7 +13,7 @@ class ReportController extends Controller
     {
         // Omset per bulan (6 bulan terakhir)
         $monthlyRevenue = Order::whereIn('payment_status', ['dp_paid', 'paid'])
-            ->selectRaw("strftime('%Y-%m', created_at) as month, SUM(paid_amount) as total")
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, SUM(paid_amount) as total")
             ->groupBy('month')
             ->orderBy('month', 'desc')
             ->take(6)

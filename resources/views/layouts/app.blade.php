@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Khasanah - Premium Catering & Booking System')</title>
+    <link rel="icon" type="image/jpeg" href="{{ asset('storage/images/logo__1_-removebg-preview.png') }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Italianno&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -52,8 +53,9 @@
             --accent-green: var(--success);
             --danger-red: var(--error);
 
-            --font-heading: 'Fraunces', Georgia, 'Times New Roman', serif;
-            --font-body: 'Inter', sans-serif;
+            --font-heading: 'Cinzel', Georgia, serif;
+            --font-body: 'Newsreader', 'Crimson Text', Georgia, serif;
+            --font-accent: 'Crimson Text', Georgia, serif;
 
             --radius-lg: 18px;
             --radius-md: 12px;
@@ -179,33 +181,47 @@
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.55rem;
-            font-weight: 500;
-            letter-spacing: 0.2px;
+            gap: 14px;
             color: var(--text-primary);
+            text-decoration: none;
         }
 
         .nav-brand .brand-text {
-            font-family: var(--font-heading);
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+            gap: 2px;
+        }
+
+        .nav-brand .brand-name {
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            color: var(--text-primary);
+            text-transform: uppercase;
         }
 
         .nav-brand .brand-accent {
-            font-style: italic;
-            font-weight: 600;
+            font-family: 'Italianno', cursive;
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: 1px;
             background: linear-gradient(100deg, var(--primary-orange), var(--secondary-gold-dark));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            line-height: 1;
         }
 
-        .nav-brand i {
-            color: var(--primary-orange);
-            font-size: 1.8rem;
-        }
-
-        .nav-brand .brand-accent {
-            color: var(--primary-orange);
+        .nav-brand-logo {
+            width: 54px;
+            height: 54px;
+            border-radius: 0;
+            object-fit: contain;
+            border: none;
+            flex-shrink: 0;
+            background: transparent;
         }
 
         .nav-links {
@@ -466,10 +482,6 @@
             color: rgba(255, 255, 255, 0.65);
         }
 
-        footer .nav-brand i {
-            color: var(--primary-orange);
-        }
-
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -538,8 +550,8 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <a href="{{ route('home') }}" class="nav-brand">
-            <i class="fa-solid fa-utensils"></i>
-            <span class="brand-text">Khasanah<span class="brand-accent">Catering</span></span>
+            <img src="{{ asset('storage/images/logo__1_-removebg-preview.png') }}" alt="Khasanah Catering" class="nav-brand-logo">
+            <span class="brand-text"><span class="brand-name">Khasanah</span><span class="brand-accent">Catering</span></span>
         </a>
 
         <button class="hamburger-btn" onclick="toggleMobileNav()" aria-label="Menu">
@@ -651,9 +663,9 @@
         <div class="footer-content">
             <div class="footer-col">
                 <div class="nav-brand" style="margin-bottom: 1rem;">
-                    <i class="fa-solid fa-utensils"></i> <span class="brand-text">Khasanah<span class="brand-accent">Catering</span></span>
+                    <img src="{{ asset('storage/images/logo__1_-removebg-preview.png') }}" alt="Khasanah Catering" class="nav-brand-logo"> <span class="brand-text"><span class="brand-name">Khasanah</span><span class="brand-accent">Catering</span></span>
                 </div>
-                <p>Layanan Booking Katering Modern untuk Pernikahan, Acara Kantor, Prasmanan, dan Syukuran Keluarga. Garansi Rasa & Kualitas Bintang 5.</p>
+                <p>Dapur rumahan yang sekarang bisa dipesan online. Kami masak dari pagi begitu ada pesanan masuk — bukan dari gudang beku, cuma bumbu asli dan tangan yang udah terbiasa dari 2019.</p>
             </div>
             <div class="footer-col">
                 <h4>Menu Utama</h4>
@@ -669,6 +681,7 @@
                 <p><i class="fa-solid fa-location-dot" style="color: var(--primary-orange);"></i> Ngesrep, Kec. Banyumanik, Kota Semarang, Jawa Tengah 50261</p>
                 <p><i class="fa-solid fa-phone" style="color: var(--primary-orange);"></i> +62 813-2503-2009</p>
                 <p><i class="fa-solid fa-envelope" style="color: var(--primary-orange);"></i> deanthamrin72@gmail.com</p>
+                <p><i class="fa-solid fa-clock" style="color: var(--primary-orange);"></i> Senin–Sabtu, 08.00–20.00 WIB</p>
                 <p>
                     <a href="https://maps.app.goo.gl/Dhg1FxakT4vSRb4E8" target="_blank" style="color: var(--primary-orange); font-weight: 700;">
                         <i class="fa-solid fa-map-location-dot"></i> Buka di Google Maps
