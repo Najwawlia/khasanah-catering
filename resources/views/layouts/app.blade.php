@@ -697,7 +697,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; {{ date('Y') }} <strong>Khasanah Catering</strong></p>
+            <p>&copy; {{ date('Y') }} <strong>Copyright Khasanah Catering. All rights reserved.</strong></p>
         </div>
     </footer>
 
