@@ -123,11 +123,12 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            padding: 1rem 2rem;
+            padding: 0.4rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: var(--shadow-soft);
+            overflow: visible;
         }
 
         .hamburger-btn {
@@ -140,6 +141,8 @@
         }
 
         @media (max-width: 900px) {
+            .nav-brand-logo { width: 62px; height: 62px; }
+
             .hamburger-btn {
                 display: block;
             }
@@ -215,8 +218,8 @@
         }
 
         .nav-brand-logo {
-            width: 54px;
-            height: 54px;
+            width: 86px;
+            height: 86px;
             border-radius: 0;
             object-fit: contain;
             border: none;
@@ -473,6 +476,10 @@
         }
 
         footer, footer .nav-brand, footer .footer-col h4 {
+            color: #FFFFFF;
+        }
+
+        footer .nav-brand .brand-name {
             color: #FFFFFF;
         }
 

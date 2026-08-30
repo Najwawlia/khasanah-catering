@@ -1017,7 +1017,7 @@
                 <div class="menu-row-top">
                     <h3 class="menu-row-title">{{ $menu->name }}</h3>
                     <span class="menu-row-leader"></span>
-                    <span class="menu-row-price">Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</span>
+                    <span class="menu-row-price" data-price="{{ $menu->price_per_pax }}">Rp {{ number_format($menu->price_per_pax, 0, ',', '.') }}</span>
                 </div>
                 <p class="menu-row-desc" id="desc-{{ $menu->id }}">{{ $menu->description }}</p>
                 <button type="button" class="menu-row-readmore" id="readmore-{{ $menu->id }}" onclick="toggleDesc('{{ $menu->id }}')">
@@ -1176,8 +1176,13 @@
     // --- Unique reveal animation for menu rows (clip-path unfold + price count-up) ---
     function animatePriceIn(el) {
         if (!el || el.dataset.animated === '1') return;
+
+        // Safety guard: if data-price is missing/invalid, don't touch the
+        // already-correct server-rendered price text — just skip the animation.
+        if (!el.dataset.price || isNaN(parseFloat(el.dataset.price))) return;
+
         el.dataset.animated = '1';
-        const target = parseFloat(el.dataset.price) || 0;
+        const target = parseFloat(el.dataset.price);
         const duration = 700;
         const start = performance.now();
 

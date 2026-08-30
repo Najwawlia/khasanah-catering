@@ -2,6 +2,82 @@
 @section('title', 'Dashboard - Admin Khasanah Catering')
 @section('admin-title', 'Dashboard')
 
+@section('styles')
+<style>
+    .welcome-card {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 18px 24px;
+        margin-bottom: 22px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(100deg, var(--accent-s) 0%, transparent 45%);
+        opacity: .5;
+        pointer-events: none;
+    }
+
+    .welcome-stamp {
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        border: 1.5px dashed var(--accent);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--accent);
+        background: var(--accent-s);
+        position: relative;
+        z-index: 1;
+    }
+
+    .welcome-stamp .d-num {
+        font-family: 'Cinzel', Georgia, serif;
+        font-size: 1.35rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .welcome-stamp .d-mon {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .55rem;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        margin-top: 2px;
+    }
+
+    .welcome-text { position: relative; z-index: 1; }
+
+    .welcome-text h1 {
+        font-family: 'Cinzel', Georgia, serif;
+        font-size: 1.3rem;
+        font-weight: 600;
+        letter-spacing: .01em;
+        color: var(--ink);
+        line-height: 1.3;
+    }
+
+    .welcome-text h1 i { color: var(--gold); font-size: .85em; margin-right: 8px; }
+
+    .welcome-text p {
+        font-size: .82rem;
+        color: var(--ink-3);
+        margin-top: 3px;
+    }
+</style>
+@endsection
+
 @section('content')
 
 @php
@@ -10,14 +86,17 @@
     elseif ($hour < 15) { $greet = 'Selamat Siang'; $greetIcon = 'fa-sun'; }
     elseif ($hour < 18) { $greet = 'Selamat Sore'; $greetIcon = 'fa-cloud-sun'; }
     else { $greet = 'Selamat Malam'; $greetIcon = 'fa-moon'; }
+    $now = \Carbon\Carbon::now();
 @endphp
 
-<div class="ph">
-    <div>
-        <h1 class="ph-title" style="font-style: italic; font-weight: 500;">
-            <i class="fa-solid {{ $greetIcon }}" style="color: var(--gold); font-style: normal; margin-right: 8px; font-size: .85em;"></i>{{ $greet }}, Admin.
-        </h1>
-        <p class="ph-sub">{{ \Carbon\Carbon::now()->isoFormat('dddd, D MMMM Y') }} — begini rangkuman dapur hari ini.</p>
+<div class="welcome-card">
+    <div class="welcome-stamp">
+        <span class="d-num">{{ $now->format('d') }}</span>
+        <span class="d-mon">{{ $now->isoFormat('MMM') }}</span>
+    </div>
+    <div class="welcome-text">
+        <h1><i class="fa-solid {{ $greetIcon }}"></i>{{ $greet }}, Admin</h1>
+        <p>{{ $now->isoFormat('dddd, D MMMM Y') }} — begini rangkuman dapur hari ini.</p>
     </div>
 </div>
 

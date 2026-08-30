@@ -6,7 +6,7 @@
     <title>@yield('title', 'Admin — Khasanah Catering')</title>
     <link rel="icon" type="image/jpeg" href="{{ asset('storage/images/logo__1_-removebg-preview.png') }}">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Italianno&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
@@ -89,11 +89,8 @@
     }
 
     .sb-mark {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        overflow: hidden;
-        background: var(--accent);
+        width: 46px;
+        height: 46px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -101,15 +98,23 @@
         font-size: .7rem;
         flex-shrink: 0;
     }
-    .sb-mark img { width: 100%; height: 100%; object-fit: cover; }
+    .sb-mark img { width: 100%; height: 100%; object-fit: contain; }
 
     .sb-name {
-        font-family: 'Fraunces', Georgia, serif;
-        font-size: .92rem;
+        font-family: 'Cinzel', Georgia, serif;
+        font-size: .8rem;
         font-weight: 600;
         color: var(--sb-hi);
-        letter-spacing: -.01em;
+        letter-spacing: .09em;
+        text-transform: uppercase;
         line-height: 1.2;
+    }
+    .sb-accent {
+        font-family: 'Italianno', cursive;
+        font-size: 1.15rem;
+        color: var(--accent);
+        line-height: 1;
+        margin-top: 1px;
     }
     .sb-role {
         font-size: .6rem;
@@ -289,12 +294,12 @@
         flex-wrap: wrap;
     }
     .ph-title {
-        font-family: 'Fraunces', Georgia, serif;
-        font-size: 1.6rem;
-        font-weight: 700;
+        font-family: 'Cinzel', Georgia, serif;
+        font-size: 1.5rem;
+        font-weight: 600;
         color: var(--ink);
-        letter-spacing: -.01em;
-        line-height: 1.15;
+        letter-spacing: .015em;
+        line-height: 1.25;
     }
     .ph-sub {
         font-size: .8rem;
@@ -373,15 +378,16 @@
         align-items: center;
         justify-content: space-between;
         padding: 14px 18px;
-        border-bottom: 1px solid var(--border-2);
+        border-bottom: 1.5px dashed var(--border);
     }
 
     .box-title {
-        font-family: 'Fraunces', Georgia, serif;
-        font-size: .96rem;
+        font-family: 'Cinzel', Georgia, serif;
+        font-size: .82rem;
         font-weight: 600;
         color: var(--ink);
-        letter-spacing: -.005em;
+        letter-spacing: .05em;
+        text-transform: uppercase;
     }
 
     .box-sub {
@@ -782,6 +788,7 @@
         <div class="sb-mark"><img src="{{ asset('storage/images/logo__1_-removebg-preview.png') }}" alt="Khasanah Catering"></div>
         <div>
             <div class="sb-name">Khasanah</div>
+            <div class="sb-accent">Catering</div>
             <div class="sb-role">Admin Panel</div>
         </div>
     </div>

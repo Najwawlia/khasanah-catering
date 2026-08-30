@@ -4,14 +4,15 @@
 
 @section('styles')
 <style>
-    .auth-wrapper {
+    .auth-split {
         min-height: calc(100vh - 74px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 3rem 2rem;
-        background: radial-gradient(circle at 15% 10%, var(--primary-orange-light) 0%, transparent 45%),
-                    radial-gradient(circle at 90% 85%, var(--tertiary-coral-light) 0%, transparent 45%);
+        display: grid;
+        grid-template-columns: 1fr 1.05fr;
+    }
+
+    @media (max-width: 900px) {
+        .auth-split { grid-template-columns: 1fr; }
+        .auth-visual { display: none; }
     }
 
     @keyframes fadeSlideUp {
@@ -19,59 +20,45 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+    /* --- LEFT: FORM PANEL --- */
+    .auth-form-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2.6rem 2rem;
+        background: var(--bg-main);
+    }
+
     .auth-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-lg);
         width: 100%;
-        max-width: 520px;
-        padding: 2.6rem;
-        box-shadow: var(--shadow-soft);
-        position: relative;
-        overflow: hidden;
+        max-width: 430px;
         animation: fadeSlideUp 0.6s cubic-bezier(0.4,0,0.2,1);
     }
 
-    .auth-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 5px;
-        background: linear-gradient(90deg, var(--primary-orange), var(--secondary-gold), var(--tertiary-coral), var(--quaternary-olive));
-    }
-
-    .auth-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
+    .auth-header { margin-bottom: 1.8rem; }
 
     .auth-icon-circle {
         display: block;
-        margin: 0 auto 1.1rem;
+        margin-bottom: 1rem;
     }
 
     .auth-icon-circle img {
         display: block;
-        width: 88px;
+        width: 100px;
         height: auto;
         object-fit: contain;
     }
 
-    .auth-header i {
-        font-size: 1.55rem;
-        color: var(--primary-orange-hover);
-    }
-
     .auth-title {
         font-family: var(--font-heading);
-        font-size: 1.9rem;
+        font-size: 1.85rem;
         font-weight: 700;
         color: var(--text-main);
     }
 
     .auth-subtitle {
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         margin-top: 6px;
     }
 
@@ -86,7 +73,7 @@
     }
 
     .form-group {
-        margin-bottom: 1.15rem;
+        margin-bottom: 1.05rem;
         animation: fadeSlideUp 0.5s cubic-bezier(0.4,0,0.2,1) backwards;
     }
 
@@ -98,7 +85,7 @@
 
     .form-group label {
         display: block;
-        font-size: 0.87rem;
+        font-size: 0.84rem;
         font-weight: 600;
         margin-bottom: 6px;
         color: var(--text-main);
@@ -112,7 +99,7 @@
         top: 50%;
         transform: translateY(-50%);
         color: var(--text-secondary);
-        font-size: 0.88rem;
+        font-size: 0.85rem;
         transition: color var(--transition-speed);
     }
 
@@ -123,9 +110,9 @@
         background: var(--bg-input);
         border: 1.5px solid var(--border-color);
         color: var(--text-main);
-        padding: 12px 16px 12px 42px;
+        padding: 11px 14px 11px 40px;
         border-radius: var(--radius-md);
-        font-size: 0.95rem;
+        font-size: 0.92rem;
         outline: none;
         transition: all var(--transition-speed);
     }
@@ -137,10 +124,10 @@
     }
 
     .auth-footer {
-        margin-top: 1.5rem;
-        text-align: center;
+        margin-top: 1.4rem;
+        text-align: left;
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 0.88rem;
     }
 
     .auth-footer a {
@@ -153,83 +140,245 @@
         color: var(--primary-orange-hover);
         text-decoration: underline;
     }
+
+    /* --- RIGHT: MEMBERSHIP INVITATION VISUAL --- */
+    .auth-visual {
+        position: relative;
+        background: linear-gradient(200deg, var(--charcoal) 0%, #4A372A 55%, var(--primary-orange-hover) 130%),
+                    url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1200&auto=format&fit=crop&q=80') center/cover;
+        background-blend-mode: multiply;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        overflow: hidden;
+    }
+
+    .auth-visual::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 80% 20%, rgba(184, 137, 43, 0.35), transparent 55%),
+                    radial-gradient(circle at 15% 85%, rgba(201, 123, 109, 0.3), transparent 50%);
+        animation: floatGlow 9s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatGlow {
+        from { transform: translate(0, 0) scale(1); }
+        to { transform: translate(-15px, 15px) scale(1.05); }
+    }
+
+    /* Membership invitation card - reuses the ticket-stub / dashed-perforation
+       language from the landing page CTA for brand consistency */
+    .member-card {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 380px;
+        background: rgba(255,255,255,0.06);
+        backdrop-filter: blur(6px);
+        border: 1.5px dashed rgba(255,255,255,0.3);
+        border-radius: 18px;
+        padding: 2.2rem 2rem;
+        animation: fadeSlideUp 0.8s cubic-bezier(0.4,0,0.2,1) 0.1s backwards;
+    }
+
+    .member-eyebrow {
+        color: var(--secondary-gold);
+        font-size: 0.76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 0.7rem;
+        display: block;
+    }
+
+    .member-heading {
+        font-family: var(--font-heading);
+        font-style: italic;
+        font-size: 1.5rem;
+        line-height: 1.4;
+        color: #FFFFFF;
+        margin-bottom: 1.6rem;
+    }
+
+    .member-heading span { color: var(--secondary-gold); }
+
+    .benefit-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+    }
+
+    .benefit-item {
+        display: flex;
+        gap: 13px;
+        align-items: flex-start;
+        animation: fadeSlideUp 0.6s cubic-bezier(0.4,0,0.2,1) backwards;
+    }
+
+    .benefit-item:nth-child(1) { animation-delay: 0.2s; }
+    .benefit-item:nth-child(2) { animation-delay: 0.3s; }
+    .benefit-item:nth-child(3) { animation-delay: 0.4s; }
+    .benefit-item:nth-child(4) { animation-delay: 0.5s; }
+
+    .benefit-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1.5px dashed rgba(255,255,255,0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--secondary-gold);
+        font-size: 0.85rem;
+        flex-shrink: 0;
+    }
+
+    .benefit-text strong {
+        display: block;
+        color: #FFFFFF;
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+    }
+
+    .benefit-text span {
+        color: rgba(255,255,255,0.6);
+        font-size: 0.79rem;
+        line-height: 1.5;
+    }
+
+    .member-divider {
+        border-top: 1.5px dashed rgba(255,255,255,0.22);
+        margin: 1.6rem 0;
+    }
+
+    .member-footnote {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255,255,255,0.55);
+        font-size: 0.75rem;
+    }
+
+    .member-footnote i { color: var(--secondary-gold); }
 </style>
 @section('content')
 
-<div class="auth-wrapper">
-    <div class="auth-card">
-        <div class="auth-header">
-            <div class="auth-icon-circle"><img src="{{ asset('storage/images/logo__1_-removebg-preview.png') }}" alt="Khasanah Catering"></div>
-            <h2 class="auth-title">Daftar Akun Kedai Khasanah</h2>
-            <p class="auth-subtitle">Buat akun untuk kemudahan booking katering acara Anda</p>
+<div class="auth-split">
+    <!-- LEFT: FORM -->
+    <div class="auth-form-panel">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon-circle"><img src="{{ asset('storage/images/logo__1_-removebg-preview.png') }}" alt="Khasanah Catering"></div>
+                <h2 class="auth-title">Buat Akun Baru</h2>
+                <p class="auth-subtitle">Isi data di bawah untuk mulai booking katering</p>
+            </div>
+
+            <form action="{{ route('register.post') }}" method="POST">
+                @csrf
+
+                <div class="form-group">
+                    <label for="name">Nama Lengkap</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-user field-icon"></i>
+                        <input type="text" name="name" id="name" class="form-input" placeholder="Masukkan nama lengkap Anda" value="{{ old('name') }}" required autofocus>
+                    </div>
+                    @error('name')
+                        <span style="color: var(--danger-red); font-size: 0.83rem; margin-top: 4px; display: block;">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">No. WhatsApp</label>
+                        <div class="input-wrap">
+                            <i class="fa-brands fa-whatsapp field-icon"></i>
+                            <input type="text" name="phone" id="phone" class="form-input" placeholder="0812xxxxxxx" value="{{ old('phone') }}" required>
+                        </div>
+                        @error('phone')
+                            <span style="color: var(--danger-red); font-size: 0.83rem; margin-top: 4px; display: block;">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrap">
+                            <i class="fa-solid fa-envelope field-icon"></i>
+                            <input type="email" name="email" id="email" class="form-input" placeholder="contoh@email.com" value="{{ old('email') }}" required>
+                        </div>
+                        @error('email')
+                            <span style="color: var(--danger-red); font-size: 0.83rem; margin-top: 4px; display: block;">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-wrap">
+                            <i class="fa-solid fa-lock field-icon"></i>
+                            <input type="password" name="password" id="password" class="form-input" placeholder="Minimal 6 karakter" required>
+                        </div>
+                        @error('password')
+                            <span style="color: var(--danger-red); font-size: 0.83rem; margin-top: 4px; display: block;">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_confirmation">Konfirmasi</label>
+                        <div class="input-wrap">
+                            <i class="fa-solid fa-lock field-icon"></i>
+                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Ulangi password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 13px;">
+                    <i class="fa-solid fa-user-check"></i> Daftar Sekarang
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Sudah punya akun? <a href="{{ route('login') }}">Login di sini</a>
+            </div>
         </div>
+    </div>
 
-        <form action="{{ route('register.post') }}" method="POST">
-            @csrf
+    <!-- RIGHT: MEMBERSHIP INVITATION -->
+    <div class="auth-visual">
+        <div class="member-card">
+            <span class="member-eyebrow">Kartu Keanggotaan Digital</span>
+            <p class="member-heading">"Sekali daftar, pesan katering berikutnya jadi <span>jauh lebih cepat.</span>"</p>
 
-            <div class="form-group">
-                <label for="name">Nama Lengkap</label>
-                <div class="input-wrap">
-                    <i class="fa-solid fa-user field-icon"></i>
-                    <input type="text" name="name" id="name" class="form-input" placeholder="Masukkan nama lengkap Anda" value="{{ old('name') }}" required autofocus>
-                </div>
-                @error('name')
-                    <span style="color: var(--danger-red); font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="phone">No. WhatsApp</label>
-                    <div class="input-wrap">
-                        <i class="fa-brands fa-whatsapp field-icon"></i>
-                        <input type="text" name="phone" id="phone" class="form-input" placeholder="0812xxxxxxx" value="{{ old('phone') }}" required>
+            <div class="benefit-list">
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                    <div class="benefit-text">
+                        <strong>Lacak Pesanan Real-time</strong>
+                        <span>Pantau progress dari booking diterima sampai siap diantar.</span>
                     </div>
-                    @error('phone')
-                        <span style="color: var(--danger-red); font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>
-                    @enderror
                 </div>
-
-                <div class="form-group">
-                    <label for="email">Alamat Email</label>
-                    <div class="input-wrap">
-                        <i class="fa-solid fa-envelope field-icon"></i>
-                        <input type="email" name="email" id="email" class="form-input" placeholder="contoh@email.com" value="{{ old('email') }}" required>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    <div class="benefit-text">
+                        <strong>Riwayat Pesanan Tersimpan</strong>
+                        <span>Mau pesan menu yang sama lagi? Tinggal lihat riwayat.</span>
                     </div>
-                    @error('email')
-                        <span style="color: var(--danger-red); font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>
-                    @enderror
                 </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="input-wrap">
-                        <i class="fa-solid fa-lock field-icon"></i>
-                        <input type="password" name="password" id="password" class="form-input" placeholder="Minimal 6 karakter" required>
-                    </div>
-                    @error('password')
-                        <span style="color: var(--danger-red); font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label for="password_confirmation">Konfirmasi Password</label>
-                    <div class="input-wrap">
-                        <i class="fa-solid fa-lock field-icon"></i>
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Ulangi password Anda" required>
+                <div class="benefit-item">
+                    <div class="benefit-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="benefit-text">
+                        <strong>Checkout Lebih Cepat</strong>
+                        <span>Data pemesan otomatis terisi, tinggal pilih tanggal acara.</span>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.6rem; padding: 14px;">
-                <i class="fa-solid fa-user-check"></i> Registrasi Sekarang
-            </button>
-        </form>
-
-        <div class="auth-footer">
-            Sudah punya akun? <a href="{{ route('login') }}">Login di Sini</a>
+            <div class="member-divider"></div>
+            <div class="member-footnote">
+                <i class="fa-solid fa-heart"></i> Gratis, tanpa biaya keanggotaan tersembunyi
+            </div>
         </div>
     </div>
 </div>

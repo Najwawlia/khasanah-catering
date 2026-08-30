@@ -125,7 +125,7 @@
 
     .auth-icon-circle img {
         display: block;
-        width: 88px;
+        width: 108px;
         height: auto;
         object-fit: contain;
     }
