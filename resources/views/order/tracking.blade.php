@@ -160,7 +160,7 @@
         <div class="success-icon">
             <i class="fa-solid fa-calendar-check"></i>
         </div>
-        <h1 class="creative-title">Tanggal Acara Berhasil Diamankan!</h1>
+        <h1 class="creative-title">Tanggal Berhasil Diamankan!</h1>
         <p class="creative-subtitle">
             Terima kasih! Pesanan katering Anda dengan Kode Booking <strong>{{ $order->order_code }}</strong> untuk tanggal <strong>{{ \Carbon\Carbon::parse($order->event_date)->format('d F Y') }}</strong> sudah tercatat resmi di jadwal dapur kami.
         </p>

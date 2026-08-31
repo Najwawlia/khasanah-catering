@@ -1003,7 +1003,7 @@
     </form>
 </section>
 
-<!-- MENU LIST (editorial style) -->
+<!-- MENU LIST -->
 <section class="menu-list-container">
     @forelse($menus as $index => $menu)
         <article class="menu-row {{ !is_null($bestsellerCount) && $index >= $bestsellerCount ? 'menu-row-hidden' : '' }}" style="--i: {{ $index % 6 }}">
@@ -1146,9 +1146,9 @@
             <div class="form-group">
                 <label for="paxInput">Jumlah Porsi (Pack) <span id="modalMinHint" style="color: var(--primary-orange);">(Minimal 30 Pack)</span></label>
                 <div class="qty-stepper">
-                    <button type="button" class="qty-btn qty-minus" onclick="stepPax(-5)"><i class="fa-solid fa-minus"></i></button>
+                    <button type="button" class="qty-btn qty-minus" onclick="stepPax(-1)"><i class="fa-solid fa-minus"></i></button>
                     <input type="number" name="pax_quantity" id="paxInput" class="qty-input" min="30" value="30" oninput="calculateSubtotal()" required>
-                    <button type="button" class="qty-btn qty-plus" onclick="stepPax(5)"><i class="fa-solid fa-plus"></i></button>
+                    <button type="button" class="qty-btn qty-plus" onclick="stepPax(1)"><i class="fa-solid fa-plus"></i></button>
                 </div>
                 <small id="modalMinNote" style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; display: block;">
                     <i class="fa-solid fa-circle-info" style="color: var(--primary-orange);"></i> Pemesanan di bawah 30 pack akan ditolak oleh sistem katering.

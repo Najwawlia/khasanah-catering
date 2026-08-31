@@ -409,12 +409,6 @@
                             <span style="font-weight: 700; font-size: 0.9rem;">GoPay</span>
                         </label>
 
-                        <label class="payment-option-card" id="pay_ovo" onclick="selectPaymentMethod('ovo')">
-                            <input type="radio" name="payment_method" value="ovo">
-                            <i class="fa-solid fa-wallet payment-icon"></i>
-                            <span style="font-weight: 700; font-size: 0.9rem;">OVO</span>
-                        </label>
-
                         <label class="payment-option-card" id="pay_bca" onclick="selectPaymentMethod('bca')">
                             <input type="radio" name="payment_method" value="bca">
                             <i class="fa-solid fa-building-columns payment-icon"></i>
@@ -425,12 +419,6 @@
                             <input type="radio" name="payment_method" value="mandiri">
                             <i class="fa-solid fa-building-columns payment-icon"></i>
                             <span style="font-weight: 700; font-size: 0.9rem;">Mandiri</span>
-                        </label>
-
-                        <label class="payment-option-card" id="pay_bri" onclick="selectPaymentMethod('bri')">
-                            <input type="radio" name="payment_method" value="bri">
-                            <i class="fa-solid fa-building-columns payment-icon"></i>
-                            <span style="font-weight: 700; font-size: 0.9rem;">Bank BRI</span>
                         </label>
                     </div>
                 </div>

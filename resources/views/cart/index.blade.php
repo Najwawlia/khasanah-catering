@@ -250,9 +250,9 @@
                         <div class="cart-item-actions">
                             <form action="{{ route('cart.update', $id) }}" method="POST" class="qty-stepper cart-qty-stepper" data-min="{{ $item['category'] === 'Custom / Tumpeng' ? 1 : 30 }}">
                                 @csrf
-                                <button type="button" class="qty-btn qty-minus" onclick="stepCartQty(this, -5)"><i class="fa-solid fa-minus"></i></button>
+                                <button type="button" class="qty-btn qty-minus" onclick="stepCartQty(this, -1)"><i class="fa-solid fa-minus"></i></button>
                                 <input type="number" name="pax_quantity" class="qty-input cart-qty-input" value="{{ $item['pax_quantity'] }}" min="{{ $item['category'] === 'Custom / Tumpeng' ? 1 : 30 }}" onchange="this.form.submit()">
-                                <button type="button" class="qty-btn qty-plus" onclick="stepCartQty(this, 5)"><i class="fa-solid fa-plus"></i></button>
+                                <button type="button" class="qty-btn qty-plus" onclick="stepCartQty(this, 1)"><i class="fa-solid fa-plus"></i></button>
                             </form>
 
                             <form action="{{ route('cart.remove', $id) }}" method="POST">

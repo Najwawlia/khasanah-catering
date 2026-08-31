@@ -121,21 +121,21 @@
                 <img src="{{ asset('images/qris-khasanah-catering.jpeg') }}" alt="QRIS Khasanah Snack N Nasi Box" class="qris-img" style="width: 260px; height: auto; object-fit: contain;">
                 <div style="color: #111; font-weight: 800; font-size: 0.85rem; margin-top: 8px;">NMID: ID1026487951174 — KHASANAH SNACK N NASI BOX, BNYMNK</div>
             </div>
-        @elseif(in_array($order->payment_method, ['bca', 'mandiri', 'bri']))
+        @elseif(in_array($order->payment_method, ['bca', 'mandiri']))
             <div class="bank-account-box">
                 <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px;">Transfer ke Rekening Bank Official:</div>
                 <div style="font-size: 1.3rem; font-weight: 800; color: var(--primary-orange);">
-                    BANK {{ strtoupper($order->payment_method) }}: 8830-1234-9988
+                    BANK {{ strtoupper($order->payment_method) }}: 1360-0147-63301
                 </div>
-                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. PT Katering Khasanah Indonesia</div>
+                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. Dean Thamrin</div>
             </div>
         @else
             <div class="bank-account-box">
                 <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px;">Nomor E-Wallet Official:</div>
                 <div style="font-size: 1.3rem; font-weight: 800; color: var(--primary-orange);">
-                    {{ strtoupper($order->payment_method) }}: 0812-3456-7890
+                    {{ strtoupper($order->payment_method) }}: 0813-2503-2009
                 </div>
-                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. Khasanah Catering Official Store</div>
+                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. Dean Thamprin</div>
             </div>
         @endif
 
