@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Khasanah Catering - Booking Katering Premium & Modern')
 
@@ -967,7 +967,7 @@
             <a href="#katalog" class="btn-primary">
                 <i class="fa-solid fa-utensils"></i> Lihat Katalog Menu
             </a>
-            <a href="https://wa.me/621325032009?text=Halo%20Admin,%20saya%20mau%20konsultasi%20menu%20katering" target="_blank" class="btn-secondary">
+            <a href="https://wa.me/+6281325032009?text=Halo%20Khasanah,%20saya%20mau%20tanya%20tanya%20tentang%20menu%20katering" target="_blank" class="btn-secondary">
                 <i class="fa-brands fa-whatsapp"></i> Konsultasi Acara Free
             </a>
         </div>

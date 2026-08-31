@@ -587,7 +587,7 @@
 
                 @if(Auth::user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                        <i class="fa-solid fa-gauge-high"></i> Panel Admin
+                        <i class="fa-solid fa-gauge-high"></i> Admin Panel
                     </a>
                 @endif
 
@@ -658,7 +658,7 @@
     </main>
 
     <!-- FLOATING WHATSAPP BUTTON -->
-    <a href="https://wa.me/6281325032009?text=Halo%20Admin%20Khasanah Catering,%20saya%20ingin%20tanya%20seputar%20booking%20katering..." 
+    <a href="https://wa.me/+6281325032009?text=Halo%20Khasanah Catering,%20saya%20ingin%20tanya%20seputar%20booking%20katering..." 
        target="_blank" 
        class="floating-wa" 
        title="Chat Customer Service via WhatsApp">
@@ -688,7 +688,6 @@
                 <p><i class="fa-solid fa-location-dot" style="color: var(--primary-orange);"></i> Ngesrep, Kec. Banyumanik, Kota Semarang, Jawa Tengah 50261</p>
                 <p><i class="fa-solid fa-phone" style="color: var(--primary-orange);"></i> +62 813-2503-2009</p>
                 <p><i class="fa-solid fa-envelope" style="color: var(--primary-orange);"></i> deanthamrin72@gmail.com</p>
-                <p><i class="fa-solid fa-clock" style="color: var(--primary-orange);"></i> Senin–Sabtu, 08.00–20.00 WIB</p>
                 <p>
                     <a href="https://maps.app.goo.gl/Dhg1FxakT4vSRb4E8" target="_blank" style="color: var(--primary-orange); font-weight: 700;">
                         <i class="fa-solid fa-map-location-dot"></i> Buka di Google Maps
