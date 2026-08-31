@@ -1094,7 +1094,7 @@
                     ['stars' => 5, 'text' => 'Pesen paket prasmanan nasi kebuli buat ulang tahun anak saya, tamu pada nanya resepnya. Minta waktu hidang dimajuin 30 menit juga masih bisa, makasih Bu Dean!', 'initial' => 'T', 'name' => 'Tania Dwi', 'event' => 'Ulang Tahun Anak'],
                     ['stars' => 5, 'text' => 'Order nasi kotak buat syukuran 17-an di RT, 50 kotak habis semua sebelum acara kelar. Rasanya emang beda kalau masakan rumahan, ga kayak katering biasa yang hambar.', 'initial' => 'O', 'name' => 'Ogi Winarni', 'event' => 'Syukuran RT'],
                     ['stars' => 4, 'text' => 'Buat rapat kantor udah pas, snack box-nya habis semua. Cuma waktu itu pengirimannya telat 15 menitan karena macet, untungnya tim WA duluan ngasih kabar jadi ga bingung.', 'initial' => 'A', 'name' => 'Agung Tri', 'event' => 'Rapat Kantor'],
-                    ['stars' => 5, 'text' => 'Pesan tumpeng buat syukuran rumah baru, cuma buat 20 orang, request porsinya dikecilin ternyata bisa. Ayam goreng lengkuasnya juara, sisa tamu pada nanyain nomor WA-nya.', 'initial' => 'R', 'name' => 'Rina Kusuma', 'event' => 'Syukuran Rumah Baru'],
+                    ['stars' => 5, 'text' => 'Pesan tumpeng buat syukuran rumah baru, cuma buat 20 orang, request porsinya dikecilin ternyata bisa. Ayam goreng lengkuasnya juara, sisa tamu pada nanyain nomor WA-nya.', 'initial' => 'D', 'name' => 'Deva Arvira', 'event' => 'Syukuran Rumah Baru'],
                 ];
             @endphp
             @for ($i = 0; $i < 2; $i++)
