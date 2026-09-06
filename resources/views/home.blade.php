@@ -1003,7 +1003,7 @@
     </form>
 </section>
 
-<!-- MENU LIST -->
+<!-- MENU LIST (editorial style) -->
 <section class="menu-list-container">
     @forelse($menus as $index => $menu)
         <article class="menu-row {{ !is_null($bestsellerCount) && $index >= $bestsellerCount ? 'menu-row-hidden' : '' }}" style="--i: {{ $index % 6 }}">

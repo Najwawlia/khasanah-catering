@@ -58,7 +58,10 @@
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
                                 <form action="{{ route('admin.menus.destroy', $menu->id) }}" method="POST"
-                                      onsubmit="return confirm('Hapus menu ini?')">
+                                      class="js-confirm"
+                                      data-confirm-title="Hapus Menu"
+                                      data-confirm-message="Apakah Anda yakin ingin menghapus menu '{{ $menu->name }}'? Tindakan ini tidak bisa dibatalkan."
+                                      data-confirm-label="Ya, Hapus">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-r btn-sm btn-sq" title="Hapus">
                                         <i class="fa-solid fa-trash"></i>

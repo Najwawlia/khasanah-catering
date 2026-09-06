@@ -33,6 +33,42 @@ class OrderController extends Controller
         return view('order.tracking', compact('order'));
     }
 
+    /**
+     * Halaman pelunasan sisa DP. Hanya bisa diakses kalau order memang
+     * pakai skema DP dan DP-nya sudah dibayar tapi belum lunas.
+     */
+    public function settlementPage($order_code)
+    {
+        $order = Order::with('items')->where('order_code', $order_code)->firstOrFail();
+
+        if (!$order->needsSettlement()) {
+            return redirect()->route('order.tracking', $order->order_code)
+                ->with('error', 'Pesanan ini tidak memerlukan pelunasan.');
+        }
+
+        return view('order.settlement', compact('order'));
+    }
+
+    /**
+     * Konfirmasi pelunasan sisa DP oleh customer.
+     */
+    public function confirmSettlement(Request $request, $order_code)
+    {
+        $order = Order::where('order_code', $order_code)->firstOrFail();
+
+        if (!$order->needsSettlement()) {
+            return redirect()->route('order.tracking', $order->order_code)
+                ->with('error', 'Pesanan ini tidak memerlukan pelunasan.');
+        }
+
+        $order->paid_amount = $order->total_amount;
+        $order->payment_status = 'paid';
+        $order->save();
+
+        return redirect()->route('order.tracking', $order->order_code)
+            ->with('success', 'Pelunasan berhasil dikonfirmasi! Sisa pembayaran Anda sudah lunas 100%.');
+    }
+
     public function myOrders()
     {
         if (!Auth::check()) {

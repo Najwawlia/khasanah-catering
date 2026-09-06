@@ -109,12 +109,17 @@
                     Total: <strong style="color: var(--primary-orange); font-size: 1.2rem;">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</strong>
                 </div>
 
-                <div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
                     @if($order->payment_status === 'pending')
                         <a href="{{ route('order.payment', $order->order_code) }}" class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">
                             <i class="fa-solid fa-credit-card"></i> Bayar Sekarang
                         </a>
                     @else
+                        @if($order->needsSettlement())
+                            <a href="{{ route('order.settlement', $order->order_code) }}" class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">
+                                <i class="fa-solid fa-hand-holding-dollar"></i> Lunasi Sekarang
+                            </a>
+                        @endif
                         <a href="{{ route('order.tracking', $order->order_code) }}" class="btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">
                             <i class="fa-solid fa-truck-fast"></i> Lacak Booking
                         </a>

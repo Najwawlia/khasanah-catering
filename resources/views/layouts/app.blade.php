@@ -443,6 +443,51 @@
         }
         .alert-catering-min i.alert-icon { color: var(--tertiary-coral-dark); }
 
+        /* --- CONFIRM MODAL (dipakai untuk logout) --- */
+        .cfm-overlay {
+            position: fixed; inset: 0;
+            background: rgba(43, 33, 25, .45);
+            display: none; align-items: center; justify-content: center;
+            z-index: 4000; padding: 20px;
+        }
+        .cfm-overlay.open { display: flex; animation: cfmFade .15s ease; }
+        @keyframes cfmFade { from { opacity: 0; } to { opacity: 1; } }
+        .cfm-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            max-width: 380px; width: 100%;
+            padding: 30px 26px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-hover);
+            animation: cfmPop .22s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes cfmPop { from { opacity: 0; transform: scale(.94) translateY(6px); } to { opacity: 1; transform: none; } }
+        .cfm-icon {
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            background: var(--primary-orange-light); color: var(--primary-orange);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; margin: 0 auto 16px;
+        }
+        .cfm-title {
+            font-family: var(--font-heading);
+            font-size: 1.15rem; font-weight: 700;
+            color: var(--text-primary); margin-bottom: 8px;
+        }
+        .cfm-msg { font-size: .9rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 24px; }
+        .cfm-actions { display: flex; gap: 10px; }
+        .cfm-btn {
+            flex: 1; padding: 12px; border-radius: var(--radius-md);
+            font-size: .88rem; font-weight: 700; cursor: pointer;
+            border: 1.5px solid transparent; font-family: inherit;
+            transition: all var(--transition-speed);
+        }
+        .cfm-btn-cancel { background: var(--bg-card); color: var(--text-primary); border-color: var(--border-color); }
+        .cfm-btn-cancel:hover { background: var(--bg-soft); }
+        .cfm-btn-confirm { background: var(--primary-orange); color: #fff; }
+        .cfm-btn-confirm:hover { background: var(--primary-orange-hover); }
+
         /* --- FLOATING WHATSAPP BUTTON --- */
         .floating-wa {
             position: fixed;
@@ -591,7 +636,7 @@
                     </a>
                 @endif
 
-                <div class="profile-btn" onclick="toggleDropdown()">
+                <div class="profile-btn" onclick="handleProfileLogout()" data-user-name="{{ Auth::user()->name }}">
                     <div class="avatar-circle">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
@@ -700,6 +745,19 @@
         </div>
     </footer>
 
+    <!-- MODAL KONFIRMASI LOGOUT -->
+    <div class="cfm-overlay" id="cfmOverlay">
+        <div class="cfm-box" role="alertdialog" aria-modal="true">
+            <div class="cfm-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <h3 class="cfm-title">Konfirmasi Logout</h3>
+            <p class="cfm-msg" id="cfmMsg">Apakah Anda yakin ingin logout?</p>
+            <div class="cfm-actions">
+                <button type="button" class="cfm-btn cfm-btn-cancel" id="cfmCancel">Batal</button>
+                <button type="button" class="cfm-btn cfm-btn-confirm" id="cfmConfirm">Ya, Logout</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Toast notification: manual close + auto-dismiss after 5s
         function dismissAlert(btn) {
@@ -718,11 +776,40 @@
             });
         });
 
-        function toggleDropdown() {
-            if (confirm('Apakah Anda ingin keluar (Logout) dari akun Anda?')) {
-                document.getElementById('logout-form').submit();
+        /* ─── MODAL KONFIRMASI LOGOUT ────────────────────────────── */
+        (function () {
+            var overlay = document.getElementById('cfmOverlay');
+            var msgEl = document.getElementById('cfmMsg');
+            var confirmBtn = document.getElementById('cfmConfirm');
+            var cancelBtn = document.getElementById('cfmCancel');
+            if (!overlay) return;
+
+            function openModal(message) {
+                msgEl.textContent = message;
+                overlay.classList.add('open');
             }
-        }
+            function closeModal() {
+                overlay.classList.remove('open');
+            }
+
+            confirmBtn.addEventListener('click', function () {
+                closeModal();
+                document.getElementById('logout-form').submit();
+            });
+            cancelBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closeModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+
+            window.handleProfileLogout = function () {
+                var btn = document.querySelector('.profile-btn[data-user-name]');
+                var name = btn ? btn.dataset.userName : '';
+                openModal("Apakah Anda yakin ingin logout dari '" + name + "'?");
+            };
+        })();
 
         // Mobile hamburger menu toggle
         function toggleMobileNav() {

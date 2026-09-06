@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Support\SemarangArea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -26,8 +28,10 @@ class CheckoutController extends Controller
         $dp50Amount = $totalAmount * 0.50;
         $user = Auth::user();
         $minEventDate = now()->addDays(3)->format('Y-m-d');
+        $kecamatanList = SemarangArea::KECAMATAN;
+        $mapCenter = SemarangArea::CENTER;
 
-        return view('checkout.index', compact('cart', 'totalAmount', 'dp50Amount', 'user', 'minEventDate'));
+        return view('checkout.index', compact('cart', 'totalAmount', 'dp50Amount', 'user', 'minEventDate', 'kecamatanList', 'mapCenter'));
     }
 
     public function process(Request $request)
@@ -40,13 +44,16 @@ class CheckoutController extends Controller
 
         $minEventDate = now()->addDays(3)->startOfDay();
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:20',
             'customer_email' => 'required|email|max:255',
             'event_date' => 'required|date|after_or_equal:' . $minEventDate->format('Y-m-d'),
             'delivery_type' => 'required|in:pickup,delivery',
             'shipping_address' => 'required_if:delivery_type,delivery|nullable|string',
+            'kecamatan' => 'required_if:delivery_type,delivery|nullable|in:' . implode(',', SemarangArea::KECAMATAN),
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
             'special_notes' => 'nullable|string',
             'payment_method' => 'required|in:qris,gopay,ovo,bca,mandiri,bri',
             'payment_type' => 'required|in:full,dp_50',
@@ -57,9 +64,29 @@ class CheckoutController extends Controller
             'event_date.required' => 'Tanggal acara wajib dipilih!',
             'event_date.after_or_equal' => 'Mohon maaf, pemesanan katering minimal 3 hari sebelum tanggal acara (tidak melayani pesanan mendadak/dadakan).',
             'shipping_address.required_if' => 'Alamat pengiriman lokasi acara wajib diisi untuk layanan Delivery.',
+            'kecamatan.required_if' => 'Pilih kecamatan lokasi acara. Kami saat ini hanya melayani pengiriman di wilayah Kota Semarang.',
+            'kecamatan.in' => 'Kecamatan yang dipilih tidak valid. Kami saat ini hanya melayani pengiriman di wilayah Kota Semarang.',
             'payment_method.required' => 'Pilih salah satu metode pembayaran.',
             'payment_type.required' => 'Pilih jenis pembayaran (Bayar Penuh atau DP 50%).',
         ]);
+
+        // Lapisan validasi kedua: kalau customer sempat menggeser pin di peta
+        // sampai keluar wilayah Kota Semarang, tolak juga di sini.
+        $validator->after(function ($validator) use ($request) {
+            if ($request->delivery_type === 'delivery' && $request->filled('latitude') && $request->filled('longitude')) {
+                $inBounds = SemarangArea::isWithinBounds((float) $request->latitude, (float) $request->longitude);
+                if (!$inBounds) {
+                    $validator->errors()->add(
+                        'shipping_address',
+                        'Titik lokasi yang Anda pilih di peta berada di luar wilayah Kota Semarang. Kami saat ini hanya melayani pengiriman di dalam Kota Semarang — silakan sesuaikan pin-nya, atau pilih Pickup kalau lokasi acara di luar Semarang.'
+                    );
+                }
+            }
+        });
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
 
         $totalAmount = 0;
         foreach ($cart as $item) {
@@ -81,6 +108,9 @@ class CheckoutController extends Controller
             'event_date' => $request->event_date,
             'delivery_type' => $request->delivery_type,
             'shipping_address' => $request->shipping_address,
+            'kecamatan' => $request->delivery_type === 'delivery' ? $request->kecamatan : null,
+            'latitude' => $request->delivery_type === 'delivery' ? $request->latitude : null,
+            'longitude' => $request->delivery_type === 'delivery' ? $request->longitude : null,
             'special_notes' => $request->special_notes,
             'payment_method' => $request->payment_method,
             'payment_type' => $request->payment_type,

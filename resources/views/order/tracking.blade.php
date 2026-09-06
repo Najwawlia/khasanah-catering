@@ -151,6 +151,37 @@
         border: 1px solid var(--border-color);
         height: 250px;
     }
+
+    /* --- BANNER PELUNASAN DP --- */
+    .settlement-banner {
+        background: rgba(234, 88, 12, 0.10);
+        border: 1px solid var(--primary-orange);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem 2rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .settlement-banner-text h4 {
+        color: var(--primary-orange);
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+    }
+
+    .settlement-banner-text p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .settlement-banner-text strong {
+        color: var(--text-primary);
+    }
 </style>
 @section('content')
 
@@ -160,11 +191,27 @@
         <div class="success-icon">
             <i class="fa-solid fa-calendar-check"></i>
         </div>
-        <h1 class="creative-title">Tanggal Berhasil Diamankan!</h1>
+        <h1 class="creative-title">Tanggal Acara Berhasil Diamankan!</h1>
         <p class="creative-subtitle">
             Terima kasih! Pesanan katering Anda dengan Kode Booking <strong>{{ $order->order_code }}</strong> untuk tanggal <strong>{{ \Carbon\Carbon::parse($order->event_date)->format('d F Y') }}</strong> sudah tercatat resmi di jadwal dapur kami.
         </p>
     </div>
+
+    <!-- BANNER PELUNASAN (hanya tampil kalau order pakai DP dan belum lunas) -->
+    @if($order->needsSettlement())
+        <div class="settlement-banner">
+            <div class="settlement-banner-text">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> Sisa Pembayaran Belum Dilunasi</h4>
+                <p>
+                    Pesanan Anda pakai skema DP 50%. Sisa tagihan <strong>Rp {{ number_format($order->remaining_amount, 0, ',', '.') }}</strong> wajib dilunasi
+                    sebelum pesanan bisa diproses ke tahap {{ $order->delivery_type === 'delivery' ? 'diantar ke lokasi' : 'siap diambil' }}.
+                </p>
+            </div>
+            <a href="{{ route('order.settlement', $order->order_code) }}" class="btn-primary" style="padding: 12px 22px; white-space: nowrap;">
+                <i class="fa-solid fa-hand-holding-dollar"></i> Lunasi Sekarang
+            </a>
+        </div>
+    @endif
 
     <!-- TRACKING TIMELINE -->
     <div class="timeline-card">
@@ -206,7 +253,16 @@
             <p><strong>No. WhatsApp:</strong> {{ $order->customer_phone }}</p>
             <p><strong>Tipe Layanan:</strong> {{ strtoupper($order->delivery_type) }}</p>
             @if($order->delivery_type === 'delivery')
-                <p><strong>Alamat Pengiriman:</strong> {{ $order->shipping_address }}</p>
+                <p><strong>Alamat Pengiriman:</strong> {{ $order->shipping_address }}@if($order->kecamatan), Kec. {{ $order->kecamatan }}, Kota Semarang @endif</p>
+                @if($order->latitude && $order->longitude)
+                    <div class="map-container" style="margin-top: 10px;">
+                        <iframe
+                            src="https://maps.google.com/maps?q={{ $order->latitude }},{{ $order->longitude }}&z=16&output=embed"
+                            width="100%" height="100%" style="border:0;" loading="lazy"
+                            title="Titik Lokasi Pengiriman Anda">
+                        </iframe>
+                    </div>
+                @endif
             @endif
             @if($order->special_notes)
                 <div style="margin-top: 1rem; background: var(--bg-input); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary-orange);">

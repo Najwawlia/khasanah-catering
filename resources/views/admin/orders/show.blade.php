@@ -35,7 +35,7 @@
                     <div class="f2" style="margin-bottom:14px;">
                         <div class="fg" style="margin-bottom:0;">
                             <label class="fl">Status Pembayaran</label>
-                            <select name="payment_status" class="fi" style="cursor:pointer;">
+                            <select name="payment_status" id="paymentStatusSelect" class="fi" style="cursor:pointer;">
                                 <option value="pending"   {{ $order->payment_status=='pending'   ? 'selected':'' }}>Pending</option>
                                 <option value="dp_paid"   {{ $order->payment_status=='dp_paid'   ? 'selected':'' }}>DP Paid</option>
                                 <option value="paid"      {{ $order->payment_status=='paid'      ? 'selected':'' }}>Lunas (100%)</option>
@@ -44,14 +44,22 @@
                         </div>
                         <div class="fg" style="margin-bottom:0;">
                             <label class="fl">Progress Dapur</label>
-                            <select name="tracking_status" class="fi" style="cursor:pointer;">
+                            <select name="tracking_status" id="trackingStatusSelect" class="fi" style="cursor:pointer;">
                                 <option value="booking_received"  {{ $order->tracking_status=='booking_received'  ? 'selected':'' }}>1. Booking Diterima</option>
                                 <option value="payment_verified" {{ $order->tracking_status=='payment_verified' ? 'selected':'' }}>2. Pembayaran Terverifikasi</option>
                                 <option value="kitchen_prep"     {{ $order->tracking_status=='kitchen_prep'     ? 'selected':'' }}>3. Persiapan Dapur</option>
-                                <option value="ready"            {{ $order->tracking_status=='ready'            ? 'selected':'' }}>4. Pesanan Siap</option>
+                                <option value="ready" id="readyOption" {{ !$order->canBeMarkedReady() ? 'disabled' : '' }} {{ $order->tracking_status=='ready' ? 'selected':'' }}>
+                                    4. Pesanan Siap{{ !$order->canBeMarkedReady() ? ' (menunggu pelunasan)' : '' }}
+                                </option>
                             </select>
                         </div>
                     </div>
+                    @if(!$order->canBeMarkedReady())
+                        <div style="background:var(--accent-s, rgba(234,88,12,.1)); border-left:3px solid var(--accent); border-radius:6px; padding:10px 12px; margin-bottom:14px; font-size:.8rem; color:var(--ink-2);">
+                            <i class="fa-solid fa-circle-info" style="color:var(--accent);"></i>
+                            Pesanan ini pakai DP dan belum dilunasi customer (sisa Rp {{ number_format($order->remaining_amount,0,',','.') }}). Status "Pesanan Siap" baru bisa dipilih setelah <strong>payment_status</strong> menjadi "Lunas (100%)".
+                        </div>
+                    @endif
                     <button type="submit" class="btn btn-p"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                 </form>
             </div>
@@ -145,10 +153,29 @@
                     @if($order->shipping_address)
                         <div style="display:flex; gap:9px; align-items:flex-start;">
                             <i class="fa-solid fa-location-dot" style="color:var(--ink-4); width:14px; flex-shrink:0; margin-top:2px;"></i>
-                            <span style="color:var(--ink-2);">{{ $order->shipping_address }}</span>
+                            <span style="color:var(--ink-2);">
+                                {{ $order->shipping_address }}
+                                @if($order->kecamatan)
+                                    <br><span style="font-size:.72rem; color:var(--ink-4);">Kec. {{ $order->kecamatan }}, Kota Semarang</span>
+                                @endif
+                            </span>
+                        </div>
+                    @endif
+                    @if($order->latitude && $order->longitude)
+                        <div style="display:flex; gap:9px; align-items:center;">
+                            <i class="fa-solid fa-map-location-dot" style="color:var(--ink-4); width:14px; flex-shrink:0;"></i>
+                            <a href="https://www.google.com/maps?q={{ $order->latitude }},{{ $order->longitude }}" target="_blank" style="color:var(--accent); font-weight:600;">
+                                Lihat Titik Lokasi di Google Maps <i class="fa-solid fa-up-right-from-square" style="font-size:.65rem;"></i>
+                            </a>
                         </div>
                     @endif
                 </div>
+                @if($order->latitude && $order->longitude)
+                    <div style="margin-top:12px; border:1px solid var(--border); border-radius:8px; overflow:hidden;">
+                        <iframe src="https://maps.google.com/maps?q={{ $order->latitude }},{{ $order->longitude }}&z=16&output=embed"
+                                width="100%" height="180" style="border:0; display:block;" loading="lazy" title="Lokasi Pesanan"></iframe>
+                    </div>
+                @endif
                 @if($order->special_notes)
                     <div style="margin-top:14px; padding:10px 12px; background:var(--accent-s); border-radius:6px; border-left:3px solid var(--accent);">
                         <div style="font-size:.72rem; font-weight:700; color:var(--accent); margin-bottom:3px;"><i class="fa-solid fa-note-sticky"></i> Catatan</div>
@@ -186,4 +213,30 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    // Kalau admin baru saja memilih "Lunas (100%)" di dropdown Status Pembayaran
+    // (belum di-submit), opsi "Pesanan Siap" ikut ter-enable supaya bisa dipilih
+    // dalam submit yang sama. Validasi final tetap dijaga di server (controller).
+    (function () {
+        var paymentSelect = document.getElementById('paymentStatusSelect');
+        var readyOption = document.getElementById('readyOption');
+        if (!paymentSelect || !readyOption) return;
+
+        var originallyLocked = readyOption.disabled;
+
+        paymentSelect.addEventListener('change', function () {
+            if (paymentSelect.value === 'paid') {
+                readyOption.disabled = false;
+            } else if (originallyLocked) {
+                readyOption.disabled = true;
+                if (readyOption.selected) {
+                    document.getElementById('trackingStatusSelect').value = '{{ $order->tracking_status }}';
+                }
+            }
+        });
+    })();
+</script>
 @endsection

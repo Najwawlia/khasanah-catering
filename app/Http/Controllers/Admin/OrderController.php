@@ -29,7 +29,53 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::with(['items', 'user'])->findOrFail($id);
+
+        // Begitu admin membuka detail pesanan, otomatis dianggap "sudah dibaca".
+        if (!$order->is_read_by_admin) {
+            $order->update(['is_read_by_admin' => true]);
+        }
+
         return view('admin.orders.show', compact('order'));
+    }
+
+    /**
+     * Dipanggil via fetch() dari topbar admin (polling) untuk mengisi
+     * badge & daftar lonceng notifikasi "Pesanan Baru".
+     */
+    public function notifications()
+    {
+        $unreadCount = Order::where('is_read_by_admin', false)->count();
+
+        $unreadOrders = Order::where('is_read_by_admin', false)
+            ->orderBy('created_at', 'desc')
+            ->take(8)
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'order_code' => $order->order_code,
+                    'customer_name' => $order->customer_name,
+                    'total_amount' => 'Rp ' . number_format($order->total_amount, 0, ',', '.'),
+                    'payment_type' => $order->payment_type === 'dp_50' ? 'DP 50%' : 'Bayar Penuh',
+                    'time_ago' => $order->created_at->diffForHumans(),
+                    'url' => route('admin.orders.show', $order->id),
+                ];
+            });
+
+        return response()->json([
+            'count' => $unreadCount,
+            'orders' => $unreadOrders,
+        ]);
+    }
+
+    /**
+     * Tandai semua pesanan baru sebagai sudah dibaca (tombol "Tandai semua dibaca").
+     */
+    public function markAllNotificationsRead()
+    {
+        Order::where('is_read_by_admin', false)->update(['is_read_by_admin' => true]);
+
+        return response()->json(['success' => true]);
     }
 
     public function updateStatus(Request $request, $id)
@@ -40,6 +86,12 @@ class OrderController extends Controller
             'payment_status' => 'required|in:pending,dp_paid,paid,cancelled',
             'tracking_status' => 'required|in:booking_received,payment_verified,kitchen_prep,ready',
         ]);
+
+        // Cek dulu berdasarkan payment_status BARU yang mau disimpan (bukan yang lama),
+        // karena admin bisa saja mengubah keduanya sekaligus dalam satu submit.
+        if ($request->tracking_status === 'ready' && $request->payment_status !== 'paid') {
+            return back()->with('error', 'Status "Pesanan Siap" tidak bisa dipilih karena pesanan ' . $order->order_code . ' pakai DP dan belum dilunasi customer. Sisa tagihan: Rp ' . number_format($order->remaining_amount, 0, ',', '.') . '.');
+        }
 
         $order->payment_status = $request->payment_status;
         $order->tracking_status = $request->tracking_status;
@@ -67,6 +119,11 @@ class OrderController extends Controller
         $request->validate([
             'tracking_status' => 'required|in:booking_received,payment_verified,kitchen_prep,ready',
         ]);
+
+        // Blokir kalau mau ditandai "ready" tapi pesanan (khususnya yang DP) belum lunas.
+        if ($request->tracking_status === 'ready' && !$order->canBeMarkedReady()) {
+            return back()->with('error', 'Pesanan ' . $order->order_code . ' belum bisa ditandai "Siap" karena masih ada sisa tagihan DP sebesar Rp ' . number_format($order->remaining_amount, 0, ',', '.') . ' yang belum dilunasi customer.');
+        }
 
         $order->tracking_status = $request->tracking_status;
         $order->save();

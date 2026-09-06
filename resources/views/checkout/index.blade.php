@@ -292,6 +292,19 @@
 </div>
 
 <div class="checkout-wrapper">
+    @if ($errors->any())
+        <div style="background: rgba(178,58,58,0.08); border: 1px solid var(--error); border-radius: var(--radius-md); padding: 1rem 1.2rem; margin-bottom: 1.5rem;">
+            <div style="display:flex; align-items:center; gap:8px; font-weight:700; color: var(--error); margin-bottom: 6px;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Mohon periksa kembali form Anda:
+            </div>
+            <ul style="margin: 0; padding-left: 1.4rem; color: var(--text-primary); font-size: 0.9rem;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('checkout.process') }}" method="POST">
         @csrf
 
@@ -351,9 +364,53 @@
                         </select>
                     </div>
 
-                    <div class="form-group" id="addressGroup">
-                        <label for="shipping_address">Alamat Pengiriman Lengkap (Lokasi Acara)</label>
-                        <textarea name="shipping_address" id="shipping_address" rows="3" class="form-textarea" placeholder="Tuliskan alamat gedung / rumah acara lengkap beserta patokan...">{{ old('shipping_address') }}</textarea>
+                    <div class="form-group" id="addressWrapperGroup">
+                        <div style="background: var(--bg-input); border: 1px dashed var(--primary-orange); border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 1.2rem; display:flex; align-items:flex-start; gap:10px;">
+                            <i class="fa-solid fa-location-dot" style="color: var(--primary-orange); margin-top: 2px;"></i>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                                Layanan <strong style="color: var(--text-primary);">antar (delivery)</strong> saat ini hanya kami sediakan untuk wilayah <strong style="color: var(--text-primary);">Kota Semarang</strong>. Kalau lokasi acara di luar Semarang, silakan pilih <strong style="color: var(--text-primary);">Ambil Mandiri di Dapur Utama (Pickup)</strong>.
+                            </div>
+                        </div>
+
+                        <label>Kota / Kabupaten Tujuan</label>
+                        <input type="text" class="form-input" value="Kota Semarang" disabled
+                               style="opacity: 0.7; cursor: not-allowed; margin-bottom: 1.2rem;">
+
+                        <label for="kecamatan">Kecamatan</label>
+                        <select name="kecamatan" id="kecamatan" class="form-select" style="margin-bottom: 1.2rem;">
+                            <option value="">-- Pilih Kecamatan Lokasi Acara --</option>
+                            @foreach($kecamatanList as $k)
+                                <option value="{{ $k }}" {{ old('kecamatan') === $k ? 'selected' : '' }}>{{ $k }}</option>
+                            @endforeach
+                        </select>
+
+                        <label for="shipping_address">Alamat Lengkap (Jalan, No. Rumah/Gedung, Patokan)</label>
+                        <textarea name="shipping_address" id="shipping_address" rows="3" class="form-textarea" placeholder="Contoh: Jl. Pandanaran No. 12, dekat Lawang Sewu, patokan sebelah toko oleh-oleh...">{{ old('shipping_address') }}</textarea>
+                    </div>
+
+                    <!-- PEMILIH TITIK LOKASI DI PETA -->
+                    <div class="form-group" id="mapGroup">
+                        <label>
+                            <i class="fa-solid fa-map-location-dot" style="color: var(--primary-orange);"></i>
+                            Titik Lokasi di Peta <span style="font-weight: 400; color: var(--text-muted);">(opsional, memudahkan kurir menemukan lokasi)</span>
+                        </label>
+
+                        @if(config('services.google_maps.key'))
+                            <input type="text" id="mapSearchInput" class="form-input" placeholder="Cari nama jalan / gedung di Semarang..." style="margin-bottom: 10px;">
+                            <div id="gmap" style="width: 100%; height: 260px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color);"></div>
+                            <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
+                            <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
+                            <small style="color: var(--text-muted); margin-top: 6px; display: block;">
+                                <i class="fa-solid fa-hand-pointer"></i> Geser pin merah ke lokasi yang tepat, atau ketik nama jalan/gedung di kolom pencarian di atas. Peta dikunci di area Kota Semarang.
+                            </small>
+                        @else
+                            <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
+                                <iframe src="https://maps.google.com/maps?q=Kota+Semarang&z=12&output=embed" width="100%" height="230" style="border:0; display:block;" loading="lazy" title="Peta Kota Semarang"></iframe>
+                            </div>
+                            <small style="color: var(--text-muted); margin-top: 6px; display: block;">
+                                <i class="fa-solid fa-circle-info"></i> Peta pemilih titik lokasi interaktif belum aktif — mohon tuliskan alamat selengkap dan sedetail mungkin di kolom di atas ya.
+                            </small>
+                        @endif
                     </div>
 
                     <!-- TEXTAREA CATATAN KHUSUS / DIETARY NOTES -->
@@ -409,6 +466,12 @@
                             <span style="font-weight: 700; font-size: 0.9rem;">GoPay</span>
                         </label>
 
+                        <label class="payment-option-card" id="pay_ovo" onclick="selectPaymentMethod('ovo')">
+                            <input type="radio" name="payment_method" value="ovo">
+                            <i class="fa-solid fa-wallet payment-icon"></i>
+                            <span style="font-weight: 700; font-size: 0.9rem;">OVO</span>
+                        </label>
+
                         <label class="payment-option-card" id="pay_bca" onclick="selectPaymentMethod('bca')">
                             <input type="radio" name="payment_method" value="bca">
                             <i class="fa-solid fa-building-columns payment-icon"></i>
@@ -419,6 +482,12 @@
                             <input type="radio" name="payment_method" value="mandiri">
                             <i class="fa-solid fa-building-columns payment-icon"></i>
                             <span style="font-weight: 700; font-size: 0.9rem;">Mandiri</span>
+                        </label>
+
+                        <label class="payment-option-card" id="pay_bri" onclick="selectPaymentMethod('bri')">
+                            <input type="radio" name="payment_method" value="bri">
+                            <i class="fa-solid fa-building-columns payment-icon"></i>
+                            <span style="font-weight: 700; font-size: 0.9rem;">Bank BRI</span>
                         </label>
                     </div>
                 </div>
@@ -467,12 +536,11 @@
 @section('scripts')
 <script>
     function toggleAddress(val) {
-        const addressGroup = document.getElementById('addressGroup');
-        if (val === 'pickup') {
-            addressGroup.style.display = 'none';
-        } else {
-            addressGroup.style.display = 'block';
-        }
+        const addressWrapperGroup = document.getElementById('addressWrapperGroup');
+        const mapGroup = document.getElementById('mapGroup');
+        const display = (val === 'pickup') ? 'none' : 'block';
+        addressWrapperGroup.style.display = display;
+        mapGroup.style.display = display;
     }
 
     function selectDp(type) {
@@ -492,4 +560,80 @@
         document.getElementById('pay_' + method).classList.add('selected');
     }
 </script>
+
+@if(config('services.google_maps.key'))
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initSemarangMap" async defer></script>
+<script>
+    // Peta pemilih lokasi dikunci di area Kota Semarang: bounds dipakai
+    // untuk membatasi pencarian & tampilan peta, bukan sekadar dekorasi.
+    var SEMARANG_CENTER = { lat: {{ $mapCenter['lat'] }}, lng: {{ $mapCenter['lng'] }} };
+    var SEMARANG_BOUNDS = {
+        north: -6.90,
+        south: -7.15,
+        east: 110.52,
+        west: 110.28,
+    };
+
+    function initSemarangMap() {
+        var mapEl = document.getElementById('gmap');
+        if (!mapEl) return;
+
+        var bounds = new google.maps.LatLngBounds(
+            { lat: SEMARANG_BOUNDS.south, lng: SEMARANG_BOUNDS.west },
+            { lat: SEMARANG_BOUNDS.north, lng: SEMARANG_BOUNDS.east }
+        );
+
+        var map = new google.maps.Map(mapEl, {
+            center: SEMARANG_CENTER,
+            zoom: 12,
+            restriction: { latLngBounds: bounds, strictBounds: false },
+            streetViewControl: false,
+            mapTypeControl: false,
+        });
+
+        var latField = document.getElementById('latitude');
+        var lngField = document.getElementById('longitude');
+        var initialLat = parseFloat(latField.value) || SEMARANG_CENTER.lat;
+        var initialLng = parseFloat(lngField.value) || SEMARANG_CENTER.lng;
+
+        var marker = new google.maps.Marker({
+            map: map,
+            position: { lat: initialLat, lng: initialLng },
+            draggable: true,
+        });
+
+        function syncFields(pos) {
+            latField.value = pos.lat();
+            lngField.value = pos.lng();
+        }
+        syncFields(marker.getPosition());
+
+        marker.addListener('dragend', function () {
+            syncFields(marker.getPosition());
+        });
+
+        map.addListener('click', function (e) {
+            marker.setPosition(e.latLng);
+            syncFields(e.latLng);
+        });
+
+        var searchInput = document.getElementById('mapSearchInput');
+        var autocomplete = new google.maps.places.Autocomplete(searchInput, {
+            bounds: bounds,
+            strictBounds: true,
+            componentRestrictions: { country: 'id' },
+            fields: ['geometry', 'name'],
+        });
+
+        autocomplete.addListener('place_changed', function () {
+            var place = autocomplete.getPlace();
+            if (!place.geometry || !place.geometry.location) return;
+            map.panTo(place.geometry.location);
+            map.setZoom(16);
+            marker.setPosition(place.geometry.location);
+            syncFields(place.geometry.location);
+        });
+    }
+</script>
+@endif
 @endsection

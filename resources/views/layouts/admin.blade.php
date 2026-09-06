@@ -277,6 +277,122 @@
         display: flex; align-items: center; justify-content: center;
     }
 
+    /* ─── NOTIFICATION BELL ────────────────────────────────────── */
+    .bell-wrap { position: relative; }
+    .bell-btn {
+        width: 36px; height: 36px;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--ink-2);
+        font-size: .9rem;
+        cursor: pointer;
+        position: relative;
+        transition: border-color var(--d);
+    }
+    .bell-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .bell-badge {
+        position: absolute;
+        top: -5px; right: -5px;
+        min-width: 17px; height: 17px;
+        padding: 0 4px;
+        border-radius: 100px;
+        background: var(--red);
+        color: #fff;
+        font-size: .6rem;
+        font-weight: 700;
+        display: none;
+        align-items: center; justify-content: center;
+        border: 2px solid var(--bg);
+    }
+    .bell-panel {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 320px;
+        max-height: 400px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        box-shadow: 0 16px 40px rgba(43,33,25,.16);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 60;
+    }
+    .bell-panel.open { display: flex; animation: in .16s var(--e) both; }
+    .bell-panel-head {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border-2);
+        font-size: .78rem; font-weight: 700; color: var(--ink);
+    }
+    .bell-panel-head button {
+        background: none; border: none; cursor: pointer;
+        font-size: .68rem; font-weight: 600; color: var(--accent);
+        font-family: inherit;
+    }
+    .bell-panel-head button:hover { text-decoration: underline; }
+    .bell-panel-body { overflow-y: auto; flex: 1; }
+    .bell-item {
+        display: block;
+        padding: 11px 14px;
+        border-bottom: 1px solid var(--border-2);
+        transition: background var(--d);
+    }
+    .bell-item:hover { background: var(--border-2); }
+    .bell-item-top { display: flex; justify-content: space-between; margin-bottom: 3px; }
+    .bell-item-code { font-family: 'JetBrains Mono', monospace; font-size: .68rem; font-weight: 700; color: var(--accent); }
+    .bell-item-time { font-size: .64rem; color: var(--ink-4); }
+    .bell-item-name { font-size: .8rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+    .bell-item-meta { font-size: .7rem; color: var(--ink-3); }
+    .bell-empty { padding: 26px 14px; text-align: center; font-size: .76rem; color: var(--ink-4); }
+
+    /* ─── CONFIRM MODAL (dipakai untuk hapus data & logout) ───────── */
+    .cfm-overlay {
+        position: fixed; inset: 0;
+        background: rgba(43,33,25,.45);
+        display: none; align-items: center; justify-content: center;
+        z-index: 999; padding: 20px;
+    }
+    .cfm-overlay.open { display: flex; animation: cfmFade .15s var(--e); }
+    @keyframes cfmFade { from { opacity: 0; } to { opacity: 1; } }
+    .cfm-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        max-width: 380px; width: 100%;
+        padding: 28px 26px 22px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(43,33,25,.25);
+        animation: cfmPop .2s var(--e);
+    }
+    @keyframes cfmPop { from { opacity: 0; transform: scale(.94) translateY(6px); } to { opacity: 1; transform: none; } }
+    .cfm-icon {
+        width: 52px; height: 52px;
+        border-radius: 50%;
+        background: var(--red-s); color: var(--red);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3rem; margin: 0 auto 14px;
+    }
+    .cfm-icon.info { background: var(--accent-s); color: var(--accent); }
+    .cfm-title { font-family: 'Cinzel', Georgia, serif; font-size: 1.05rem; color: var(--ink); margin-bottom: 8px; }
+    .cfm-msg { font-size: .85rem; color: var(--ink-3); line-height: 1.55; margin-bottom: 22px; }
+    .cfm-actions { display: flex; gap: 10px; }
+    .cfm-btn {
+        flex: 1; padding: 11px; border-radius: 10px;
+        font-size: .84rem; font-weight: 700; cursor: pointer;
+        border: 1px solid transparent; font-family: inherit;
+        transition: all var(--d) var(--e);
+    }
+    .cfm-btn-cancel { background: var(--border-2); color: var(--ink-2); }
+    .cfm-btn-cancel:hover { background: var(--border); }
+    .cfm-btn-confirm { background: var(--red); color: #fff; }
+    .cfm-btn-confirm:hover { background: #8A2E2E; }
+    .cfm-btn-confirm.info-variant { background: var(--accent); }
+    .cfm-btn-confirm.info-variant:hover { background: var(--accent-h); }
+
     /* ─── CONTENT ──────────────────────────────────────────────── */
     .pg {
         flex: 1;
@@ -320,6 +436,7 @@
         border: 1px solid;
     }
     .flash-ok { background: var(--green-s); color: var(--green); border-color: rgba(79,95,65,.25); }
+    .flash-err { background: rgba(220,38,38,.1); color: var(--red, #DC2626); border-color: rgba(220,38,38,.25); }
 
     /* ─── STAT ROW (thin bar, no cards) ───────────────────────── */
     .stat-row {
@@ -823,14 +940,19 @@
 
     <div class="sb-footer">
         <div class="sb-user">
-            <div class="sb-av">A</div>
+            <div class="sb-av">{{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}</div>
             <div>
-                <div class="sb-uname">Administrator</div>
+                <div class="sb-uname">{{ Auth::user()->name ?? 'Administrator' }}</div>
                 <div class="sb-urole">Super Admin</div>
             </div>
             <div class="sb-dot"></div>
         </div>
-        <form action="{{ route('logout') }}" method="POST">
+        <form action="{{ route('logout') }}" method="POST"
+              class="js-confirm"
+              data-confirm-title="Konfirmasi Logout"
+              data-confirm-message="Apakah Anda yakin ingin logout dari '{{ Auth::user()->name ?? 'Administrator' }}'?"
+              data-confirm-label="Ya, Logout"
+              data-confirm-danger="0">
             @csrf
             <button class="sb-out" type="submit">
                 <i class="fa-solid fa-right-from-bracket"></i> Keluar
@@ -847,9 +969,26 @@
         </div>
         <div class="bar-right">
             <span class="bar-clock" id="lc">{{ \Carbon\Carbon::now()->format('H:i') }} WIB</span>
+
+            <div class="bell-wrap">
+                <button type="button" class="bell-btn" id="notifBellBtn" title="Notifikasi Pesanan Baru">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="bell-badge" id="notifBadge">0</span>
+                </button>
+                <div class="bell-panel" id="notifPanel">
+                    <div class="bell-panel-head">
+                        <span>Pesanan Baru</span>
+                        <button type="button" id="notifMarkAll">Tandai semua dibaca</button>
+                    </div>
+                    <div class="bell-panel-body" id="notifList">
+                        <div class="bell-empty">Memuat...</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="bar-prof">
-                <div class="bar-prof-av">A</div>
-                Admin
+                <div class="bar-prof-av">{{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}</div>
+                {{ Auth::user()->name ?? 'Admin' }}
             </div>
         </div>
     </header>
@@ -860,8 +999,26 @@
                 <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
             </div>
         @endif
+        @if(session('error'))
+            <div class="flash flash-err">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ session('error') }}
+            </div>
+        @endif
         @yield('content')
     </main>
+</div>
+
+<!-- MODAL KONFIRMASI (dipakai untuk hapus data & logout) -->
+<div class="cfm-overlay" id="cfmOverlay">
+    <div class="cfm-box" role="alertdialog" aria-modal="true">
+        <div class="cfm-icon" id="cfmIcon"><i class="fa-solid fa-trash"></i></div>
+        <h3 class="cfm-title" id="cfmTitle">Konfirmasi</h3>
+        <p class="cfm-msg" id="cfmMsg">Apakah Anda yakin?</p>
+        <div class="cfm-actions">
+            <button type="button" class="cfm-btn cfm-btn-cancel" id="cfmCancel">Batal</button>
+            <button type="button" class="cfm-btn cfm-btn-confirm" id="cfmConfirm">Ya, Lanjutkan</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -871,6 +1028,151 @@
         if(e) e.textContent=(d.getHours()+'').padStart(2,'0')+':'+(d.getMinutes()+'').padStart(2,'0')+' WIB';
     }
     setInterval(tick,15000);
+})();
+
+/* ─── MODAL KONFIRMASI GENERIK ───────────────────────────────
+   Dipakai lewat class "js-confirm" di form (hapus menu, hapus
+   pesanan, logout, dst) supaya tidak pakai confirm() bawaan browser. */
+(function(){
+    var overlay = document.getElementById('cfmOverlay');
+    var titleEl = document.getElementById('cfmTitle');
+    var msgEl = document.getElementById('cfmMsg');
+    var iconEl = document.getElementById('cfmIcon');
+    var confirmBtn = document.getElementById('cfmConfirm');
+    var cancelBtn = document.getElementById('cfmCancel');
+    var pendingAction = null;
+
+    function openModal(opts) {
+        titleEl.textContent = opts.title || 'Konfirmasi';
+        msgEl.textContent = opts.message || 'Apakah Anda yakin?';
+        confirmBtn.textContent = opts.confirmLabel || 'Ya, Lanjutkan';
+
+        var danger = opts.danger !== false;
+        iconEl.className = 'cfm-icon' + (danger ? '' : ' info');
+        iconEl.innerHTML = danger
+            ? '<i class="fa-solid fa-trash"></i>'
+            : '<i class="fa-solid fa-right-from-bracket"></i>';
+        confirmBtn.className = 'cfm-btn cfm-btn-confirm' + (danger ? '' : ' info-variant');
+
+        pendingAction = opts.onConfirm;
+        overlay.classList.add('open');
+    }
+
+    function closeModal() {
+        overlay.classList.remove('open');
+        pendingAction = null;
+    }
+
+    confirmBtn.addEventListener('click', function () {
+        var action = pendingAction;
+        closeModal();
+        if (action) action();
+    });
+    cancelBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // Intersep submit semua form yang punya class "js-confirm"
+    document.addEventListener('submit', function (e) {
+        var form = e.target.closest('.js-confirm');
+        if (!form) return;
+        if (form.dataset.confirmed === '1') return; // sudah dikonfirmasi, biarkan submit jalan
+
+        e.preventDefault();
+        openModal({
+            title: form.dataset.confirmTitle,
+            message: form.dataset.confirmMessage,
+            confirmLabel: form.dataset.confirmLabel,
+            danger: form.dataset.confirmDanger !== '0',
+            onConfirm: function () {
+                form.dataset.confirmed = '1';
+                form.submit();
+            },
+        });
+    });
+})();
+
+/* ─── LONCENG NOTIFIKASI PESANAN BARU ────────────────────────
+   Polling ringan tiap 25 detik ke /admin/notifications supaya
+   admin tahu ada pesanan baru masuk tanpa perlu refresh halaman. */
+(function(){
+    var btn = document.getElementById('notifBellBtn');
+    var panel = document.getElementById('notifPanel');
+    var badge = document.getElementById('notifBadge');
+    var list = document.getElementById('notifList');
+    var markAllBtn = document.getElementById('notifMarkAll');
+    if (!btn) return;
+
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function renderList(orders) {
+        if (!orders.length) {
+            list.innerHTML = '<div class="bell-empty">Tidak ada pesanan baru.</div>';
+            return;
+        }
+        list.innerHTML = orders.map(function (o) {
+            return '<a href="' + o.url + '" class="bell-item">' +
+                '<div class="bell-item-top">' +
+                    '<span class="bell-item-code">' + escapeHtml(o.order_code) + '</span>' +
+                    '<span class="bell-item-time">' + escapeHtml(o.time_ago) + '</span>' +
+                '</div>' +
+                '<div class="bell-item-name">' + escapeHtml(o.customer_name) + '</div>' +
+                '<div class="bell-item-meta">' + escapeHtml(o.total_amount) + ' &middot; ' + escapeHtml(o.payment_type) + '</div>' +
+            '</a>';
+        }).join('');
+    }
+
+    function loadNotifications() {
+        fetch('{{ route('admin.notifications.index') }}', { headers: { 'Accept': 'application/json' } })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.count > 0) {
+                    badge.style.display = 'flex';
+                    badge.textContent = data.count > 9 ? '9+' : data.count;
+                } else {
+                    badge.style.display = 'none';
+                }
+                renderList(data.orders || []);
+            })
+            .catch(function () { /* diamkan supaya tidak mengganggu admin kalau fetch gagal */ });
+    }
+
+    btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        panel.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function (e) {
+        if (panel.classList.contains('open') && !panel.contains(e.target) && e.target !== btn) {
+            panel.classList.remove('open');
+        }
+    });
+
+    if (markAllBtn) {
+        markAllBtn.addEventListener('click', function () {
+            fetch('{{ route('admin.notifications.read_all') }}', {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+            }).then(function () {
+                badge.style.display = 'none';
+                list.innerHTML = '<div class="bell-empty">Tidak ada pesanan baru.</div>';
+            });
+        });
+    }
+
+    loadNotifications();
+    setInterval(loadNotifications, 25000);
 })();
 </script>
 @yield('scripts')

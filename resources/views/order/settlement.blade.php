@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Selesaikan Pembayaran - ' . $order->order_code)
+@section('title', 'Pelunasan Pembayaran - ' . $order->order_code)
 
 @section('styles')
 <style>
@@ -58,7 +58,30 @@
         color: var(--primary-orange);
     }
 
-    /* --- QRIS IMAGE CONTAINER --- */
+    .breakdown-box {
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 1.2rem 1.5rem;
+        margin: 1.5rem 0;
+        text-align: left;
+    }
+
+    .breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        padding: 6px 0;
+    }
+
+    .breakdown-row.total {
+        border-top: 1px dashed var(--border-color);
+        margin-top: 6px;
+        padding-top: 12px;
+        font-weight: 800;
+        color: var(--primary-orange);
+    }
+
     .qris-box {
         background: #FFFFFF;
         border: 1px solid var(--border-color);
@@ -92,27 +115,28 @@
         <div class="order-badge">
             <i class="fa-solid fa-ticket"></i> Kode Pesanan: {{ $order->order_code }}
         </div>
-        
-        <h2 class="payment-title">Instruksi Pembayaran Katering</h2>
-        <p style="color: var(--text-muted);">Silakan lakukan transfer/scan sebelum tanggal acara <strong>{{ \Carbon\Carbon::parse($order->event_date)->format('d F Y') }}</strong></p>
 
-        <div class="payment-amount-box">
-            <div class="amount-label">
-                @if($order->payment_type === 'dp_50')
-                    Nominal Wajib Bayar (Down Payment 50%):
-                @else
-                    Nominal Pelunasan Full (100%):
-                @endif
+        <h2 class="payment-title"><i class="fa-solid fa-hand-holding-dollar" style="color: var(--primary-orange);"></i> Pelunasan Sisa Pembayaran</h2>
+        <p style="color: var(--text-muted);">
+            DP Anda sudah kami terima. Untuk melanjutkan pesanan ke tahap pengiriman/pengambilan, mohon lunasi sisa tagihan berikut sebelum tanggal acara <strong>{{ \Carbon\Carbon::parse($order->event_date)->format('d F Y') }}</strong>.
+        </p>
+
+        <div class="breakdown-box">
+            <div class="breakdown-row">
+                <span>Total Tagihan Pesanan</span>
+                <strong>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</strong>
             </div>
-            <div class="amount-val">
-                Rp {{ number_format($order->payment_type === 'dp_50' ? $order->dp_amount : $order->total_amount, 0, ',', '.') }}
+            <div class="breakdown-row">
+                <span>Sudah Dibayar (DP)</span>
+                <strong style="color: var(--success, #22C55E);">Rp {{ number_format($order->paid_amount, 0, ',', '.') }}</strong>
             </div>
-            <small style="color: var(--text-muted); display: block; margin-top: 4px;">
-                Total Seluruh Pesanan: Rp {{ number_format($order->total_amount, 0, ',', '.') }}
-            </small>
+            <div class="breakdown-row total">
+                <span>Sisa yang Wajib Dilunasi</span>
+                <span>Rp {{ number_format($order->remaining_amount, 0, ',', '.') }}</span>
+            </div>
         </div>
 
-        <!-- OPSI TAMPILAN BERDASARKAN METODE PEMBAYARAN -->
+        <!-- OPSI TAMPILAN BERDASARKAN METODE PEMBAYARAN AWAL -->
         @if($order->payment_method === 'qris')
             <h4 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-qrcode" style="color: var(--primary-orange);"></i> Scan Barcode QRIS di Bawah Ini:</h4>
             <p style="font-size: 0.85rem; color: var(--text-muted);">Buka aplikasi GoPay, OVO, Dana, ShopeePay, atau Mobile Banking pilihan Anda.</p>
@@ -123,28 +147,32 @@
             </div>
         @elseif(in_array($order->payment_method, ['bca', 'mandiri', 'bri']))
             <div class="bank-account-box">
-                <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px;">Transfer ke Rekening Bank Official:</div>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px;">Transfer Sisa Tagihan ke Rekening Bank Official:</div>
                 <div style="font-size: 1.3rem; font-weight: 800; color: var(--primary-orange);">
-                    BANK {{ strtoupper($order->payment_method) }}: 1360-0147-63301
+                    BANK {{ strtoupper($order->payment_method) }}: 8830-1234-9988
                 </div>
-                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. Dean Thamprin</div>
+                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. PT Katering Khasanah Indonesia</div>
             </div>
         @else
             <div class="bank-account-box">
                 <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 6px;">Nomor E-Wallet Official:</div>
                 <div style="font-size: 1.3rem; font-weight: 800; color: var(--primary-orange);">
-                    {{ strtoupper($order->payment_method) }}: 0813-2503-2009
+                    {{ strtoupper($order->payment_method) }}: 0812-3456-7890
                 </div>
-                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. Dean Thamprin</div>
+                <div style="font-weight: 600; color: var(--text-main); margin-top: 4px;">a.n. Khasanah Catering Official Store</div>
             </div>
         @endif
 
-        <form action="{{ route('order.confirm', $order->order_code) }}" method="POST" style="margin-top: 2rem;">
+        <form action="{{ route('order.settlement.confirm', $order->order_code) }}" method="POST" style="margin-top: 2rem;">
             @csrf
             <button type="submit" class="btn-primary" style="width: 100%; padding: 14px; font-size: 1.1rem;">
-                <i class="fa-solid fa-circle-check"></i> Konfirmasi Pembayaran
+                <i class="fa-solid fa-circle-check"></i> Konfirmasi Pelunasan
             </button>
         </form>
+
+        <a href="{{ route('order.tracking', $order->order_code) }}" style="display:block; margin-top: 1rem; color: var(--text-muted); font-size: 0.85rem;">
+            <i class="fa-solid fa-arrow-left"></i> Kembali ke Status Booking
+        </a>
     </div>
 </div>
 

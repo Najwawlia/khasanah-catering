@@ -155,7 +155,11 @@
                             <div class="ticket-divider"></div>
                             <div class="ticket-foot">
                                 <span class="ticket-amt">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
-                                @if($stage['next'])
+                                @if($stage['next'] === 'ready' && !$order->canBeMarkedReady())
+                                    <span class="ticket-done-badge" style="color: var(--gold);" title="Sisa DP Rp {{ number_format($order->remaining_amount,0,',','.') }} belum dilunasi customer">
+                                        <i class="fa-solid fa-lock"></i> Menunggu Pelunasan
+                                    </span>
+                                @elseif($stage['next'])
                                     <form action="{{ route('admin.orders.update_tracking', $order->id) }}" method="POST">
                                         @csrf @method('PUT')
                                         <input type="hidden" name="tracking_status" value="{{ $stage['next'] }}">
@@ -240,11 +244,12 @@
                                 <form action="{{ route('admin.orders.update_tracking', $order->id) }}" method="POST">
                                     @csrf @method('PUT')
                                     <select name="tracking_status" onchange="this.form.submit()"
-                                            class="tsel tsel-{{ $order->tracking_status }}">
+                                            class="tsel tsel-{{ $order->tracking_status }}"
+                                            title="{{ !$order->canBeMarkedReady() ? 'Sisa DP Rp '.number_format($order->remaining_amount,0,',','.').' belum dilunasi customer' : '' }}">
                                         <option value="booking_received"  {{ $order->tracking_status=='booking_received'  ? 'selected':'' }}>1. Booking</option>
                                         <option value="payment_verified" {{ $order->tracking_status=='payment_verified' ? 'selected':'' }}>2. Terverifikasi</option>
                                         <option value="kitchen_prep"     {{ $order->tracking_status=='kitchen_prep'     ? 'selected':'' }}>3. Dapur</option>
-                                        <option value="ready"            {{ $order->tracking_status=='ready'            ? 'selected':'' }}>4. Siap</option>
+                                        <option value="ready" {{ !$order->canBeMarkedReady() ? 'disabled' : '' }} {{ $order->tracking_status=='ready' ? 'selected':'' }}>4. Siap{{ !$order->canBeMarkedReady() ? ' (belum lunas)' : '' }}</option>
                                     </select>
                                 </form>
                             </td>
@@ -254,7 +259,10 @@
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
                                     <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST"
-                                          onsubmit="return confirm('Hapus pesanan ini?')">
+                                          class="js-confirm"
+                                          data-confirm-title="Hapus Pesanan"
+                                          data-confirm-message="Apakah Anda yakin ingin menghapus pesanan '{{ $order->order_code }}' milik {{ $order->customer_name }}? Tindakan ini tidak bisa dibatalkan."
+                                          data-confirm-label="Ya, Hapus">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-r btn-sm btn-sq" title="Hapus">
                                             <i class="fa-solid fa-trash"></i>
