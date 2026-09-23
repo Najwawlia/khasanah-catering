@@ -3,16 +3,19 @@
 @section('admin-title', 'Detail Pesanan')
 @section('content')
 <div class="ph">
-    <div>
-        <h1 class="ph-title">Booking #{{ $order->order_code }}</h1>
-        <p class="ph-sub">
-            Dibuat {{ $order->created_at->format('d M Y, H:i') }} WIB &nbsp;&middot;&nbsp;
-            @if($order->payment_status==='pending') <span class="tag t-warn">Pending</span>
-            @elseif($order->payment_status==='paid') <span class="tag t-ok">Lunas</span>
-            @elseif($order->payment_status==='dp_paid') <span class="tag t-acc-t">DP Paid</span>
-            @else <span class="tag t-err">{{ strtoupper($order->payment_status) }}</span>
-            @endif
-        </p>
+    <div class="ph-row">
+        <div class="ph-badge"><i class="fa-solid fa-receipt"></i></div>
+        <div>
+            <h1 class="ph-title">Booking #{{ $order->order_code }}</h1>
+            <p class="ph-sub">
+                Dibuat {{ $order->created_at->format('d M Y, H:i') }} WIB &nbsp;&middot;&nbsp;
+                @if($order->payment_status==='pending') <span class="tag t-warn">Pending</span>
+                @elseif($order->payment_status==='paid') <span class="tag t-ok">Lunas</span>
+                @elseif($order->payment_status==='dp_paid') <span class="tag t-acc-t">DP Paid</span>
+                @else <span class="tag t-err">{{ strtoupper($order->payment_status) }}</span>
+                @endif
+            </p>
+        </div>
     </div>
     <a href="{{ route('admin.orders.index') }}" class="btn btn-g"><i class="fa-solid fa-arrow-left"></i> Kembali</a>
 </div>

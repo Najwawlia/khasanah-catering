@@ -11,35 +11,20 @@
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: var(--r);
-        padding: 18px 24px;
+        padding: 20px 26px;
         margin-bottom: 22px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .welcome-card::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(100deg, var(--accent-s) 0%, transparent 45%);
-        opacity: .5;
-        pointer-events: none;
+        animation: in .3s var(--e) both;
     }
 
     .welcome-stamp {
-        width: 62px;
-        height: 62px;
+        width: 64px;
+        height: 64px;
         border-radius: 50%;
         border: 1.5px dashed var(--accent);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        color: var(--accent);
         background: var(--accent-s);
-        position: relative;
-        z-index: 1;
+        color: var(--accent);
+        flex-shrink: 0;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
 
     .welcome-stamp .d-num {
@@ -50,14 +35,12 @@
     }
 
     .welcome-stamp .d-mon {
-        font-family: 'JetBrains Mono', monospace;
+        font-family: 'Manrope', sans-serif;
         font-size: .55rem;
         letter-spacing: .08em;
         text-transform: uppercase;
         margin-top: 2px;
     }
-
-    .welcome-text { position: relative; z-index: 1; }
 
     .welcome-text h1 {
         font-family: 'Cinzel', Georgia, serif;
@@ -66,6 +49,8 @@
         letter-spacing: .01em;
         color: var(--ink);
         line-height: 1.3;
+        display: flex;
+        align-items: center;
     }
 
     .welcome-text h1 i { color: var(--gold); font-size: .85em; margin-right: 8px; }
@@ -103,28 +88,33 @@
 {{-- STAT ROW --}}
 <div class="stat-row">
     <div class="stat">
+        <div class="stat-ic"><i class="fa-solid fa-sack-dollar"></i></div>
         <div class="stat-label">Pendapatan Bulan Ini</div>
         <div class="stat-val accent" style="font-size:1.2rem;">Rp {{ number_format($revenueThisMonth, 0, ',', '.') }}</div>
         <div class="stat-foot">Omset aktif</div>
     </div>
-    <div class="stat">
+    <div class="stat sapphire">
+        <div class="stat-ic"><i class="fa-solid fa-utensils"></i></div>
         <div class="stat-label">Total Menu</div>
         <div class="stat-val">{{ $totalMenus }}</div>
         <div class="stat-foot">Menu aktif di katalog</div>
     </div>
-    <div class="stat">
+    <div class="stat emerald">
+        <div class="stat-ic"><i class="fa-solid fa-users"></i></div>
         <div class="stat-label">Pelanggan</div>
         <div class="stat-val">{{ $totalCustomers }}</div>
         <div class="stat-foot">Akun terdaftar</div>
     </div>
-    <div class="stat">
+    <div class="stat teal">
+        <div class="stat-ic"><i class="fa-solid fa-receipt"></i></div>
         <div class="stat-label">Pesanan Hari Ini</div>
         <div class="stat-val">{{ $ordersToday }}</div>
         <div class="stat-foot">Masuk hari ini</div>
     </div>
-    <div class="stat">
+    <div class="stat amber">
+        <div class="stat-ic"><i class="fa-solid fa-hourglass-half"></i></div>
         <div class="stat-label">Menunggu Bayar</div>
-        <div class="stat-val" style="color:var(--gold);">{{ $pendingOrders->count() }}</div>
+        <div class="stat-val" style="color:var(--red);">{{ $pendingOrders->count() }}</div>
         <div class="stat-foot">Perlu verifikasi</div>
     </div>
 </div>
@@ -140,14 +130,19 @@
         </div>
         <div class="box-body">
             @php
-                $catColors = ['#B5502E','#8C6A1F','#A65B4E','#4F5F41'];
-                $catTotal  = $categoryDistribution->sum('total') ?: 1;
+                $catColors = ['var(--accent)', 'var(--gold)', 'var(--green)', 'var(--coral)'];
+                $catTotal = $categoryDistribution->sum('total') ?: 1;
             @endphp
-            <div class="seg" style="margin-bottom:16px;">
+            <div class="hbar">
                 @foreach($categoryDistribution as $i => $cat)
-                    <div class="seg-s"
-                         style="width:{{ ($cat->total/$catTotal)*100 }}%; background:{{ $catColors[$i%4] }};"
-                         title="{{ $cat->category }}: {{ $cat->total }} menu"></div>
+                    @php $pct = ($cat->total / $catTotal) * 100; @endphp
+                    <div class="hbar-row">
+                        <div class="hbar-label">{{ $cat->category }}</div>
+                        <div class="hbar-track">
+                            <div class="hbar-fill" style="width:{{ $pct }}%; background:{{ $catColors[$i%4] }};"></div>
+                        </div>
+                        <div class="hbar-num">{{ round($pct) }}% &middot; {{ $cat->total }}</div>
+                    </div>
                 @endforeach
             </div>
             <div class="seg-leg">
@@ -182,9 +177,12 @@
                     <div class="pend-amt">Rp {{ number_format($order->total_amount,0,',','.') }}</div>
                 </a>
             @empty
-                <div style="text-align:center; padding:2rem 0; color:var(--ink-3); font-size:.8rem;">
-                    <i class="fa-solid fa-check-circle" style="font-size:1.2rem; color:var(--green); display:block; margin-bottom:6px;"></i>
-                    Semua pesanan sudah terverifikasi
+                <div class="verif-empty">
+                    <div class="verif-badge"><span class="verif-count">0</span></div>
+                    <div class="verif-status">
+                        <div class="verif-check"><i class="fa-solid fa-check"></i></div>
+                        <span>Semua pesanan sudah terverifikasi</span>
+                    </div>
                 </div>
             @endforelse
         </div>

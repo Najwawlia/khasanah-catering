@@ -5,135 +5,268 @@
 @section('styles')
 <style>
     .orders-wrapper {
-        max-width: 1000px;
-        margin: 3rem auto;
+        max-width: 780px;
+        margin: 3.2rem auto;
         padding: 0 1.5rem;
     }
 
-    .orders-title {
-        font-size: 2rem;
-        font-weight: 800;
-        color: var(--text-primary);
-        margin-bottom: 2rem;
-        display: flex;
-        align-items: center;
-        gap: 12px;
+    .orders-header {
+        margin-bottom: 2.2rem;
     }
 
-    .orders-title i {
+    .orders-eyebrow {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--primary-orange);
+        margin-bottom: 6px;
+    }
+
+    .orders-title {
+        font-family: var(--font-heading);
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    /* --- RECEIPT-STYLE LIST --- */
+    .orders-list {
+        border-top: 1px dashed var(--border-color);
+    }
+
+    .order-row {
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
+        padding: 1.5rem 0.3rem;
+        border-bottom: 1px dashed var(--border-color);
+        transition: background var(--transition-speed);
+    }
+
+    .order-row:hover {
+        background: var(--bg-input);
+        margin: 0 -0.8rem;
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
+        border-radius: var(--radius-md);
+    }
+
+    .order-date-stub {
+        flex-shrink: 0;
+        width: 58px;
+        text-align: center;
+        border: 1.5px dashed var(--primary-orange);
+        border-radius: 10px;
+        padding: 8px 4px;
         color: var(--primary-orange);
     }
 
-    .order-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-lg);
-        padding: 1.8rem;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-soft);
-        transition: all var(--transition-speed);
+    .order-date-stub .day {
+        font-family: var(--font-heading);
+        font-size: 1.3rem;
+        font-weight: 700;
+        line-height: 1;
+        display: block;
     }
 
-    .order-card:hover {
-        border-color: var(--primary-orange);
-        box-shadow: var(--shadow-hover);
+    .order-date-stub .mon {
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        display: block;
+        margin-top: 3px;
+        opacity: 0.85;
     }
 
-    .order-card-header {
+    .order-main { flex: 1; min-width: 0; }
+
+    .order-code-line {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--border-color);
-        margin-bottom: 1rem;
+        gap: 8px;
+        margin-bottom: 4px;
         flex-wrap: wrap;
-        gap: 10px;
     }
 
-    .status-pill {
-        padding: 4px 12px;
-        border-radius: 20px;
+    .order-code {
+        font-weight: 800;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+    }
+
+    .order-status-dot {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+
+    .order-status-dot i { font-size: 6px; }
+    .dot-pending { color: var(--secondary-gold-dark); }
+    .dot-paid { color: var(--success); }
+
+    .order-items-summary {
+        color: var(--text-secondary);
+        font-size: 0.86rem;
+        line-height: 1.5;
+        margin-bottom: 5px;
+    }
+
+    .order-tracking-line {
+        font-size: 0.76rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .order-tracking-line i { color: var(--primary-orange); font-size: 0.7rem; }
+
+    .order-side {
+        flex-shrink: 0;
+        text-align: right;
+    }
+
+    .order-total {
+        font-family: var(--font-heading);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        white-space: nowrap;
+    }
+
+    .order-action-link {
         font-size: 0.8rem;
         font-weight: 700;
+        color: var(--primary-orange);
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: gap var(--transition-speed);
+    }
+    .order-action-link:hover { gap: 8px; }
+
+    .order-action-link.is-urgent {
+        color: var(--secondary-gold-dark);
     }
 
-    .status-pending { background: rgba(234, 179, 8, 0.15); color: #B45309; border: 1px solid #E8A320; }
-    .status-paid { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
-    .status-tracking { background: var(--primary-orange-light, rgba(181,80,46,0.12)); color: var(--primary-orange); border: 1px solid var(--primary-orange); }
+    @media (max-width: 620px) {
+        .order-row { flex-wrap: wrap; }
+        .order-date-stub { width: 50px; }
+        .order-side { margin-left: calc(58px + 1.4rem); text-align: left; }
+    }
+
+    /* --- EMPTY STATE: quiet, editorial — no loud gradient block --- */
+    .orders-empty {
+        text-align: center;
+        padding: 4rem 1rem 3rem;
+        border-top: 1px dashed var(--border-color);
+    }
+
+    .orders-empty-icon { margin: 0 auto 1.3rem; display: block; }
+
+    .orders-empty h3 {
+        font-family: var(--font-heading);
+        font-size: 1.25rem;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+
+    .orders-empty p {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin: 0 auto 1.6rem;
+        max-width: 320px;
+    }
 </style>
 @section('content')
 
 <div class="orders-wrapper">
-    <h1 class="orders-title">
-        <i class="fa-solid fa-receipt"></i> Riwayat Pesanan Katering Saya
-    </h1>
+    <div class="orders-header">
+        <div class="orders-eyebrow">Khasanah Catering</div>
+        <h1 class="orders-title">Riwayat Pesanan Saya</h1>
+    </div>
 
-    @forelse($orders as $order)
-        <div class="order-card">
-            <div class="order-card-header">
-                <div>
-                    <strong style="color: var(--primary-orange); font-size: 1.1rem;">{{ $order->order_code }}</strong>
-                    <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: 10px;">
-                        Acara: {{ \Carbon\Carbon::parse($order->event_date)->format('d M Y') }}
-                    </span>
-                </div>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <span class="status-pill {{ $order->payment_status === 'pending' ? 'status-pending' : 'status-paid' }}">
-                        Status Bayar: {{ strtoupper($order->payment_status) }}
-                    </span>
-                    @php
-                        $trackLabels = [
-                            'booking_received' => 'Booking Diterima',
-                            'payment_verified' => 'Pembayaran Diverifikasi',
-                            'kitchen_prep' => 'Diproses Dapur',
-                            'ready' => 'Siap Diambil/Dikirim',
-                        ];
-                    @endphp
-                    <span class="status-pill status-tracking">
-                        <i class="fa-solid fa-truck-fast"></i> {{ $trackLabels[$order->tracking_status] ?? $order->tracking_status }}
-                    </span>
-                </div>
-            </div>
-
-            <div style="margin-bottom: 1rem;">
-                @foreach($order->items as $item)
-                    <div style="display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 4px;">
-                        <span>{{ $item->menu_name }} ({{ $item->pax_quantity }} pack)</span>
-                        <strong>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</strong>
+    @if($orders->count() > 0)
+        <div class="orders-list">
+            @php
+                $trackLabels = [
+                    'booking_received' => 'Booking Diterima',
+                    'payment_verified' => 'Pembayaran Diverifikasi',
+                    'kitchen_prep' => 'Diproses Dapur',
+                    'ready' => 'Siap Diambil/Dikirim',
+                ];
+            @endphp
+            @foreach($orders as $order)
+                @php
+                    $eventDate = \Carbon\Carbon::parse($order->event_date);
+                    $itemNames = $order->items->pluck('menu_name');
+                    $itemSummary = $itemNames->take(2)->implode(', ');
+                    if ($itemNames->count() > 2) {
+                        $itemSummary .= ', +' . ($itemNames->count() - 2) . ' lainnya';
+                    }
+                @endphp
+                <div class="order-row">
+                    <div class="order-date-stub">
+                        <span class="day">{{ $eventDate->format('d') }}</span>
+                        <span class="mon">{{ $eventDate->isoFormat('MMM') }}</span>
                     </div>
-                @endforeach
-            </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border-color);">
-                <div>
-                    Total: <strong style="color: var(--primary-orange); font-size: 1.2rem;">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</strong>
-                </div>
+                    <div class="order-main">
+                        <div class="order-code-line">
+                            <span class="order-code">{{ $order->order_code }}</span>
+                            <span class="order-status-dot">
+                                <i class="fa-solid fa-circle {{ $order->payment_status === 'pending' ? 'dot-pending' : 'dot-paid' }}"></i>
+                                {{ $order->payment_status === 'pending' ? 'Menunggu Bayar' : 'Lunas' }}
+                            </span>
+                        </div>
+                        <div class="order-items-summary">{{ $itemSummary }}</div>
+                        <div class="order-tracking-line">
+                            <i class="fa-solid fa-truck-fast"></i> {{ $trackLabels[$order->tracking_status] ?? $order->tracking_status }}
+                        </div>
+                    </div>
 
-                <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;">
-                    @if($order->payment_status === 'pending')
-                        <a href="{{ route('order.payment', $order->order_code) }}" class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">
-                            <i class="fa-solid fa-credit-card"></i> Bayar Sekarang
-                        </a>
-                    @else
-                        @if($order->needsSettlement())
-                            <a href="{{ route('order.settlement', $order->order_code) }}" class="btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">
-                                <i class="fa-solid fa-hand-holding-dollar"></i> Lunasi Sekarang
+                    <div class="order-side">
+                        <div class="order-total">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</div>
+
+                        @if($order->payment_status === 'pending')
+                            <a href="{{ route('order.payment', $order->order_code) }}" class="order-action-link is-urgent">
+                                Bayar Sekarang <i class="fa-solid fa-arrow-right" style="font-size:0.7rem;"></i>
+                            </a>
+                        @elseif($order->needsSettlement())
+                            <a href="{{ route('order.settlement', $order->order_code) }}" class="order-action-link is-urgent">
+                                Lunasi Sekarang <i class="fa-solid fa-arrow-right" style="font-size:0.7rem;"></i>
+                            </a>
+                        @else
+                            <a href="{{ route('order.tracking', $order->order_code) }}" class="order-action-link">
+                                Lacak Booking <i class="fa-solid fa-arrow-right" style="font-size:0.7rem;"></i>
                             </a>
                         @endif
-                        <a href="{{ route('order.tracking', $order->order_code) }}" class="btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">
-                            <i class="fa-solid fa-truck-fast"></i> Lacak Booking
-                        </a>
-                    @endif
+                    </div>
                 </div>
-            </div>
+            @endforeach
         </div>
-    @empty
-        <div style="text-align: center; padding: 4rem 1rem; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px dashed var(--border-color);">
-            <i class="fa-solid fa-box-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-            <h3>Belum Ada Pesanan</h3>
-            <p style="color: var(--text-muted);">Anda belum pernah melakukan booking katering.</p>
+    @else
+        <div class="orders-empty">
+            <svg class="orders-empty-icon" width="46" height="46" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="16" width="44" height="34" rx="4" stroke="#B5502E" stroke-width="2.5"/>
+                <path d="M10 24h44" stroke="#B5502E" stroke-width="2.5"/>
+                <path d="M22 16v-3a4 4 0 0 1 4-4h12a4 4 0 0 1 4 4v3" stroke="#B5502E" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M22 34l6 6 12-12" stroke="#B8892B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3>Belum Ada Riwayat Pesanan</h3>
+            <p>Semua booking katering Anda akan tercatat di sini. Yuk mulai pesan menu favorit untuk acara Anda berikutnya.</p>
+            <a href="{{ route('home') }}" class="btn-primary">
+                <i class="fa-solid fa-utensils"></i> Jelajahi Katalog Menu
+            </a>
         </div>
-    @endforelse
+    @endif
 </div>
 
 @endsection

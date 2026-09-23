@@ -123,6 +123,70 @@
         box-shadow: 0 0 0 4px var(--primary-glow);
     }
 
+    .input-wrap .pw-toggle {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-size: 0.82rem;
+        padding: 4px;
+        transition: color var(--transition-speed);
+    }
+    .input-wrap .pw-toggle:hover { color: var(--primary-orange); }
+    .input-wrap.has-toggle .form-input { padding-right: 38px; }
+
+    /* --- PASSWORD STRENGTH METER --- */
+    .pw-strength {
+        display: flex;
+        gap: 4px;
+        margin-top: 7px;
+    }
+    .pw-strength-bar {
+        height: 4px;
+        flex: 1;
+        border-radius: 3px;
+        background: var(--border-color);
+        transition: background var(--transition-speed);
+    }
+    .pw-strength-label {
+        font-size: 0.72rem;
+        margin-top: 4px;
+        color: var(--text-muted);
+        min-height: 1em;
+    }
+
+    /* --- PASSWORD MATCH INDICATOR --- */
+    .pw-match-hint {
+        font-size: 0.72rem;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        min-height: 1em;
+    }
+
+    /* --- SUBMIT BUTTON LOADING STATE --- */
+    .btn-primary.is-loading {
+        pointer-events: none;
+        opacity: 0.85;
+    }
+    .btn-primary .btn-spinner {
+        display: none;
+        width: 15px; height: 15px;
+        border: 2px solid rgba(255,255,255,0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        margin-right: 8px;
+    }
+    .btn-primary.is-loading .btn-spinner { display: inline-block; }
+    .btn-primary.is-loading .btn-label-icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     .auth-footer {
         margin-top: 1.4rem;
         text-align: left;
@@ -275,7 +339,7 @@
                 <p class="auth-subtitle">Isi data di bawah untuk mulai booking katering</p>
             </div>
 
-            <form action="{{ route('register.post') }}" method="POST">
+            <form action="{{ route('register.post') }}" method="POST" id="registerForm" onsubmit="handleAuthSubmit(this)">
                 @csrf
 
                 <div class="form-group">
@@ -316,10 +380,19 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <div class="input-wrap">
+                        <div class="input-wrap has-toggle">
                             <i class="fa-solid fa-lock field-icon"></i>
-                            <input type="password" name="password" id="password" class="form-input" placeholder="Minimal 6 karakter" required>
+                            <input type="password" name="password" id="password" class="form-input" placeholder="Minimal 6 karakter" required oninput="checkPwStrength(); checkPwMatch();">
+                            <button type="button" class="pw-toggle" onclick="togglePw('password', this)" tabindex="-1">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
                         </div>
+                        <div class="pw-strength" id="pwStrengthBars">
+                            <div class="pw-strength-bar"></div>
+                            <div class="pw-strength-bar"></div>
+                            <div class="pw-strength-bar"></div>
+                        </div>
+                        <div class="pw-strength-label" id="pwStrengthLabel"></div>
                         @error('password')
                             <span style="color: var(--danger-red); font-size: 0.83rem; margin-top: 4px; display: block;">{{ $message }}</span>
                         @enderror
@@ -327,15 +400,20 @@
 
                     <div class="form-group">
                         <label for="password_confirmation">Konfirmasi</label>
-                        <div class="input-wrap">
+                        <div class="input-wrap has-toggle">
                             <i class="fa-solid fa-lock field-icon"></i>
-                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Ulangi password" required>
+                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Ulangi password" required oninput="checkPwMatch();">
+                            <button type="button" class="pw-toggle" onclick="togglePw('password_confirmation', this)" tabindex="-1">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
                         </div>
+                        <div class="pw-match-hint" id="pwMatchHint"></div>
                     </div>
                 </div>
 
                 <button type="submit" class="btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 13px;">
-                    <i class="fa-solid fa-user-check"></i> Daftar Sekarang
+                    <span class="btn-spinner"></span>
+                    <i class="fa-solid fa-user-check btn-label-icon"></i> Daftar Sekarang
                 </button>
             </form>
 
@@ -383,4 +461,58 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+<script>
+    function togglePw(fieldId, btn) {
+        var field = document.getElementById(fieldId);
+        var icon = btn.querySelector('i');
+        var showing = field.type === 'text';
+        field.type = showing ? 'password' : 'text';
+        icon.classList.toggle('fa-eye', showing);
+        icon.classList.toggle('fa-eye-slash', !showing);
+    }
+
+    function checkPwStrength() {
+        var val = document.getElementById('password').value;
+        var bars = document.querySelectorAll('#pwStrengthBars .pw-strength-bar');
+        var label = document.getElementById('pwStrengthLabel');
+
+        var score = 0;
+        if (val.length >= 6) score++;
+        if (val.length >= 10) score++;
+        if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+
+        var colors = ['var(--danger-red)', 'var(--secondary-gold-dark)', 'var(--success)'];
+        var texts = ['Lemah — tambah karakter lagi', 'Cukup — bisa lebih kuat', 'Password kuat'];
+
+        bars.forEach(function (bar, i) {
+            bar.style.background = (val.length === 0) ? '' : (i < score ? colors[score - 1] : '');
+        });
+        label.textContent = val.length === 0 ? '' : texts[score - 1] || texts[0];
+        label.style.color = val.length === 0 ? '' : colors[score - 1] || colors[0];
+    }
+
+    function checkPwMatch() {
+        var pw = document.getElementById('password').value;
+        var confirm = document.getElementById('password_confirmation').value;
+        var hint = document.getElementById('pwMatchHint');
+
+        if (confirm.length === 0) {
+            hint.innerHTML = '';
+            return;
+        }
+        if (pw === confirm) {
+            hint.innerHTML = '<i class="fa-solid fa-circle-check" style="color: var(--success);"></i> <span style="color: var(--success);">Password cocok</span>';
+        } else {
+            hint.innerHTML = '<i class="fa-solid fa-circle-xmark" style="color: var(--danger-red);"></i> <span style="color: var(--danger-red);">Belum sama</span>';
+        }
+    }
+
+    function handleAuthSubmit(form) {
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.classList.add('is-loading');
+    }
+</script>
 @endsection

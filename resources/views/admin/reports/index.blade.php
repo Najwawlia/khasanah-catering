@@ -60,7 +60,7 @@
                         <div style="font-weight:700; font-size:.83rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $menu->menu_name }}</div>
                         <div class="t-mono" style="font-size:.68rem; color:var(--ink-3); margin-top:1px;">{{ $menu->total_pax }} pack terjual</div>
                     </div>
-                    <div style="font-weight:800; color:var(--accent); font-size:.8rem; white-space:nowrap; font-family:'JetBrains Mono',monospace;">
+                    <div style="font-weight:800; color:var(--accent); font-size:.8rem; white-space:nowrap; font-family:'Manrope',sans-serif;">
                         Rp {{ number_format($menu->total_omset,0,',','.') }}
                     </div>
                 </div>
@@ -121,13 +121,13 @@ new Chart(document.getElementById('chart'), {
                 grid: { color: 'rgba(239,228,212,.7)' },
                 ticks: {
                     color: '#8A7C6D',
-                    font: { family: "'JetBrains Mono', monospace", size: 10 },
+                    font: { family: "'Manrope', sans-serif", size: 10 },
                     callback: v => v>=1000000 ? 'Rp'+(v/1000000).toFixed(1)+'jt' : 'Rp'+(v/1000)+'k'
                 }
             },
             x: {
                 grid: { display: false },
-                ticks: { color: '#8A7C6D', font: { family: "'JetBrains Mono', monospace", size: 10 } }
+                ticks: { color: '#8A7C6D', font: { family: "'Manrope', sans-serif", size: 10 } }
             }
         }
     }

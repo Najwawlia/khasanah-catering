@@ -204,6 +204,65 @@
         box-shadow: 0 0 0 4px var(--primary-glow);
     }
 
+    .input-wrap .pw-toggle {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-size: 0.88rem;
+        padding: 4px;
+        transition: color var(--transition-speed);
+    }
+    .input-wrap .pw-toggle:hover { color: var(--primary-orange); }
+    .input-wrap.has-toggle .form-input { padding-right: 42px; }
+
+    .remember-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: -0.4rem 0 1.3rem;
+        animation: fadeSlideUp 0.6s cubic-bezier(0.4,0,0.2,1) 0.17s backwards;
+    }
+
+    .remember-check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .remember-check input {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary-orange);
+        cursor: pointer;
+    }
+
+    /* --- SUBMIT BUTTON LOADING STATE --- */
+    .btn-primary.is-loading {
+        pointer-events: none;
+        opacity: 0.85;
+    }
+    .btn-primary .btn-spinner {
+        display: none;
+        width: 15px; height: 15px;
+        border: 2px solid rgba(255,255,255,0.4);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        margin-right: 8px;
+    }
+    .btn-primary.is-loading .btn-spinner { display: inline-block; }
+    .btn-primary.is-loading .btn-label-icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     .auth-submit {
         width: 100%;
         margin-top: 0.6rem;
@@ -256,7 +315,7 @@
                 <p class="auth-subtitle">Login untuk melanjutkan booking katering Anda</p>
             </div>
 
-            <form action="{{ route('login.post') }}" method="POST">
+            <form action="{{ route('login.post') }}" method="POST" id="loginForm" onsubmit="handleAuthSubmit(this)">
                 @csrf
 
                 <div class="form-group">
@@ -272,17 +331,28 @@
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <div class="input-wrap">
+                    <div class="input-wrap has-toggle">
                         <i class="fa-solid fa-lock field-icon"></i>
                         <input type="password" name="password" id="password" class="form-input" placeholder="Masukkan password" required>
+                        <button type="button" class="pw-toggle" onclick="togglePw('password', this)" tabindex="-1">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
                     </div>
                     @error('password')
                         <span style="color: var(--danger-red); font-size: 0.85rem; margin-top: 4px; display: block;">{{ $message }}</span>
                     @enderror
                 </div>
 
+                <div class="remember-row">
+                    <label class="remember-check">
+                        <input type="checkbox" name="remember" value="1">
+                        Ingat saya
+                    </label>
+                </div>
+
                 <button type="submit" class="btn-primary auth-submit">
-                    <i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+                    <span class="btn-spinner"></span>
+                    <i class="fa-solid fa-right-to-bracket btn-label-icon"></i> Masuk Akun
                 </button>
             </form>
 
@@ -293,4 +363,22 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+<script>
+    function togglePw(fieldId, btn) {
+        var field = document.getElementById(fieldId);
+        var icon = btn.querySelector('i');
+        var showing = field.type === 'text';
+        field.type = showing ? 'password' : 'text';
+        icon.classList.toggle('fa-eye', showing);
+        icon.classList.toggle('fa-eye-slash', !showing);
+    }
+
+    function handleAuthSubmit(form) {
+        var btn = form.querySelector('button[type="submit"]');
+        if (btn) btn.classList.add('is-loading');
+    }
+</script>
 @endsection

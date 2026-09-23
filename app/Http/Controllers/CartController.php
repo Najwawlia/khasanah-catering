@@ -16,7 +16,16 @@ class CartController extends Controller
             $total += $item['price'] * $item['pax_quantity'];
         }
 
-        return view('cart.index', compact('cart', 'total'));
+        $suggestedMenus = collect();
+        if (empty($cart)) {
+            $suggestedMenus = Menu::where('is_available', true)
+                ->orderByDesc('is_bestseller')
+                ->orderByDesc('created_at')
+                ->limit(3)
+                ->get();
+        }
+
+        return view('cart.index', compact('cart', 'total', 'suggestedMenus'));
     }
 
     public function add(Request $request)

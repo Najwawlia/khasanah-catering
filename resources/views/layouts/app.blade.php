@@ -356,10 +356,10 @@
             right: 1.5rem;
             z-index: 3000;
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
+            gap: 0.7rem;
             pointer-events: none;
         }
 
@@ -376,35 +376,64 @@
         .alert {
             pointer-events: auto;
             background: var(--bg-card);
-            padding: 1rem 1.2rem;
-            border-radius: var(--radius-md);
+            padding: 0.95rem 1.1rem 1.05rem;
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: flex-start;
             gap: 12px;
             font-weight: 600;
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             line-height: 1.45;
-            box-shadow: var(--shadow-soft), 0 8px 24px rgba(42, 31, 22, 0.12);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-soft), 0 10px 26px rgba(42, 31, 22, 0.14);
             animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border-left: 4px solid transparent;
+            border: 1px solid var(--border-color);
             position: relative;
+            overflow: hidden;
         }
 
-        .alert i.alert-icon { font-size: 1.15rem; margin-top: 2px; }
+        .alert-icon-badge {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+            color: #FFFFFF;
+        }
+
+        .alert-icon-badge i { font-size: 0.8rem; }
+
+        .alert-body { flex: 1; padding-right: 14px; }
+        .alert-body strong { display: block; margin-bottom: 2px; }
 
         .alert-close {
             position: absolute;
-            top: 8px;
-            right: 10px;
+            top: 10px;
+            right: 12px;
             background: none;
             border: none;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             opacity: 0.6;
         }
 
         .alert-close:hover { opacity: 1; }
+
+        /* countdown bar synced with the 5.5s JS auto-dismiss timer */
+        .alert-progress {
+            position: absolute;
+            left: 0; bottom: 0;
+            height: 3px;
+            width: 100%;
+            transform-origin: left;
+            animation: alertDeplete 5.5s linear forwards;
+        }
+
+        @keyframes alertDeplete {
+            from { transform: scaleX(1); }
+            to { transform: scaleX(0); }
+        }
 
         @keyframes slideIn {
             from { opacity: 0; transform: translateX(40px); }
@@ -419,29 +448,17 @@
             to { opacity: 0; transform: translateX(40px); }
         }
 
-        .alert-success {
-            border-left-color: var(--success);
-            color: #14532D;
-        }
-        .alert-success i.alert-icon { color: var(--success); }
+        .alert-success .alert-icon-badge { background: var(--success); }
+        .alert-success .alert-progress { background: var(--success); }
 
-        .alert-danger {
-            border-left-color: var(--error);
-            color: #7A1E22;
-        }
-        .alert-danger i.alert-icon { color: var(--error); }
+        .alert-danger .alert-icon-badge { background: var(--error); }
+        .alert-danger .alert-progress { background: var(--error); }
 
-        .alert-warning {
-            border-left-color: var(--secondary-gold);
-            color: var(--warning);
-        }
-        .alert-warning i.alert-icon { color: var(--secondary-gold-dark); }
+        .alert-warning .alert-icon-badge { background: var(--secondary-gold-dark); }
+        .alert-warning .alert-progress { background: var(--secondary-gold-dark); }
 
-        .alert-catering-min {
-            border-left-color: var(--tertiary-coral);
-            color: var(--text-primary);
-        }
-        .alert-catering-min i.alert-icon { color: var(--tertiary-coral-dark); }
+        .alert-catering-min .alert-icon-badge { background: var(--tertiary-coral-dark); }
+        .alert-catering-min .alert-progress { background: var(--tertiary-coral-dark); }
 
         /* --- CONFIRM MODAL (dipakai untuk logout) --- */
         .cfm-overlay {
@@ -660,39 +677,43 @@
     <div class="alert-container" id="alertContainer">
         @if(session('success'))
             <div class="alert alert-success">
-                <i class="fa-solid fa-circle-check alert-icon"></i>
-                <div>{{ session('success') }}</div>
+                <div class="alert-icon-badge"><i class="fa-solid fa-check"></i></div>
+                <div class="alert-body">{{ session('success') }}</div>
                 <button class="alert-close" onclick="dismissAlert(this)"><i class="fa-solid fa-xmark"></i></button>
+                <div class="alert-progress"></div>
             </div>
         @endif
 
         @if(session('error'))
             <div class="alert alert-danger">
-                <i class="fa-solid fa-circle-exclamation alert-icon"></i>
-                <div>{{ session('error') }}</div>
+                <div class="alert-icon-badge"><i class="fa-solid fa-xmark"></i></div>
+                <div class="alert-body">{{ session('error') }}</div>
                 <button class="alert-close" onclick="dismissAlert(this)"><i class="fa-solid fa-xmark"></i></button>
+                <div class="alert-progress"></div>
             </div>
         @endif
 
         @if(session('error_login_required'))
             <div class="alert alert-warning">
-                <i class="fa-solid fa-lock alert-icon"></i>
-                <div>
-                    <strong>Upps, Anda belum login!</strong><br>
+                <div class="alert-icon-badge"><i class="fa-solid fa-lock"></i></div>
+                <div class="alert-body">
+                    <strong>Upps, Anda belum login!</strong>
                     {{ session('error_login_required') }}
                 </div>
                 <button class="alert-close" onclick="dismissAlert(this)"><i class="fa-solid fa-xmark"></i></button>
+                <div class="alert-progress"></div>
             </div>
         @endif
 
         @if(session('error_min_pax'))
             <div class="alert alert-catering-min">
-                <i class="fa-solid fa-triangle-exclamation alert-icon"></i>
-                <div>
-                    <strong>Peringatan Porsi Katering!</strong><br>
+                <div class="alert-icon-badge"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="alert-body">
+                    <strong>Peringatan Porsi Katering!</strong>
                     {{ session('error_min_pax') }}
                 </div>
                 <button class="alert-close" onclick="dismissAlert(this)"><i class="fa-solid fa-xmark"></i></button>
+                <div class="alert-progress"></div>
             </div>
         @endif
     </div>

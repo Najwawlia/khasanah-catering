@@ -4,93 +4,352 @@
 
 @section('styles')
 <style>
-    /* --- HERO SECTION --- */
+    /* Prevent the rotated marquee band / oversized hero blob from causing
+       horizontal page overflow (which left a stray cream gutter on the right edge) */
+    html, body { overflow-x: hidden; }
+
+    /* --- SCROLL PROGRESS BAR --- */
+    #scrollProgress {
+        position: fixed;
+        top: 0; left: 0;
+        height: 3px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--primary-orange), var(--secondary-gold-dark));
+        z-index: 5000;
+        transition: width 0.08s linear;
+    }
+
+    /* --- HERO SECTION (asymmetric split, kinetic type, floating collage) --- */
     .hero-section {
         position: relative;
-        padding: 6rem 2rem;
-        background: linear-gradient(165deg, rgba(43, 33, 25, 0.82) 0%, rgba(181, 80, 46, 0.58) 60%, var(--bg-main) 100%),
-                    url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1600&auto=format&fit=crop&q=80') center/cover no-repeat;
-        border-bottom: 1px solid var(--border-color);
-        text-align: center;
+        padding: 5.5rem 2rem 6rem;
+        background: var(--bg-main);
         overflow: hidden;
     }
 
-    .hero-content {
-        max-width: 900px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 2;
-        animation: heroFade 0.9s cubic-bezier(0.4,0,0.2,1);
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(125deg, rgba(43,33,24,0.72) 0%, rgba(181,80,46,0.38) 45%, rgba(43,33,24,0.6) 100%),
+            url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1800&auto=format&fit=crop&q=70') center 30%/cover no-repeat;
+        filter: saturate(1.35) contrast(1.05) brightness(0.95);
+        z-index: 0;
+        pointer-events: none;
     }
 
-    @keyframes heroFade {
-        from { opacity: 0; transform: translateY(24px); }
-        to { opacity: 1; transform: translateY(0); }
+    /* text on top of the dark full-bleed photo needs light colors with real depth */
+    .hero-title, .hero-title .kinetic-word {
+        color: #FFFFFF;
+        text-shadow: 0 2px 4px rgba(15,10,6,0.7), 0 8px 28px rgba(15,10,6,0.5);
+    }
+    .hero-title em.kinetic-word {
+        color: #FFA966;
+        text-shadow: 0 2px 4px rgba(15,10,6,0.6), 0 8px 24px rgba(181,80,46,0.55);
+    }
+    .hero-subtitle {
+        color: #FFFFFF;
+        text-shadow: 0 2px 4px rgba(15,10,6,0.6), 0 6px 18px rgba(15,10,6,0.45);
+    }
+    .hero-trust-item strong { color: #FFFFFF; text-shadow: 0 2px 4px rgba(15,10,6,0.6); }
+    .hero-trust-item span { color: rgba(255,255,255,0.75); }
+    .hero-trust-divider { background: rgba(255,255,255,0.3); }
+
+    .hero-blob {
+        z-index: 1;
+    }
+
+    .hero-blob {
+        position: absolute;
+        top: -20%;
+        right: -10%;
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(circle, var(--primary-orange-light) 0%, transparent 68%);
+        filter: blur(10px);
+        opacity: 0.9;
+        pointer-events: none;
+        animation: blobDrift 14s ease-in-out infinite;
+    }
+
+    @keyframes blobDrift {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(-30px, 40px) scale(1.08); }
+    }
+
+    .hero-grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 3rem;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    @media (max-width: 940px) {
+        .hero-grid { grid-template-columns: 1fr; }
     }
 
     .hero-badge {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(255,255,255,0.12);
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(255, 215, 130, 0.5);
-        color: #F7DDBB;
-        padding: 7px 18px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        color: var(--primary-orange);
+        padding: 7px 16px;
         border-radius: 30px;
-        font-size: 0.86rem;
-        font-weight: 600;
-        letter-spacing: 0.3px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.2px;
         margin-bottom: 1.6rem;
-        animation: badgeFloat 4.5s ease-in-out infinite;
+        box-shadow: var(--shadow-soft);
     }
 
-    @keyframes badgeFloat {
-        0%   { transform: translateY(0) rotate(0deg); }
-        25%  { transform: translateY(-7px) rotate(-1.5deg); }
-        50%  { transform: translateY(0) rotate(0deg); }
-        75%  { transform: translateY(6px) rotate(1.5deg); }
-        100% { transform: translateY(0) rotate(0deg); }
-    }
-
-    .hero-badge i {
-        display: inline-block;
-        animation: badgeSpinIcon 5s ease-in-out infinite;
-    }
+    .hero-badge i { animation: badgeSpinIcon 3.5s ease-in-out infinite; }
 
     @keyframes badgeSpinIcon {
         0%, 100% { transform: rotate(0deg); }
-        50% { transform: rotate(14deg); }
+        50% { transform: rotate(16deg); }
     }
 
     .hero-title {
         font-family: var(--font-heading);
-        font-size: 3.4rem;
+        font-size: 3.1rem;
         font-weight: 600;
-        line-height: 1.18;
+        line-height: 1.16;
         margin-bottom: 1.3rem;
-        color: #FFFFFF;
-        text-shadow: 0 2px 14px rgba(0,0,0,0.3);
+        color: var(--text-primary);
     }
 
-    .hero-title span {
-        font-style: italic;
-        color: var(--secondary-gold);
+    .hero-title .kinetic-word {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(18px);
+        animation: kineticIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes kineticIn {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-title em {
+        font-family: 'Italianno', cursive;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 2.05em;
+        line-height: 0.6;
+        display: inline-block;
+        vertical-align: -0.12em;
+        position: relative;
+        white-space: nowrap;
+        padding-bottom: 0.14em;
+    }
+
+    .hero-title em::after {
+        content: '';
+        position: absolute;
+        left: 2%; right: 2%; bottom: -0.06em;
+        height: 10px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 C40 2, 80 10, 100 6 C130 1, 160 9, 198 5' fill='none' stroke='%23B8892B' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        opacity: 0;
+        transform: scaleX(0.4);
+        transform-origin: left;
+        animation: swashGrow 0.7s ease-out 1.05s forwards;
+    }
+
+    @keyframes swashGrow {
+        to { opacity: 0.9; transform: scaleX(1); }
     }
 
     .hero-subtitle {
-        font-size: 1.1rem;
-        color: rgba(255, 255, 255, 0.85);
-        max-width: 680px;
-        margin: 0 auto 2.5rem;
+        font-size: 1.05rem;
+        color: var(--text-secondary);
+        max-width: 520px;
+        margin: 0 0 2.2rem;
         line-height: 1.65;
+        opacity: 0;
+        animation: fadeSlideUp 0.7s ease-out 0.5s forwards;
     }
 
     .hero-buttons {
         display: flex;
-        justify-content: center;
         gap: 1rem;
         flex-wrap: wrap;
+        margin-bottom: 2.4rem;
+        opacity: 0;
+        animation: fadeSlideUp 0.7s ease-out 0.65s forwards;
+    }
+
+    .hero-trust-row {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+        flex-wrap: wrap;
+        opacity: 0;
+        animation: fadeSlideUp 0.7s ease-out 0.8s forwards;
+    }
+
+    .hero-trust-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .hero-trust-item strong {
+        font-family: var(--font-heading);
+        font-size: 1.05rem;
+        color: var(--text-primary);
+        display: block;
+        line-height: 1;
+    }
+
+    .hero-trust-item span {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+    }
+
+    .hero-trust-divider {
+        width: 1px;
+        height: 30px;
+        background: var(--border-color);
+    }
+
+    .hero-stars { color: var(--secondary-gold-dark); font-size: 0.85rem; }
+
+    /* --- Floating photo collage --- */
+    .hero-visual {
+        position: relative;
+        height: 460px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media (max-width: 940px) {
+        .hero-visual { height: 340px; margin-top: 1rem; }
+    }
+
+    .hero-visual-ring {
+        position: absolute;
+        width: 380px;
+        height: 380px;
+        border: 1.5px dashed rgba(181, 80, 46, 0.3);
+        border-radius: 50%;
+        animation: spinSlow 40s linear infinite;
+    }
+
+    @keyframes spinSlow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .hero-float-card {
+        position: absolute;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 20px 45px rgba(43, 33, 24, 0.22);
+        border: 4px solid var(--bg-card);
+        opacity: 0;
+        animation: floatCardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        will-change: transform;
+    }
+
+    .hero-float-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .hfc-1 { width: 230px; height: 290px; top: 6%; left: 4%; transform: rotate(-7deg); animation-delay: 0.3s; }
+    .hfc-2 { width: 200px; height: 250px; bottom: 4%; right: 2%; transform: rotate(6deg); animation-delay: 0.5s; }
+    .hfc-3 { width: 150px; height: 150px; top: 42%; right: 24%; transform: rotate(-4deg); animation-delay: 0.7s; z-index: 3; }
+
+    @keyframes floatCardIn {
+        from { opacity: 0; transform: translateY(24px) rotate(var(--r, 0deg)) scale(0.94); }
+        to   { opacity: 1; transform: translateY(0) rotate(var(--r, 0deg)) scale(1); }
+    }
+
+    .hero-seal {
+        position: absolute;
+        top: 4%;
+        right: 10%;
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: var(--charcoal);
+        color: var(--secondary-gold);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: var(--font-heading);
+        font-size: 0.72rem;
+        font-weight: 600;
+        line-height: 1.25;
+        box-shadow: 0 12px 26px rgba(43, 33, 24, 0.3);
+        z-index: 4;
+        animation: sealPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1s backwards, sealFloat 5s ease-in-out 1.6s infinite;
+    }
+
+    @keyframes sealPop {
+        from { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+        to   { opacity: 1; transform: scale(1) rotate(-10deg); }
+    }
+
+    @keyframes sealFloat {
+        0%, 100% { transform: rotate(-10deg) translateY(0); }
+        50% { transform: rotate(-8deg) translateY(-6px); }
+    }
+
+    /* --- ANIMATED STATS STRIP --- */
+    .stats-strip {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: -2.2rem;
+        margin-bottom: 4rem;
+        position: relative;
+        z-index: 3;
+    }
+
+    @media (max-width: 760px) {
+        .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat-chip {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 1.3rem 1rem;
+        text-align: center;
+        box-shadow: var(--shadow-soft);
+        transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    }
+
+    .stat-chip:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .stat-chip .stat-num {
+        font-family: var(--font-heading);
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--primary-orange);
+        line-height: 1;
+        margin-bottom: 5px;
+    }
+
+    .stat-chip .stat-label {
+        font-size: 0.76rem;
+        color: var(--text-muted);
+        font-weight: 600;
     }
 
     /* --- CATEGORY FILTERS --- */
@@ -215,7 +474,7 @@
     }
 
     .menu-row:hover {
-        transform: translateY(-4px);
+        transform: perspective(900px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg)) translateY(-4px);
         box-shadow: 0 12px 32px rgba(43, 33, 25, 0.10);
         border-color: var(--primary-orange);
     }
@@ -422,8 +681,8 @@
         border: 1px solid var(--border-color);
         border-radius: var(--radius-lg);
         width: 100%;
-        max-width: 550px;
-        padding: 2rem;
+        max-width: 500px;
+        padding: 1.6rem;
         position: relative;
         box-shadow: 0 20px 50px rgba(42, 33, 24, 0.25);
         animation: popup 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -436,38 +695,82 @@
 
     .close-modal-btn {
         position: absolute;
-        top: 15px;
-        right: 15px;
+        top: 14px;
+        right: 14px;
         background: var(--bg-input);
         color: var(--text-secondary);
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         border: none;
+        font-size: 1.1rem;
+        line-height: 1;
+        z-index: 2;
         transition: all var(--transition-speed);
     }
 
     .close-modal-btn:hover {
-        color: var(--text-primary);
-        background: var(--error);
+        color: #FFFFFF;
+        background: var(--primary-orange);
+        transform: rotate(90deg);
+    }
+
+    /* --- Modal header: photo + name/category/price --- */
+    .modal-head {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        margin-bottom: 1.4rem;
+        padding-bottom: 1.2rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .modal-head-img {
+        width: 72px;
+        height: 72px;
+        border-radius: var(--radius-md);
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 1px solid var(--border-color);
+    }
+
+    .modal-head-info { min-width: 0; }
+
+    .modal-head-tag {
+        display: inline-block;
+        font-size: 0.62rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        color: var(--tertiary-coral-dark);
+        background: var(--tertiary-coral-light);
+        padding: 2px 9px;
+        border-radius: 20px;
+        margin-bottom: 5px;
     }
 
     .modal-title {
-        font-size: 1.4rem;
-        font-weight: 800;
+        font-size: 1.15rem;
+        font-weight: 700;
         color: var(--text-primary);
-        margin-bottom: 0.5rem;
+        line-height: 1.3;
+        margin-bottom: 3px;
     }
 
     .modal-price {
-        font-size: 1.3rem;
+        font-size: 1.05rem;
         color: var(--primary-orange);
         font-weight: 800;
-        margin-bottom: 1rem;
+    }
+
+    .modal-price small {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-muted);
     }
 
     .form-group {
@@ -563,14 +866,38 @@
     .subtotal-preview {
         background: var(--primary-orange-light);
         border: 1px dashed var(--primary-orange);
-        padding: 1rem;
+        padding: 0.85rem 1rem;
         border-radius: var(--radius-sm);
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.5rem;
-        font-weight: 700;
+        gap: 12px;
+        margin-bottom: 1.3rem;
         color: var(--text-primary);
+    }
+
+    .subtotal-preview-ic {
+        width: 34px; height: 34px;
+        border-radius: 50%;
+        background: var(--bg-card);
+        color: var(--primary-orange);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+    .subtotal-preview span {
+        display: block;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 1px;
+    }
+
+    .subtotal-preview strong {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--primary-orange);
     }
 
     /* --- SECTION HEADER (shared) --- */
@@ -948,34 +1275,302 @@
             animation-duration: 22s;
         }
     }
+
+    /* --- SCROLL REVEAL (activates the reveal-up class already used across sections) --- */
+    .reveal-up {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal-up.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* stagger children of revealed grids/rows for a nicer cascade */
+    .reveal-up.is-visible .menu-row,
+    .reveal-up.is-visible .step-item,
+    .reveal-up.is-visible .stat-chip {
+        animation: staggerIn 0.6s cubic-bezier(0.22,1,0.36,1) backwards;
+    }
+    .reveal-up.is-visible .menu-row:nth-child(1),
+    .reveal-up.is-visible .stat-chip:nth-child(1),
+    .reveal-up.is-visible .step-item:nth-child(1) { animation-delay: 0.05s; }
+    .reveal-up.is-visible .menu-row:nth-child(2),
+    .reveal-up.is-visible .stat-chip:nth-child(2) { animation-delay: 0.12s; }
+    .reveal-up.is-visible .menu-row:nth-child(3),
+    .reveal-up.is-visible .stat-chip:nth-child(3),
+    .reveal-up.is-visible .step-item:nth-child(3) { animation-delay: 0.19s; }
+    .reveal-up.is-visible .menu-row:nth-child(4),
+    .reveal-up.is-visible .stat-chip:nth-child(4) { animation-delay: 0.26s; }
+
+    @keyframes staggerIn {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Note: the 3D tilt (--rx/--ry) is applied together with the existing
+       hover-lift transform on .menu-row:hover above, driven by JS mousemove. */
+
+    /* --- CTA STAMP: gentle idle pulse so it doesn't feel static --- */
+    .invite-stamp {
+        animation: stampIdle 4s ease-in-out infinite;
+    }
+    @keyframes stampIdle {
+        0%, 100% { transform: rotate(-8deg) translateY(0); }
+        50% { transform: rotate(-6deg) translateY(-4px); }
+    }
+    .invite-stamp:hover { animation-play-state: paused; }
+
+    /* --- SUBTLE GRAIN TEXTURE (adds tactile depth, breaks flat-AI feel) --- */
+    .grain-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.035;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* --- MARQUEE TICKER (signature editorial band) --- */
+    .marquee-band {
+        position: relative;
+        background: var(--charcoal);
+        overflow: hidden;
+        padding: 1.1rem 0;
+        transform: rotate(-1.2deg) scale(1.02);
+        margin: 3.5rem -6px 3rem;
+        z-index: 3;
+    }
+
+    .marquee-track {
+        display: flex;
+        width: max-content;
+        animation: marqueeScroll 26s linear infinite;
+    }
+
+    @keyframes marqueeScroll {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+
+    .marquee-track > span {
+        display: flex;
+        align-items: center;
+    }
+
+    .marquee-track span span {
+        font-family: var(--font-heading);
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: var(--secondary-gold-light, #F0DFB4);
+        white-space: nowrap;
+        padding: 0 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 1.4rem;
+        opacity: 0.92;
+    }
+
+    .marquee-track span span i {
+        font-size: 0.6rem;
+        color: var(--primary-orange);
+    }
+
+    /* --- FOUNDER'S NOTE / BRAND STORY (dark textured, human touch) --- */
+    .story-section {
+        position: relative;
+        background: linear-gradient(155deg, var(--charcoal) 0%, #3A2B1F 100%);
+        border-radius: 28px;
+        max-width: 1200px;
+        margin: 1rem auto 4.5rem;
+        padding: 4rem 3rem;
+        overflow: hidden;
+        z-index: 2;
+    }
+
+    @media (max-width: 900px) {
+        .story-section { padding: 3rem 1.6rem; border-radius: 18px; }
+    }
+
+    .story-watermark {
+        position: absolute;
+        top: -6%;
+        left: -2%;
+        font-family: var(--font-heading);
+        font-size: 9rem;
+        font-weight: 700;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255,255,255,0.07);
+        white-space: nowrap;
+        pointer-events: none;
+        line-height: 1;
+        user-select: none;
+    }
+
+    .story-inner {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 2.2rem;
+        align-items: flex-start;
+        max-width: 820px;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 700px) {
+        .story-inner { grid-template-columns: 1fr; text-align: center; }
+        .story-avatar { margin: 0 auto; }
+    }
+
+    .story-quote-mark {
+        font-family: var(--font-heading);
+        font-size: 4.5rem;
+        line-height: 0.6;
+        color: var(--secondary-gold);
+        opacity: 0.85;
+    }
+
+    .story-avatar {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(255,255,255,0.15);
+        flex-shrink: 0;
+    }
+
+    .story-quote {
+        font-style: italic;
+        font-size: 1.5rem;
+        line-height: 1.55;
+        color: #F5EFE6;
+        margin-bottom: 1.4rem;
+    }
+
+    .story-attribution strong {
+        font-family: var(--font-heading);
+        color: var(--secondary-gold-light, #F0DFB4);
+        font-size: 1rem;
+        display: block;
+    }
+
+    .story-attribution span {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.55);
+    }
 </style>
 @section('content')
 
 <!-- HERO SECTION -->
+<div id="scrollProgress"></div>
+<div class="grain-overlay"></div>
 <section class="hero-section">
-    <div class="hero-content">
-        <div class="hero-badge">
-            <i class="fa-solid fa-kitchen-set"></i> Dari Dapur Rumahan, Sejak 2019
+    <div class="hero-blob"></div>
+    <div class="hero-grid">
+        <div>
+            <div class="hero-badge">
+                <i class="fa-solid fa-kitchen-set"></i> Dari Dapur Rumahan, Sejak 2019
+            </div>
+            <h1 class="hero-title">
+                <span class="kinetic-word" style="animation-delay:.05s">Masakan</span>
+                <span class="kinetic-word" style="animation-delay:.12s">Rumahan</span>
+                <span class="kinetic-word" style="animation-delay:.19s">yang</span><br>
+                <span class="kinetic-word" style="animation-delay:.26s">Bikin</span>
+                <span class="kinetic-word" style="animation-delay:.33s">Tamu</span>
+                <em class="kinetic-word" style="animation-delay:.42s">Nanya Resepnya</em>
+            </h1>
+            <p class="hero-subtitle">
+                Resep keluarga yang biasa kami masak sendiri, sekarang bisa dipesan online. Buat rapat kantor, nikahan, syukuran, sampai ulang tahun anak — kami masak dari pagi, bukan dari gudang beku.
+            </p>
+            <div class="hero-buttons">
+                <a href="#katalog" class="btn-primary">
+                    <i class="fa-solid fa-utensils"></i> Lihat Katalog Menu
+                </a>
+                <a href="https://wa.me/+6281325032009?text=Halo%20Khasanah,%20saya%20mau%20tanya%20tanya%20tentang%20menu%20katering" target="_blank" class="btn-secondary">
+                    <i class="fa-brands fa-whatsapp"></i> Konsultasi Acara Free
+                </a>
+            </div>
+            <div class="hero-trust-row">
+                <div class="hero-trust-item">
+                    <div class="hero-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                    <span>4.9 dari pelanggan</span>
+                </div>
+                <div class="hero-trust-divider"></div>
+                <div class="hero-trust-item">
+                    <strong>500+</strong>
+                    <span>Acara terlayani</span>
+                </div>
+                <div class="hero-trust-divider"></div>
+                <div class="hero-trust-item">
+                    <strong>6 Thn</strong>
+                    <span>Pengalaman</span>
+                </div>
+            </div>
         </div>
-        <h1 class="hero-title">
-            Masakan Rumahan yang <br> Bikin Tamu <span>Nanya Resepnya</span>
-        </h1>
-        <p class="hero-subtitle">
-            Resep keluarga yang biasa kami masak sendiri, sekarang bisa dipesan online. Buat rapat kantor, nikahan, syukuran, sampai ulang tahun anak — kami masak dari pagi, bukan dari gudang beku.
-        </p>
-        <div class="hero-buttons">
-            <a href="#katalog" class="btn-primary">
-                <i class="fa-solid fa-utensils"></i> Lihat Katalog Menu
-            </a>
-            <a href="https://wa.me/+6281325032009?text=Halo%20Khasanah,%20saya%20mau%20tanya%20tanya%20tentang%20menu%20katering" target="_blank" class="btn-secondary">
-                <i class="fa-brands fa-whatsapp"></i> Konsultasi Acara Free
-            </a>
+
+        <div class="hero-visual" id="heroVisual">
+            <div class="hero-visual-ring"></div>
+            <div class="hero-float-card hfc-1" style="--r:-7deg;">
+                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&auto=format&fit=crop&q=70" alt="Prasmanan Khasanah Catering">
+            </div>
+            <div class="hero-float-card hfc-2" style="--r:6deg;">
+                <img src="https://images.unsplash.com/photo-1555244162-803834f70033?w=500&auto=format&fit=crop&q=70" alt="Nasi Kotak Khasanah Catering">
+            </div>
+            <div class="hero-float-card hfc-3" style="--r:-4deg;">
+                <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=300&auto=format&fit=crop&q=70" alt="Snack Box Khasanah Catering">
+            </div>
+            <div class="hero-seal">Sejak<br>2019</div>
         </div>
     </div>
 </section>
 
+<!-- ANIMATED STATS STRIP -->
+<div class="stats-strip reveal-up">
+    <div class="stat-chip">
+        <div class="stat-num" data-count="500" data-suffix="+">0</div>
+        <div class="stat-label">Acara Terlayani</div>
+    </div>
+    <div class="stat-chip">
+        <div class="stat-num" data-count="49" data-decimal="10" data-suffix="">0</div>
+        <div class="stat-label">Rating Pelanggan</div>
+    </div>
+    <div class="stat-chip">
+        <div class="stat-num" data-count="{{ $menus->count() }}" data-suffix="+">0</div>
+        <div class="stat-label">Pilihan Menu</div>
+    </div>
+    <div class="stat-chip">
+        <div class="stat-num" data-count="6" data-suffix=" Thn">0</div>
+        <div class="stat-label">Pengalaman Dapur</div>
+    </div>
+</div>
+
+<!-- MARQUEE TICKER -->
+<div class="marquee-band">
+    <div class="marquee-track">
+        <span>
+            <span><i class="fa-solid fa-star"></i> Prasmanan</span>
+            <span><i class="fa-solid fa-star"></i> Nasi Kotak</span>
+            <span><i class="fa-solid fa-star"></i> Snack Box</span>
+            <span><i class="fa-solid fa-star"></i> Custom Tumpeng</span>
+            <span><i class="fa-solid fa-star"></i> Dimasak Segar Tiap Hari</span>
+            <span><i class="fa-solid fa-star"></i> Booking Online 24 Jam</span>
+        </span>
+        <span aria-hidden="true">
+            <span><i class="fa-solid fa-star"></i> Prasmanan</span>
+            <span><i class="fa-solid fa-star"></i> Nasi Kotak</span>
+            <span><i class="fa-solid fa-star"></i> Snack Box</span>
+            <span><i class="fa-solid fa-star"></i> Custom Tumpeng</span>
+            <span><i class="fa-solid fa-star"></i> Dimasak Segar Tiap Hari</span>
+            <span><i class="fa-solid fa-star"></i> Booking Online 24 Jam</span>
+        </span>
+    </div>
+</div>
+
 <!-- MENU SECTION TITLE -->
-<div class="section-header reveal-up" style="padding-top: 3rem;">
+<div class="section-header reveal-up" style="padding-top: 1rem;">
     <span class="eyebrow"><i class="fa-solid fa-bowl-food"></i> Katalog Kami</span>
     <h2>Menu <span>Kami</span></h2>
     <p>Aneka pilihan prasmanan, nasi kotak, snack box, hingga custom tumpeng untuk setiap acara Anda.</p>
@@ -1006,7 +1601,7 @@
 <!-- MENU LIST (editorial style) -->
 <section class="menu-list-container">
     @forelse($menus as $index => $menu)
-        <article class="menu-row {{ !is_null($bestsellerCount) && $index >= $bestsellerCount ? 'menu-row-hidden' : '' }}" style="--i: {{ $index % 6 }}">
+        <article id="menu-{{ $menu->id }}" class="menu-row {{ !is_null($bestsellerCount) && $index >= $bestsellerCount ? 'menu-row-hidden' : '' }}" style="--i: {{ $index % 6 }}">
             <div class="menu-row-media">
                 <img src="{{ $menu->image }}" alt="{{ $menu->name }}" class="menu-row-img" onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=800'">
                 @if($menu->is_bestseller)
@@ -1029,7 +1624,7 @@
                         <span class="menu-row-minpax"><i class="fa-solid fa-users"></i> Min. {{ $menu->min_pax }} Pack</span>
                     @endif
                     <button type="button" class="menu-row-cta" title="Tambah ke Keranjang"
-                            onclick="openOrderModal('{{ $menu->id }}', '{{ addslashes($menu->name) }}', '{{ $menu->price_per_pax }}', '{{ $menu->min_pax }}', '{{ addslashes($menu->category) }}')">
+                            onclick="openOrderModal('{{ $menu->id }}', '{{ addslashes($menu->name) }}', '{{ $menu->price_per_pax }}', '{{ $menu->min_pax }}', '{{ addslashes($menu->category) }}', '{{ addslashes($menu->image) }}')">
                         <i class="fa-solid fa-cart-plus"></i>
                     </button>
                 </div>
@@ -1079,6 +1674,26 @@
         </div>
     </div>
 </section>
+
+<!-- FOUNDER'S NOTE / BRAND STORY -->
+<div class="story-section reveal-up">
+    <div class="story-watermark">KHASANAH KHASANAH</div>
+    <div class="story-inner">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+            <img class="story-avatar" src="https://images.unsplash.com/photo-1607631568010-a87245c0daf8?w=200&auto=format&fit=crop&q=70" alt="Pendiri Khasanah Catering">
+            <span class="story-quote-mark">"</span>
+        </div>
+        <div>
+            <p class="story-quote">
+                Dulu saya cuma masak buat tetangga yang lagi ada hajatan. Sekarang, resep yang sama itu yang kami pakai buat ratusan acara tiap bulan — gak pernah kami ubah biar tetap terasa seperti masakan rumah, bukan katering pabrik.
+            </p>
+            <div class="story-attribution">
+                <strong>Ibu Dean</strong>
+                <span>Pendiri & Kepala Dapur, Khasanah Catering</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- TESTIMONIALS -->
 <section class="testimonials reveal-up">
@@ -1136,13 +1751,20 @@
 <div class="modal-overlay" id="orderModal">
     <div class="modal-box">
         <button class="close-modal-btn" onclick="closeOrderModal()">&times;</button>
-        <h3 class="modal-title" id="modalMenuName">Nama Menu Katering</h3>
-        <div class="modal-price" id="modalMenuPrice">Rp 0 / pack</div>
-        
+
+        <div class="modal-head">
+            <img id="modalMenuImg" class="modal-head-img" src="" alt="" onerror="this.src='https://images.unsplash.com/photo-1555244162-803834f70033?w=400'">
+            <div class="modal-head-info">
+                <span class="modal-head-tag" id="modalMenuCat">Kategori</span>
+                <h3 class="modal-title" id="modalMenuName">Nama Menu Katering</h3>
+                <div class="modal-price"><span id="modalMenuPrice">Rp 0</span><small> / pack</small></div>
+            </div>
+        </div>
+
         <form action="{{ route('cart.add') }}" method="POST" id="addToCartForm">
             @csrf
             <input type="hidden" name="menu_id" id="modalMenuId">
-            
+
             <div class="form-group">
                 <label for="paxInput">Jumlah Porsi (Pack) <span id="modalMinHint" style="color: var(--primary-orange);">(Minimal 30 Pack)</span></label>
                 <div class="qty-stepper">
@@ -1156,8 +1778,11 @@
             </div>
 
             <div class="subtotal-preview">
-                <span>Total Biaya (Perkiraan):</span>
-                <span id="subtotalText" style="color: var(--primary-orange); font-size: 1.2rem;">Rp 0</span>
+                <div class="subtotal-preview-ic"><i class="fa-solid fa-receipt"></i></div>
+                <div style="flex:1;">
+                    <span>Total Biaya (Perkiraan)</span>
+                    <strong id="subtotalText">Rp 0</strong>
+                </div>
             </div>
 
             <button type="submit" class="btn-primary" style="width: 100%;">
@@ -1260,11 +1885,13 @@
             : 'Selengkapnya <i class="fa-solid fa-chevron-down"></i>';
     }
 
-    function openOrderModal(id, name, price, minPax, category) {
+    function openOrderModal(id, name, price, minPax, category, image) {
         currentPrice = parseFloat(price);
         document.getElementById('modalMenuId').value = id;
         document.getElementById('modalMenuName').innerText = name;
-        document.getElementById('modalMenuPrice').innerText = 'Rp ' + Number(price).toLocaleString('id-ID') + ' / pack';
+        document.getElementById('modalMenuPrice').innerText = 'Rp ' + Number(price).toLocaleString('id-ID');
+        document.getElementById('modalMenuCat').innerText = category;
+        document.getElementById('modalMenuImg').src = image;
 
         const paxInput = document.getElementById('paxInput');
         const minHint = document.getElementById('modalMinHint');
@@ -1327,5 +1954,134 @@
             closeOrderModal();
         }
     }
+
+    // --- SCROLL PROGRESS BAR ---
+    (function () {
+        const bar = document.getElementById('scrollProgress');
+        if (!bar) return;
+        window.addEventListener('scroll', function () {
+            const h = document.documentElement;
+            const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+            bar.style.width = scrolled + '%';
+        }, { passive: true });
+    })();
+
+    // --- ACTIVATE reveal-up SECTIONS ON SCROLL ---
+    (function () {
+        const revealEls = document.querySelectorAll('.reveal-up');
+        if (!revealEls.length) return;
+
+        if (!('IntersectionObserver' in window)) {
+            revealEls.forEach(el => el.classList.add('is-visible'));
+            return;
+        }
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+        revealEls.forEach(el => revealObserver.observe(el));
+    })();
+
+    // --- ANIMATED STAT COUNTERS (500+, 4.9, dst) ---
+    (function () {
+        const counters = document.querySelectorAll('.stat-num');
+        if (!counters.length) return;
+
+        function animateCounter(el) {
+            const target = parseFloat(el.dataset.count) || 0;
+            const decimals = parseInt(el.dataset.decimal) || 0;
+            const suffix = el.dataset.suffix || '';
+            const divisor = decimals ? 10 : 1;
+            const displayTarget = decimals ? target / divisor : target;
+            const duration = 1400;
+            const startTime = performance.now();
+
+            function tick(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = displayTarget * eased;
+                el.textContent = (decimals ? current.toFixed(1) : Math.round(current)) + suffix;
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        if (!('IntersectionObserver' in window)) {
+            counters.forEach(animateCounter);
+            return;
+        }
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.4 });
+
+        counters.forEach(el => counterObserver.observe(el));
+    })();
+
+    // --- HERO FLOATING COLLAGE: subtle mouse-parallax (desktop only) ---
+    (function () {
+        const visual = document.getElementById('heroVisual');
+        if (!visual || !window.matchMedia('(hover: hover)').matches) return;
+
+        const cards = visual.querySelectorAll('.hero-float-card');
+        visual.addEventListener('mousemove', function (e) {
+            const rect = visual.getBoundingClientRect();
+            const px = (e.clientX - rect.left) / rect.width - 0.5;
+            const py = (e.clientY - rect.top) / rect.height - 0.5;
+            cards.forEach((card, i) => {
+                const depth = (i + 1) * 6;
+                card.style.transform = 'translate(' + (px * depth) + 'px,' + (py * depth) + 'px) rotate(var(--r, 0deg))';
+            });
+        });
+        visual.addEventListener('mouseleave', function () {
+            cards.forEach(card => { card.style.transform = 'rotate(var(--r, 0deg))'; });
+        });
+    })();
+
+    // --- MENU CARDS: subtle 3D tilt following the cursor (desktop only) ---
+    (function () {
+        if (!window.matchMedia('(hover: hover)').matches) return;
+        document.querySelectorAll('.menu-row').forEach(function (card) {
+            card.addEventListener('mousemove', function (e) {
+                const rect = card.getBoundingClientRect();
+                const px = (e.clientX - rect.left) / rect.width - 0.5;
+                const py = (e.clientY - rect.top) / rect.height - 0.5;
+                card.style.setProperty('--rx', (px * 4) + 'deg');
+                card.style.setProperty('--ry', (py * -4) + 'deg');
+            });
+            card.addEventListener('mouseleave', function () {
+                card.style.setProperty('--rx', '0deg');
+                card.style.setProperty('--ry', '0deg');
+            });
+        });
+    })();
+
+    // --- MAGNETIC HOVER on hero CTA buttons (desktop only) ---
+    (function () {
+        if (!window.matchMedia('(hover: hover)').matches) return;
+        document.querySelectorAll('.hero-buttons .btn-primary, .hero-buttons .btn-secondary').forEach(function (btn) {
+            btn.style.transition = 'transform 0.2s ease-out';
+            btn.addEventListener('mousemove', function (e) {
+                const rect = btn.getBoundingClientRect();
+                const px = (e.clientX - rect.left) / rect.width - 0.5;
+                const py = (e.clientY - rect.top) / rect.height - 0.5;
+                btn.style.transform = 'translate(' + (px * 10) + 'px,' + (py * 8) + 'px)';
+            });
+            btn.addEventListener('mouseleave', function () {
+                btn.style.transform = 'translate(0,0)';
+            });
+        });
+    })();
 </script>
 @endsection

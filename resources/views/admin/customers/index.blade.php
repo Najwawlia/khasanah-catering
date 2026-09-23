@@ -3,9 +3,12 @@
 @section('admin-title', 'Pelanggan')
 @section('content')
 <div class="ph">
-    <div>
-        <h1 class="ph-title">Data Pelanggan</h1>
-        <p class="ph-sub">Akun customer yang terdaftar di website Khasanah Catering.</p>
+    <div class="ph-row">
+        <div class="ph-badge"><i class="fa-solid fa-users"></i></div>
+        <div>
+            <h1 class="ph-title">Data Pelanggan</h1>
+            <p class="ph-sub">Akun customer yang terdaftar di website Khasanah Catering.</p>
+        </div>
     </div>
 </div>
 <div class="box">
@@ -37,17 +40,17 @@
                                 <span class="t-bold">{{ $customer->name }}</span>
                             </div>
                         </td>
-                        <td class="t-mono" style="font-size:.74rem;">{{ $customer->email }}</td>
-                        <td class="t-mono">{{ $customer->phone ?? '—' }}</td>
+                        <td class="t-mono" style="font-size:.78rem; font-weight:500; color:var(--ink-3);">{{ $customer->email }}</td>
+                        <td class="t-mono" style="font-weight:500; color:var(--ink-3);">{{ $customer->phone ?? '—' }}</td>
                         <td><span class="tag t-acc-t">{{ $customer->orders_count }} pesanan</span></td>
                         <td class="t-bold">Rp {{ number_format($customer->orders_sum_paid_amount ?? 0,0,',','.') }}</td>
                         <td class="t-mono t-muted">{{ $customer->created_at->format('d M Y') }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" style="text-align:center; color:var(--ink-3); padding:2.5rem 0; font-size:.8rem;">
-                            <i class="fa-solid fa-users" style="font-size:1.3rem; display:block; margin-bottom:8px; opacity:.35;"></i>
-                            Belum ada pelanggan terdaftar.
+                        <td colspan="6" class="t-empty">
+                            <div class="t-empty-ic"><i class="fa-solid fa-users"></i></div>
+                            <div class="t-empty-msg">Belum ada pelanggan terdaftar.</div>
                         </td>
                     </tr>
                 @endforelse

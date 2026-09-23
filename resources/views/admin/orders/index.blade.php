@@ -50,14 +50,14 @@
     }
     .kanban-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .kanban-col-title {
-        font-family: 'Fraunces', Georgia, serif;
-        font-size: .9rem;
+        font-family: 'Cinzel', Georgia, serif;
+        font-size: .88rem;
         font-weight: 600;
         color: var(--ink);
     }
     .kanban-col-count {
         margin-left: auto;
-        font-family: 'JetBrains Mono', monospace;
+        font-family: 'Manrope', sans-serif;
         font-size: .66rem;
         color: var(--ink-3);
         background: var(--border-2);
@@ -76,7 +76,7 @@
     .ticket:hover { box-shadow: 0 6px 18px rgba(33,25,19,.09); transform: translateY(-2px); }
 
     .ticket-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-    .ticket-code { font-family: 'JetBrains Mono', monospace; font-size: .68rem; font-weight: 600; color: var(--accent); }
+    .ticket-code { font-family: 'Manrope', sans-serif; font-size: .68rem; font-weight: 600; color: var(--accent); }
     .ticket-name { font-weight: 700; font-size: .88rem; color: var(--ink); margin-bottom: 3px; }
     .ticket-meta { font-size: .72rem; color: var(--ink-3); margin-bottom: 10px; }
     .ticket-divider { border-top: 1.5px dashed var(--border); margin: 10px 0; }
@@ -104,10 +104,13 @@
 @endsection
 
 @section('content')
-<div class="ph" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-    <div>
-        <h1 class="ph-title">Data Pesanan</h1>
-        <p class="ph-sub">Kelola booking, verifikasi pembayaran, dan update progress dapur.</p>
+<div class="ph">
+    <div class="ph-row">
+        <div class="ph-badge"><i class="fa-solid fa-receipt"></i></div>
+        <div>
+            <h1 class="ph-title">Data Pesanan</h1>
+            <p class="ph-sub">Kelola booking, verifikasi pembayaran, dan update progress dapur.</p>
+        </div>
     </div>
     <div class="view-toggle">
         <button type="button" id="btnViewBoard" class="active" onclick="switchOrderView('board')">
@@ -273,9 +276,9 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" style="text-align:center; color:var(--ink-3); padding:2.5rem 0; font-size:.8rem;">
-                                <i class="fa-solid fa-clipboard-list" style="font-size:1.3rem; display:block; margin-bottom:8px; opacity:.35;"></i>
-                                Belum ada data pesanan.
+                            <td colspan="8" class="t-empty">
+                                <div class="t-empty-ic"><i class="fa-solid fa-clipboard-list"></i></div>
+                                <div class="t-empty-msg">Belum ada data pesanan.</div>
                             </td>
                         </tr>
                     @endforelse

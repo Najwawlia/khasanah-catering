@@ -128,46 +128,101 @@
 
     .form-input:focus, .form-textarea:focus, .form-select:focus {
         border-color: var(--primary-orange);
-        box-shadow: 0 0 12px var(--primary-glow);
+        box-shadow: 0 0 0 3px var(--primary-orange-light);
     }
 
-    /* --- PAYMENT METHOD SELECTOR CARDS --- */
-    .payment-options-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 1rem;
+    /* --- LOCATION MAP PICKER --- */
+    .map-search-wrap {
+        position: relative;
+        margin-bottom: 10px;
     }
+    .map-search-wrap i {
+        position: absolute;
+        left: 14px; top: 50%; transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+    .map-search-wrap input { padding-left: 38px; }
 
-    .payment-option-card {
-        background: var(--bg-input);
-        border: 2px solid var(--border-color);
+    #leafletMap {
+        width: 100%;
+        height: 260px;
         border-radius: var(--radius-md);
-        padding: 1rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all var(--transition-speed);
+        border: 1px solid var(--border-color);
+    }
+    .leaflet-pin-hint {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        margin-top: 6px;
+    }
+    .leaflet-pin-hint i { color: var(--primary-orange); }
+
+    /* --- PAYMENT METHOD (QRIS only) --- */
+    .qris-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: var(--bg-input);
+        border: 2px solid var(--primary-orange);
+        border-radius: var(--radius-md);
+        padding: 1.2rem 1.4rem;
+    }
+
+    .qris-badge {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: #FFFFFF;
+        border: 1px solid var(--border-color);
+        flex-shrink: 0;
+        display: flex;
         align-items: center;
         justify-content: center;
+        padding: 8px;
+    }
+
+    .qris-info { flex: 1; min-width: 0; }
+
+    .qris-info-title {
+        display: flex;
+        align-items: center;
         gap: 8px;
-        color: var(--text-secondary);
-    }
-
-    .payment-option-card:hover, .payment-option-card.selected {
-        border-color: var(--tertiary-coral-dark);
-        background: var(--tertiary-coral-light);
+        font-weight: 800;
+        font-size: 1rem;
         color: var(--text-primary);
-        box-shadow: 0 0 15px rgba(255, 138, 117, 0.35);
+        margin-bottom: 3px;
     }
 
-    .payment-option-card input[type="radio"] {
-        display: none;
+    .qris-info-title .qris-check {
+        color: var(--success);
+        font-size: 0.85rem;
     }
 
-    .payment-icon {
-        font-size: 1.6rem;
-        color: var(--primary-orange);
+    .qris-info-desc {
+        font-size: 0.83rem;
+        color: var(--text-secondary);
+        line-height: 1.5;
+    }
+
+    .qris-apps-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+
+    .qris-apps-row span {
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        padding: 2px 9px;
+        border-radius: 20px;
     }
 
     /* --- DP TYPE TOGGLE CARDS --- */
@@ -189,7 +244,6 @@
     .dp-card:hover, .dp-card.selected {
         border-color: var(--secondary-gold-dark);
         background: var(--secondary-gold-light);
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.35);
     }
 
     .dp-card input[type="radio"] {
@@ -359,8 +413,8 @@
                     <div class="form-group">
                         <label for="delivery_type">Tipe Layanan</label>
                         <select name="delivery_type" id="delivery_type" class="form-select" onchange="toggleAddress(this.value)">
-                            <option value="delivery">Diantar ke Lokasi Acara (Delivery)</option>
-                            <option value="pickup">Ambil Mandiri di Dapur Utama (Pickup)</option>
+                            <option value="delivery" {{ old('delivery_type', 'delivery') === 'delivery' ? 'selected' : '' }}>Diantar ke Lokasi Acara (Delivery)</option>
+                            <option value="pickup" {{ old('delivery_type') === 'pickup' ? 'selected' : '' }}>Ambil Mandiri di Dapur Utama (Pickup)</option>
                         </select>
                     </div>
 
@@ -395,22 +449,16 @@
                             Titik Lokasi di Peta <span style="font-weight: 400; color: var(--text-muted);">(opsional, memudahkan kurir menemukan lokasi)</span>
                         </label>
 
-                        @if(config('services.google_maps.key'))
-                            <input type="text" id="mapSearchInput" class="form-input" placeholder="Cari nama jalan / gedung di Semarang..." style="margin-bottom: 10px;">
-                            <div id="gmap" style="width: 100%; height: 260px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color);"></div>
-                            <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
-                            <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
-                            <small style="color: var(--text-muted); margin-top: 6px; display: block;">
-                                <i class="fa-solid fa-hand-pointer"></i> Geser pin merah ke lokasi yang tepat, atau ketik nama jalan/gedung di kolom pencarian di atas. Peta dikunci di area Kota Semarang.
-                            </small>
-                        @else
-                            <div style="border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
-                                <iframe src="https://maps.google.com/maps?q=Kota+Semarang&z=12&output=embed" width="100%" height="230" style="border:0; display:block;" loading="lazy" title="Peta Kota Semarang"></iframe>
-                            </div>
-                            <small style="color: var(--text-muted); margin-top: 6px; display: block;">
-                                <i class="fa-solid fa-circle-info"></i> Peta pemilih titik lokasi interaktif belum aktif — mohon tuliskan alamat selengkap dan sedetail mungkin di kolom di atas ya.
-                            </small>
-                        @endif
+                        <div class="map-search-wrap">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="mapSearchInput" class="form-input" placeholder="Cari nama jalan / gedung di Semarang...">
+                        </div>
+                        <div id="leafletMap"></div>
+                        <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
+                        <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
+                        <div class="leaflet-pin-hint">
+                            <i class="fa-solid fa-hand-pointer"></i> Geser pin merah ke lokasi yang tepat, atau ketik nama jalan/gedung di kolom pencarian. Peta dikunci di area Kota Semarang.
+                        </div>
                     </div>
 
                     <!-- TEXTAREA CATATAN KHUSUS / DIETARY NOTES -->
@@ -453,43 +501,32 @@
                         <span class="section-icon-badge"><i class="fa-solid fa-wallet"></i></span> Metode Pembayaran
                     </h3>
 
-                    <div class="payment-options-grid">
-                        <label class="payment-option-card selected" id="pay_qris" onclick="selectPaymentMethod('qris')">
-                            <input type="radio" name="payment_method" value="qris" checked>
-                            <i class="fa-solid fa-qrcode payment-icon"></i>
-                            <span style="font-weight: 700; font-size: 0.9rem;">QRIS</span>
-                        </label>
-
-                        <label class="payment-option-card" id="pay_gopay" onclick="selectPaymentMethod('gopay')">
-                            <input type="radio" name="payment_method" value="gopay">
-                            <i class="fa-solid fa-mobile-screen-button payment-icon"></i>
-                            <span style="font-weight: 700; font-size: 0.9rem;">GoPay</span>
-                        </label>
-
-                        <label class="payment-option-card" id="pay_ovo" onclick="selectPaymentMethod('ovo')">
-                            <input type="radio" name="payment_method" value="ovo">
-                            <i class="fa-solid fa-wallet payment-icon"></i>
-                            <span style="font-weight: 700; font-size: 0.9rem;">OVO</span>
-                        </label>
-
-                        <label class="payment-option-card" id="pay_bca" onclick="selectPaymentMethod('bca')">
-                            <input type="radio" name="payment_method" value="bca">
-                            <i class="fa-solid fa-building-columns payment-icon"></i>
-                            <span style="font-weight: 700; font-size: 0.9rem;">Bank BCA</span>
-                        </label>
-
-                        <label class="payment-option-card" id="pay_mandiri" onclick="selectPaymentMethod('mandiri')">
-                            <input type="radio" name="payment_method" value="mandiri">
-                            <i class="fa-solid fa-building-columns payment-icon"></i>
-                            <span style="font-weight: 700; font-size: 0.9rem;">Mandiri</span>
-                        </label>
-
-                        <label class="payment-option-card" id="pay_bri" onclick="selectPaymentMethod('bri')">
-                            <input type="radio" name="payment_method" value="bri">
-                            <i class="fa-solid fa-building-columns payment-icon"></i>
-                            <span style="font-weight: 700; font-size: 0.9rem;">Bank BRI</span>
-                        </label>
+                    <div class="qris-card">
+                        <div class="qris-badge">
+                            <svg viewBox="0 0 40 40" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2" y="2" width="14" height="14" rx="2" fill="none" stroke="#E4002B" stroke-width="3"/>
+                                <rect x="6" y="6" width="6" height="6" fill="#E4002B"/>
+                                <rect x="24" y="2" width="14" height="14" rx="2" fill="none" stroke="#E4002B" stroke-width="3"/>
+                                <rect x="28" y="6" width="6" height="6" fill="#E4002B"/>
+                                <rect x="2" y="24" width="14" height="14" rx="2" fill="none" stroke="#E4002B" stroke-width="3"/>
+                                <rect x="6" y="28" width="6" height="6" fill="#E4002B"/>
+                                <rect x="24" y="24" width="6" height="6" fill="#E4002B"/>
+                                <rect x="32" y="24" width="6" height="6" fill="#E4002B"/>
+                                <rect x="24" y="32" width="6" height="6" fill="#E4002B"/>
+                                <rect x="32" y="32" width="6" height="6" fill="#E4002B"/>
+                            </svg>
+                        </div>
+                        <div class="qris-info">
+                            <div class="qris-info-title">QRIS <i class="fa-solid fa-circle-check qris-check"></i></div>
+                            <div class="qris-info-desc">
+                                Satu kode QR untuk semua. Scan pakai aplikasi bank atau e-wallet favorit Anda — pembayaran dikonfirmasi otomatis.
+                            </div>
+                            <div class="qris-apps-row">
+                                <span>GoPay</span><span>OVO</span><span>DANA</span><span>ShopeePay</span><span>m-Banking</span>
+                            </div>
+                        </div>
                     </div>
+                    <input type="hidden" name="payment_method" value="qris">
                 </div>
             </div>
 
@@ -534,6 +571,9 @@
 @endsection
 
 @section('scripts')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
 <script>
     function toggleAddress(val) {
         const addressWrapperGroup = document.getElementById('addressWrapperGroup');
@@ -541,6 +581,7 @@
         const display = (val === 'pickup') ? 'none' : 'block';
         addressWrapperGroup.style.display = display;
         mapGroup.style.display = display;
+        if (val !== 'pickup') { setTimeout(function () { if (window.__semarangMap) window.__semarangMap.invalidateSize(); }, 50); }
     }
 
     function selectDp(type) {
@@ -553,87 +594,99 @@
             document.getElementById('cardFull').classList.add('selected');
         }
     }
-
-    function selectPaymentMethod(method) {
-        const cards = document.querySelectorAll('.payment-option-card');
-        cards.forEach(card => card.classList.remove('selected'));
-        document.getElementById('pay_' + method).classList.add('selected');
-    }
 </script>
 
-@if(config('services.google_maps.key'))
-<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initSemarangMap" async defer></script>
 <script>
-    // Peta pemilih lokasi dikunci di area Kota Semarang: bounds dipakai
-    // untuk membatasi pencarian & tampilan peta, bukan sekadar dekorasi.
-    var SEMARANG_CENTER = { lat: {{ $mapCenter['lat'] }}, lng: {{ $mapCenter['lng'] }} };
-    var SEMARANG_BOUNDS = {
-        north: -6.90,
-        south: -7.15,
-        east: 110.52,
-        west: 110.28,
-    };
+    // Peta pemilih lokasi Leaflet + OpenStreetMap — gratis, tanpa API key,
+    // jadi selalu aktif. Dikunci di area Kota Semarang lewat maxBounds,
+    // dan pencarian alamat pakai Nominatim (geocoder gratis dari OSM)
+    // yang dibatasi viewbox Semarang.
+    var SEMARANG_CENTER = [{{ $mapCenter['lat'] }}, {{ $mapCenter['lng'] }}];
+    var SEMARANG_BOUNDS = L.latLngBounds(
+        [-7.15, 110.28], // southwest
+        [-6.90, 110.52]  // northeast
+    );
 
-    function initSemarangMap() {
-        var mapEl = document.getElementById('gmap');
+    document.addEventListener('DOMContentLoaded', function () {
+        var mapEl = document.getElementById('leafletMap');
         if (!mapEl) return;
-
-        var bounds = new google.maps.LatLngBounds(
-            { lat: SEMARANG_BOUNDS.south, lng: SEMARANG_BOUNDS.west },
-            { lat: SEMARANG_BOUNDS.north, lng: SEMARANG_BOUNDS.east }
-        );
-
-        var map = new google.maps.Map(mapEl, {
-            center: SEMARANG_CENTER,
-            zoom: 12,
-            restriction: { latLngBounds: bounds, strictBounds: false },
-            streetViewControl: false,
-            mapTypeControl: false,
-        });
 
         var latField = document.getElementById('latitude');
         var lngField = document.getElementById('longitude');
-        var initialLat = parseFloat(latField.value) || SEMARANG_CENTER.lat;
-        var initialLng = parseFloat(lngField.value) || SEMARANG_CENTER.lng;
+        var initialLat = parseFloat(latField.value) || SEMARANG_CENTER[0];
+        var initialLng = parseFloat(lngField.value) || SEMARANG_CENTER[1];
 
-        var marker = new google.maps.Marker({
-            map: map,
-            position: { lat: initialLat, lng: initialLng },
-            draggable: true,
+        var map = L.map('leafletMap', {
+            center: [initialLat, initialLng],
+            zoom: 13,
+            maxBounds: SEMARANG_BOUNDS.pad(0.05),
+            maxBoundsViscosity: 0.8,
+            minZoom: 11,
+        });
+        window.__semarangMap = map;
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var pinIcon = L.divIcon({
+            className: '',
+            html: '<div style="width:30px;height:30px;border-radius:50% 50% 50% 0;background:#B5502E;transform:rotate(-45deg);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35);"></div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30],
         });
 
-        function syncFields(pos) {
-            latField.value = pos.lat();
-            lngField.value = pos.lng();
+        var marker = L.marker([initialLat, initialLng], { icon: pinIcon, draggable: true }).addTo(map);
+
+        function syncFields(latlng) {
+            latField.value = latlng.lat;
+            lngField.value = latlng.lng;
         }
-        syncFields(marker.getPosition());
+        syncFields(marker.getLatLng());
 
-        marker.addListener('dragend', function () {
-            syncFields(marker.getPosition());
+        marker.on('dragend', function () {
+            syncFields(marker.getLatLng());
         });
 
-        map.addListener('click', function (e) {
-            marker.setPosition(e.latLng);
-            syncFields(e.latLng);
+        map.on('click', function (e) {
+            marker.setLatLng(e.latlng);
+            syncFields(e.latlng);
         });
 
+        // Pencarian alamat via Nominatim, dibatasi wilayah Semarang.
         var searchInput = document.getElementById('mapSearchInput');
-        var autocomplete = new google.maps.places.Autocomplete(searchInput, {
-            bounds: bounds,
-            strictBounds: true,
-            componentRestrictions: { country: 'id' },
-            fields: ['geometry', 'name'],
+        var searchTimer = null;
+
+        searchInput.addEventListener('input', function () {
+            clearTimeout(searchTimer);
+            var q = searchInput.value.trim();
+            if (q.length < 3) return;
+
+            searchTimer = setTimeout(function () {
+                var viewbox = SEMARANG_BOUNDS.toBBoxString();
+                var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=id'
+                    + '&viewbox=' + viewbox + '&bounded=1&q=' + encodeURIComponent(q + ', Semarang');
+
+                fetch(url, { headers: { 'Accept-Language': 'id' } })
+                    .then(function (res) { return res.json(); })
+                    .then(function (data) {
+                        if (!data || !data.length) return;
+                        var lat = parseFloat(data[0].lat);
+                        var lng = parseFloat(data[0].lon);
+                        map.setView([lat, lng], 16);
+                        marker.setLatLng([lat, lng]);
+                        syncFields({ lat: lat, lng: lng });
+                    })
+                    .catch(function () { /* silent — user can still drag pin manually */ });
+            }, 600);
         });
 
-        autocomplete.addListener('place_changed', function () {
-            var place = autocomplete.getPlace();
-            if (!place.geometry || !place.geometry.location) return;
-            map.panTo(place.geometry.location);
-            map.setZoom(16);
-            marker.setPosition(place.geometry.location);
-            syncFields(place.geometry.location);
-        });
-    }
+        if (document.getElementById('delivery_type').value === 'pickup') {
+            document.getElementById('mapGroup').style.display = 'none';
+        } else {
+            setTimeout(function () { map.invalidateSize(); }, 100);
+        }
+    });
 </script>
-@endif
 @endsection

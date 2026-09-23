@@ -3,9 +3,12 @@
 @section('admin-title', 'Kelola Menu')
 @section('content')
 <div class="ph">
-    <div>
-        <h1 class="ph-title">Kelola Menu Katering</h1>
-        <p class="ph-sub">Atur katalog menu, harga, dan ketersediaan.</p>
+    <div class="ph-row">
+        <div class="ph-badge"><i class="fa-solid fa-utensils"></i></div>
+        <div>
+            <h1 class="ph-title">Kelola Menu Katering</h1>
+            <p class="ph-sub">Atur katalog menu, harga, dan ketersediaan.</p>
+        </div>
     </div>
     <a href="{{ route('admin.menus.create') }}" class="btn btn-p">
         <i class="fa-solid fa-plus"></i> Tambah Menu
@@ -42,7 +45,18 @@
                                 <span class="tag t-warn" style="margin-top:3px;"><i class="fa-solid fa-star" style="font-size:.55rem;"></i> Bestseller</span>
                             @endif
                         </td>
-                        <td><span class="tag t-acc-t">{{ $menu->category }}</span></td>
+                        <td>
+                            @php
+                                $catTagClass = match($menu->category) {
+                                    'Prasmanan' => 't-sapphire',
+                                    'Nasi Kotak' => 't-warn',
+                                    'Snack Box' => 't-emerald',
+                                    'Custom / Tumpeng' => 't-teal',
+                                    default => 't-acc-t',
+                                };
+                            @endphp
+                            <span class="tag {{ $catTagClass }}">{{ $menu->category }}</span>
+                        </td>
                         <td class="t-bold">Rp {{ number_format($menu->price_per_pax,0,',','.') }}</td>
                         <td class="t-mono">{{ $menu->min_pax }} pack</td>
                         <td>
@@ -72,10 +86,12 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" style="text-align:center; color:var(--ink-3); padding:2.5rem 0; font-size:.8rem;">
-                            <i class="fa-solid fa-utensils" style="font-size:1.3rem; display:block; margin-bottom:8px; opacity:.35;"></i>
-                            Belum ada data menu.
-                            <a href="{{ route('admin.menus.create') }}" style="color:var(--accent); font-weight:600;"> Tambah sekarang →</a>
+                        <td colspan="7" class="t-empty">
+                            <div class="t-empty-ic"><i class="fa-solid fa-utensils"></i></div>
+                            <div class="t-empty-msg">
+                                Belum ada data menu.
+                                <a href="{{ route('admin.menus.create') }}">Tambah sekarang →</a>
+                            </div>
                         </td>
                     </tr>
                 @endforelse

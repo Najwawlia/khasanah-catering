@@ -55,7 +55,7 @@ class CheckoutController extends Controller
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
             'special_notes' => 'nullable|string',
-            'payment_method' => 'required|in:qris,gopay,ovo,bca,mandiri,bri',
+            'payment_method' => 'required|in:qris',
             'payment_type' => 'required|in:full,dp_50',
         ], [
             'customer_name.required' => 'Nama lengkap pemesan wajib diisi.',
